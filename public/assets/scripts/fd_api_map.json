@@ -1,0 +1,60 @@
+{
+  "output": {
+    "categories": {
+      "0": {
+        "1": ["body", "shape"]
+      },
+      "1": {
+        "1": ["head", "shape"],
+        "2": ["head", "ears"],
+        "3": ["head", "eyes"],
+        "4": ["head", "eyebrows"],
+        "5": ["head", "nose"],
+        "6": ["head", "mouth"],
+        "7": ["head", "mustache"],
+        "8": ["head", "beard"]
+      },
+      "2": {
+        "1": ["head", "hair"]
+      },
+      "3": {
+        "1": ["wearable", "shirt"],
+        "2": ["wearable", "jacket"],
+        "3": ["wearable", "scarf"],
+        "4": ["wearable", "hat"]
+      },
+      "4": {
+        "1": ["wearable", "glasses"]
+      },
+      "5": {
+        "1": ["background", "filled"],
+        "2": ["background", "pattern"],
+        "3": ["background", "theme"],
+        "4": ["effect", "weather"]
+      }
+    }
+  },
+  "input": {
+    "indexes": {
+      "data_format": {
+        "i": "item",
+        "c": "color",
+        "d": "distance"
+      },
+      "view_config": {
+        "sections": "pages",
+        "sections_name": "title",
+        "sections_first_id": "item_start"
+      }
+    }
+  },
+  "url_placeholders": {
+    "[shape]": {
+      "reference": [1, 1]
+    },
+    "[hat.size]": {
+      "reference": [2, 1],
+      "relation": "hairs_hat"
+    }
+  }
+}

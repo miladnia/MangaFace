@@ -1,0 +1,28 @@
+{
+  "name": "negarang/face-app",
+  "description": "A Web Application to Draw a Cartoon Face.",
+  "type": "project",
+  "keywords": ["graphics", "face", "application", "avatar", "cartoon"],
+  "homepage": "http://negarang.milad-ab.ir/face-app",
+  "support": {
+    "source": "https://github.com/negarang/face-app"
+  },
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "Milad Abdollahnia",
+      "email": "milad_abdollahnia@yahoo.com",
+      "homepage": "http://milad-ab.ir",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "files": ["helpers/functions.php"]
+  },
+  "require": {
+    "php": "^5.6 || ^7.0",
+    "negarang/face-designer": "^1.0"
+  }
+}

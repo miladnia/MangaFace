@@ -1,0 +1,22 @@
+body {
+	text-align: right;
+}
+
+/* ------------------------------------- frame-bar */
+
+.face-app .frame-bar .title,
+.face-app .frame-bar label {
+	direction: rtl;
+}
+
+/* ------------------------------------- #fdItems */
+
+#fdItems ul {
+	direction: rtl;
+}
+
+/* ------------------------------------- #fdColorBox */
+
+#fdColorBox ul {
+	direction: rtl;
+}
