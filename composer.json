@@ -1,28 +1,27 @@
 {
-  "name": "negarang/face-app",
-  "description": "A Web Application to Draw a Cartoon Face.",
+  "name": "miladnia/mangaface",
+  "description": "Create your own custom avatar.",
   "type": "project",
-  "keywords": ["graphics", "face", "application", "avatar", "cartoon"],
-  "homepage": "http://negarang.milad-ab.ir/face-app",
-  "support": {
-    "source": "https://github.com/negarang/face-app"
-  },
+  "keywords": ["avatar", "avatar-generator", "manga", "graphics"],
+  "homepage": "https://github.com/miladnia/mangaface",
   "license": "MIT",
   "minimum-stability": "dev",
   "prefer-stable": true,
   "authors": [
     {
-      "name": "Milad Abdollahnia",
-      "email": "milad_abdollahnia@yahoo.com",
-      "homepage": "http://milad-ab.ir",
-      "role": "Developer"
+      "name": "Milad Nia",
+      "email": "milad@miladnia.ir",
+      "homepage": "http://miladnia.ir"
     }
   ],
   "autoload": {
-    "files": ["helpers/functions.php"]
+    "psr-4": {
+        "MangaFace\\": "src/"
+    },
+    "files": ["src/config.php"]
   },
   "require": {
-    "php": "^5.6 || ^7.0",
-    "negarang/face-designer": "^1.0"
+    "php": ">=5.6",
+    "ext-gd": "*"
   }
 }

@@ -1,10 +1,9 @@
 <?php
+
 /**
- * Project: Negarang FaceApp
- * This file is part of Negarang.
+ * This file is part of MangaFace.
  *
- * (c) Milad Abdollahnia
- * http://milad-ab.ir
+ * (c) Milad Nia <milad@miladnia.ir>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,27 +12,27 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 $list = [
-//    \Negarang\FaceDesigner\Head\RightEyebrow::class => [42, 0],
-//    \Negarang\FaceDesigner\Head\LeftEyebrow::class => [42, 0],
-//    \Negarang\FaceDesigner\Head\RightEyeShadow::class => [44, 0],
-//    \Negarang\FaceDesigner\Head\LeftEyeShadow::class => [44, 0],
-//    \Negarang\FaceDesigner\Head\RightEye::class => [38, 0],
-//    \Negarang\FaceDesigner\Head\LeftEye::class => [38, 0],
-//    \Negarang\FaceDesigner\Head\RightEar::class => [28, 49],
-//    \Negarang\FaceDesigner\Head\LeftEar::class => [28, 49],
-//    \Negarang\FaceDesigner\Head\HairBack::class => [0, 165],
-//    \Negarang\FaceDesigner\Wearable\Shirt::class => [0, 63],
-//    \Negarang\FaceDesigner\Wearable\Jacket::class => [0, 65],
+//    \MangaFace\FaceDesigner\Head\RightEyebrow::class => [42, 0],
+//    \MangaFace\FaceDesigner\Head\LeftEyebrow::class => [42, 0],
+//    \MangaFace\FaceDesigner\Head\RightEyeShadow::class => [44, 0],
+//    \MangaFace\FaceDesigner\Head\LeftEyeShadow::class => [44, 0],
+//    \MangaFace\FaceDesigner\Head\RightEye::class => [38, 0],
+//    \MangaFace\FaceDesigner\Head\LeftEye::class => [38, 0],
+//    \MangaFace\FaceDesigner\Head\RightEar::class => [28, 49],
+//    \MangaFace\FaceDesigner\Head\LeftEar::class => [28, 49],
+//    \MangaFace\FaceDesigner\Head\HairBack::class => [0, 165],
+//    \MangaFace\FaceDesigner\Wearable\Shirt::class => [0, 63],
+//    \MangaFace\FaceDesigner\Wearable\Jacket::class => [0, 65],
 ];
 
 /**
- * @var Negarang\FaceDesigner\Item $class
+ * @var MangaFace\FaceDesigner\Item $class
  * @var int[] $sDim Standard Dimensions.
  */
 foreach ($list as $class => $sDim) {
     foreach ($class::getColors() as $colorKey => $colorName) {
         for ($id = $class::getMinId(); $id <= $class::getMaxId(); $id++) {
-            /** @var Negarang\FaceDesigner\Item $obj */
+            /** @var MangaFace\FaceDesigner\Item $obj */
             $obj = new $class($id, $colorKey + 1, 0);
             $image = $obj->getImage();
             $createWidth = ($sDim[0] > 0) ? $sDim[0] : $obj->getImageWidth();
@@ -44,7 +43,7 @@ foreach ($list as $class => $sDim) {
             imagefill($croppedImage, 0, 0, $imgColor);
             $cropX = 0;
             if ($sDim[0] > 0
-                && is_subclass_of($obj, \Negarang\FaceDesigner\Items\Head\RightItem::class)) {
+                && is_subclass_of($obj, \MangaFace\FaceDesigner\Item\Head\RightItem::class)) {
                 $cropX = $sDim[0] - $obj->getImageWidth();
             }
             $cropY = ($sDim[1] > 0) ? $sDim[1] - $obj->getImageHeight() : 0;
