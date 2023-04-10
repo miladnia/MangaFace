@@ -150,8 +150,6 @@ class ApiProvider {
 
     private $colorCodes = [];
 
-    private $jsonFilePrefix = "fd_";
-
     /**
      * @param string $resourceDir
      */
@@ -310,21 +308,23 @@ class ApiProvider {
     /**
      * @return null|string
      */
-    private function buildFile($jsonDirectory, $fileName, &$data) {
-        if (!is_dir($jsonDirectory)) {
-            mkdir($jsonDirectory, 0777, true);
+    private function storeJSON($dstDir, $fileName, &$values) {
+        if (!is_dir($dstDir)
+            && (false === mkdir($dstDir, 0777, true))) {
+            return null;
         }
-        $path = $jsonDirectory . $this->jsonFilePrefix
-            . $fileName . ".json";
-        $result = file_put_contents($path, json_encode($data));
+
+        $path = rtrim($dstDir, "\/")
+            . DIRECTORY_SEPARATOR . $fileName . ".json";
+        $result = file_put_contents($path, json_encode($values));
+
         return ($result !== false) ? $path : null;
     }
 
     /**
-     * @param string $jsonDirectory
      * @return bool
      */
-    public function make($jsonDirectory) {
+    public function make($dstDir, $manifestFileName, $dataFormatFileName) {
         // The format which client must return to the server.
         $dataFormat = [];
 
@@ -356,13 +356,15 @@ class ApiProvider {
         self::getItemsRules(function ($parent, $item, $id, $rule) {
             $this->manifest["items"][$parent][$item][0]["rules"][$id] = $rule;
         });
+        $dataFormatPath = $this->storeJSON($dstDir, $dataFormatFileName, $dataFormat);
+        $manifestPath = $this->storeJSON($dstDir, $manifestFileName, $this->manifest);
 
-        $path = $this->buildFile($jsonDirectory, "data_format", $dataFormat);
-        if ($path !== null)
-            echo "File Generated: " . $path . "\r\n";
-        $path = $this->buildFile($jsonDirectory, "manifest", $this->manifest);
-        if ($path !== null)
-            echo "File Generated: " . $path . "\r\n";
+        foreach ([$dataFormatPath, $manifestPath] as $path) {
+            if ($path !== null)
+                echo "File is ready: {$path}\r\n";
+            else
+                echo "Creating file {$dataFormatFileName} failed!\r\n";
+        }
 
         return true;
     }

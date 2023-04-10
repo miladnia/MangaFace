@@ -14,4 +14,4 @@ require_once dirname(__DIR__) . "/vendor/autoload.php";
 MangaFace\config();
 
 $api = new MangaFace\ApiProvider("resource/graphics/facedesigner");
-$api->make(dirname(__DIR__) . "/public/resource/json/");
+$api->make(dirname(__DIR__) . "/tmp", "manifest", "data_format");
