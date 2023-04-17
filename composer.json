@@ -14,6 +14,16 @@
       "homepage": "http://miladnia.ir"
     }
   ],
+  "scripts": {
+    "installer": [
+      "@composer update",
+      "@build",
+      "npm install",
+      "npm run build"
+    ],
+    "build": "@php ./scripts/build.php",
+    "server": "@php -S 127.0.0.1:8000 -t ./public"
+  },
   "autoload": {
     "psr-4": {
         "MangaFace\\": "src/"

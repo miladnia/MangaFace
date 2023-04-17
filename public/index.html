@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MangaFace</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="./assets/styles/face-app.css?ver=1.2.0">
+	<link rel="stylesheet" type="text/css" href="./assets/styles/face-app-icons.css?ver=1.2.0">
+	<link rel="stylesheet" type="text/css" href="./assets/styles/face-app-rtl.css?ver=1.2.0">
+</head>
+    <body class="face-app">
+        <br>
+        <div class="frame">
+            <div class="frame-section">
+                <div id="fdFacePreview"></div>
+                <ul id="fdPositionBox" class="frame-box">
+                    <li class="g-btn btn-up" data-action="up" data-status="on"></li><li class="g-btn btn-down" data-action="down" data-status="on"></li>
+                </ul>
+                <div id="fdColorBox" class="frame-box" data-limit="8"></div>
+                <button id="fdCreateImage" class="btn-save" disabled>Save</button>
+            </div>
+            <div id="fdItems" class="frame-section section-items" data-limit="36"></div>
+            <div id="fdSubTabs" class="frame-section section-subcategories">
+                <ul class="visible" data-parent="1">
+                    <li class="active" data-number="1">Head Shape</li>
+                    <li data-number="2">Ears</li>
+                    <li data-number="3">Eyes</li>
+                    <li data-number="4">Eyebrows</li>
+                    <li data-number="5">Nose</li>
+                    <li data-number="6">Mouth</li>
+                    <li data-number="7">Mustache</li>
+                    <li data-number="8">Beard</li>
+                </ul>
+                <ul data-parent="2">
+                    <li class="active" data-number="1">Hair</li>
+                </ul>
+                <ul data-parent="3">
+                    <li class="active" data-number="1">Shirt</li>
+                    <li data-number="2">Jacket</li>
+                    <li data-number="3">Scarf</li>
+                    <li data-number="4">Hat</li>
+                </ul>
+                <ul data-parent="4">
+                    <li class="active" data-number="1">Glasses</li>
+                </ul>
+                <ul data-parent="5">
+                    <li class="active" data-number="1">Filled</li>
+                    <li data-number="2">Pattern</li>
+                    <li data-number="3">Theme</li>
+                    <li data-number="4">Weather</li>
+                </ul>
+            </div>
+            <ul id="fdTabs" class="frame-section section-categories">
+                <li class="active" data-number="1"></li>
+                <li data-number="2"></li>
+                <li data-number="3"></li>
+                <li data-number="4"></li>
+                <li data-number="5"></li>
+            </ul>
+            <div class="frame-bar">
+                <div class="title">MangaFace</div>
+                <label><input name="use_face" value="1" type="checkbox" checked><span> Show My Face in The Game and Community.</span></label>
+            </div>
+        </div>
+        <div id="monitor">
+            <img id="outputImage" src="" alt="Output Image">
+        </div>
+        <div class="freepik">
+            <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by freepik - www.freepik.com</a>
+        </div>
+        <script type="text/javascript" src="./dist/main.js?ver=1.1.0"></script>
+    </body>
+</html>

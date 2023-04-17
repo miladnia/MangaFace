@@ -1,19 +1,23 @@
 {
-  "name": "FaceApp",
-  "version": "1.0.0",
-  "description": "A Web Application Based on FaceDesigner Library.",
+  "name": "MangaFace",
+  "version": "1.1.0",
+  "description": "Create your own custom avatar.",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "keywords": [
-    "graphics",
-    "design",
-    "face",
-    "avatar"
+    "avatar",
+    "avatar-generator",
+    "manga",
+    "graphics"
   ],
-  "author": "Milad Abdollahnia",
+  "author": "Milad Nia <milad@miladnia.ir>",
   "license": "MIT",
+  "engines": {
+    "node": ">=6.11.5"
+  },
   "devDependencies": {
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.2"

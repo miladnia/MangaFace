@@ -1,5 +1,10 @@
 /.idea
+/.vscode
+
 /vendor
-/composer.lock
 /node_modules
+/composer.lock
 /package-lock.json
+
+/public/dist
+/web-client/autoconfig

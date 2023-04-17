@@ -17,7 +17,7 @@ use MangaFace\FaceDesigner\Designer;
 MangaFace\config();
 // Get input.
 $input = json_decode(file_get_contents("php://input"), true);
-$designer = new Designer(__DIR__ . "/resource/graphics/facedesigner", 180, 187);
+$designer = new Designer(__DIR__ . "/assets/graphics", 180, 187);
 
 $designer->drawHead(
         @$input["head"]["shape"]["i"],

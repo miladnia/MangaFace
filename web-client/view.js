@@ -1,16 +1,20 @@
 /**
- * FaceAppFrame
- * @constructor
- * @description Implement App UI.
+ * This file is part of MangaFace.
+ *
+ * (c) Milad Nia <milad@miladnia.ir>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
-function FaceAppFrame() {
+
+function View() {
     this.values = {};
     this.pages = {};
     this.category = -1;
     this.subcategory = -1;
     this.page = -1;
 
-    // Set jQuery selectors.
+    // jQuery selectors.
     this.tabs = $("#fdTabs");
     this.subTabs = $("#fdSubTabs");
     this.itemsContainer = $("#fdItems");
@@ -22,6 +26,7 @@ function FaceAppFrame() {
      * Initializing.
      */
     this.init = function () {
+        console.log("View init");
         // Items.
         this.addItems();
         // Colors.
@@ -30,74 +35,73 @@ function FaceAppFrame() {
 
     /**
      * Run and Enable Events and Buttons.
-      */
+     */
     this.run = function (config) {
-        var fd = this;
+        var self = this;
         // Configuration.
         this.readConfig(config);
         // Initialize categories.
         var activeCategory = this.tabs.find(".active");
         this.categoryClickEvent(activeCategory);
+
         // Category Tabs.
         this.tabs.on("click", "li", function () {
-            fd.categoryClickEvent($(this));
+            self.categoryClickEvent($(this));
         });
+
         // Subcategory Tabs.
         this.subTabs.on("click", "li", function () {
-            fd.subcategoryClickEvent($(this));
+            self.subcategoryClickEvent($(this));
         });
+
         // Position Box.
         this.positionBox.on("click", "li", function () {
-            fd.positionClickEvent($(this));
+            self.positionClickEvent($(this));
         });
+
         // Button.
         this.buttonSave.on("click", function () {
-            fd.buttonClickEvent();
+            self.buttonClickEvent();
         });
     };
 
     /**
      * Read and Execute Configs.
-     * @param config
      */
     this.readConfig = function(config) {
-        var fd = this;
-        $.each(config, function (catKey, subCats) {
-            $.each(subCats, function (subCatKey, data) {
-                if (data["pages"]) {
-                    fd.paginate(catKey, subCatKey, data["pages"]);
+        for (var cat in config) {
+            for (var subCat in config[cat]) {
+                if (config[cat][subCat]["pages"]) {
+                    this.paginate(cat, subCat, config[cat][subCat]["pages"]);
                 }
-            });
-        });
+            }
+        }
     };
 
     /**
      * Set Value.
-     * @param key
-     * @param value
-     * @param [category]
-     * @param [subcategory]
      */
     this.setValue = function (key, value, category, subcategory) {
-        if (typeof subcategory === typeof undefined) {
+
+        if (typeof subcategory === "undefined") {
             category = this.category;
             subcategory = this.subcategory;
         }
-        if (typeof this.values[category] === typeof undefined) {
+
+        if (typeof this.values[category] === "undefined") {
             this.values[category] = {};
         }
-        if (typeof this.values[category][subcategory] === typeof undefined) {
+
+        if (typeof this.values[category][subcategory] === "undefined") {
             this.values[category][subcategory] = {};
         }
+
         this.values[category][subcategory][key] = value;
-        console.log(category, subcategory, value);
+        console.log("cat", category, "sub_cat", subcategory, "val", value);
     };
 
     /**
      * Set Value of The Color.
-     * @param value
-     * @param category
-     * @param subcategory
      */
     this.setColorValue = function (value, category, subcategory) {
         return this.setValue("color", value, category, subcategory);
@@ -105,30 +109,26 @@ function FaceAppFrame() {
 
     /**
      * Returns Value by Key.
-     * @param key
-     * @param [category]
-     * @param [subcategory]
-     * @return {*}
      */
     this.getValue = function (key, category, subcategory) {
-        if (typeof subcategory === typeof undefined) {
+
+        if (typeof subcategory === "undefined") {
             category = this.category;
             subcategory = this.subcategory;
         }
-        if ((typeof this.values[category] === typeof undefined)
-            || (typeof this.values[category][subcategory] === typeof undefined)
-            || (typeof this.values[category][subcategory][key] === typeof undefined)) {
+
+        if ((typeof this.values[category] === "undefined")
+            || (typeof this.values[category][subcategory] === "undefined")
+            || (typeof this.values[category][subcategory][key] === "undefined")) {
             // If there is no value, just return the initial value.
             return (key === "distance") ? 0 : 1;
         }
+
         return this.values[category][subcategory][key];
     };
 
     /**
      * Returns Value of The Item.
-     * @param category
-     * @param subcategory
-     * @return {number|*}
      */
     this.getItemValue = function (category, subcategory) {
         return this.getValue("item", category, subcategory);
@@ -136,107 +136,98 @@ function FaceAppFrame() {
 
     /**
      * Returns Value of The Color.
-     * @param category
-     * @param subcategory
-     * @return {number|*}
      */
     this.getColorValue = function (category, subcategory) {
         return this.getValue("color", category, subcategory);
     };
-
-    // Listener: itemListener.
-    this.itemListener = function () {
-        alert("Item Listener Is Not Configured.");
+    
+    var listenerAlert = function () {
+        alert("The listener is NOT configured.");
     };
 
-    // Listener: distanceListener.
-    this.distanceListener = function () {
-        alert("Distance Listener Is Not Configured.");
-    };
+    // [Listener] <item>
+    this.itemListener = listenerAlert;
 
-    // Listener: colorListener.
-    this.colorListener = function () {
-        alert("Color Listener Is Not Configured.");
-    };
+    // [Listener] <distance>
+    this.distanceListener = listenerAlert;
 
-    // Listener: colorBoxListener.
-    this.colorBoxListener = function () {
-        alert("ColorBox Listener Is Not Configured.");
-    };
+    // [Listener] <color>
+    this.colorListener = listenerAlert;
 
-    // Listener: positionBoxListener.
-    this.positionBoxListener = function () {
-        alert("PositionBox Listener Is Not Configured.");
-    };
+    // [Listener] <colorBox>
+    this.colorBoxListener = listenerAlert;
 
-    // Listener: buttonListener.
-    this.buttonListener = function () {
-        alert("Button Listener Is Not Configured.");
-    };
+    // [Listener] <positionBox>
+    this.positionBoxListener = listenerAlert;
+
+    // [Listener] <button>
+    this.buttonListener = listenerAlert;
 }
 
 /**
  * Autoloader.
- * @param values
  */
-FaceAppFrame.prototype.autoload = function (values) {
-    var fd = this;
+View.prototype.autoload = function (values) {
     var catTemp = this.category;
     var subCatTemp = this.subcategory;
-    $.each(values, function (catKey, subCats) {
-        $.each(subCats, function (subCatKey, data) {
-            if (data["item"] <= 0) {
-                return;
+
+    for (var cat in values) {
+        for (var subCat in values[cat]) {
+            if (values[cat][subCat]["item"] <= 0) {
+                continue;
             }
-            fd.category = catKey;
-            fd.subcategory = subCatKey;
-            fd.itemClickEvent(data["item"]);
-            if (typeof data["color"] !== typeof undefined) {
-                fd.colorClickEvent(data["color"]);
+            
+            this.category = cat;
+            this.subcategory = subCat;
+            this.itemClickEvent(values[cat][subCat]["item"]);
+
+            if (typeof values[cat][subCat]["color"] !== "undefined") {
+                this.colorClickEvent(values[cat][subCat]["color"]);
             }
-        });
-    });
+        }
+    }
+
     this.category = catTemp;
     this.subcategory = subCatTemp;
 };
 
 /**
  * Load Values.
- * @param values
- * @param callback
  */
-FaceAppFrame.prototype.loadValues = function (values, callback) {
-    var fd = this;
-    if ((typeof values === typeof undefined)
+View.prototype.loadValues = function (values, callback) {
+
+    if ((typeof values === "undefined")
         || (values.length === 0)) {
         return;
     }
+
     var catTemp = this.category;
     var subCatTemp = this.subcategory;
-    $.each(values, function (catKey, subCats) {
-        $.each(subCats, function (subCatKey, value) {
-            fd.category = catKey;
-            fd.subcategory = subCatKey;
-            callback(catKey, subCatKey, value);
-        });
-    });
+
+    for (var cat in values) {
+        for (var subCat in values[cat]) {
+            values[cat][subCat]["item"]
+            this.category = cat;
+            this.subcategory = subCat;
+            callback(cat, subCat, values[cat][subCat]);
+        }
+    }
+    
     this.category = catTemp;
     this.subcategory = subCatTemp;
 };
 
 /**
- * Return Face Preview Element.
- * @return {*|jQuery|HTMLElement}
+ * Returns Face Preview Element.
  */
-FaceAppFrame.prototype.getFacePreviewElement = function () {
+View.prototype.getFacePreviewElement = function () {
     return $("#fdFacePreview");
 };
 
 /**
  * Show The Final Image.
- * @param imageData
  */
-FaceAppFrame.prototype.showResult = function (imageData) {
+View.prototype.showResult = function (imageData) {
     $("#outputImage").attr("src", imageData);
     $("#monitor").show().on("click", function (e) {
         if ($(e.target).closest("#outputImage").length)
@@ -247,9 +238,8 @@ FaceAppFrame.prototype.showResult = function (imageData) {
 
 /**
  * Set Distance Listener.
- * @param listener
  */
-FaceAppFrame.prototype.setButtonListener = function (listener) {
+View.prototype.setButtonListener = function (listener) {
     this.buttonListener = listener;
     // Enable The Button.
     this.buttonSave.prop("disabled", false);
@@ -257,32 +247,30 @@ FaceAppFrame.prototype.setButtonListener = function (listener) {
 
 /**
  * Event: Category Click.
- * @param option
  */
-FaceAppFrame.prototype.categoryClickEvent = function (option) {
+View.prototype.categoryClickEvent = function (option) {
+
     if (option.attr("data-disabled") === "true") {
         return;
     }
+
     if (!option.hasClass("active")) {
         // Reset status of the option that selected already.
-        this.tabs.find("li.active")
-            .removeClass("active");
+        this.tabs.find("li.active").removeClass("active");
         // Change status of selected option.
         option.addClass("active");
     }
+
     // Get category number.
     this.category = option.attr("data-number");
     // Hide visible sub-tabs.
-    this.subTabs.find("ul.visible")
-        .removeClass("visible");
+    this.subTabs.find("ul.visible").removeClass("visible");
     // Get options of the sub-tab.
-    var subTabOptions = this.subTabs
-        .find('ul[data-parent="' + this.category + '"]');
+    var subTabOptions = this.subTabs.find('ul[data-parent="' + this.category + '"]');
     // Show requested tab.
     subTabOptions.addClass("visible");
     // Set category data of the items.
-    this.itemsContainer.find("ul")
-        .attr("data-category", this.category);
+    this.itemsContainer.find("ul").attr("data-category", this.category);
     // Which subcategory is active now?
     var subcategory = subTabOptions.find("li.active");
     // Auto select the subcategory.
@@ -291,32 +279,34 @@ FaceAppFrame.prototype.categoryClickEvent = function (option) {
 
 /**
  * Event: Subcategory Click.
- * @param option
  */
-FaceAppFrame.prototype.subcategoryClickEvent = function (option) {
+View.prototype.subcategoryClickEvent = function (option) {
+
     if (option.attr("data-disabled") === "true") {
         return;
     }
+
     if (!option.hasClass("active")) {
         // Reset status of the option that selected already.
         option.parent().find("li.active").removeClass("active");
         // Change status of selected option.
         option.addClass("active");
     }
+
     // Get subcategory number.
     this.subcategory = option.attr("data-number");
     this.page = 0;
     // Set category data of the items.
-    this.itemsContainer.find("ul")
-        .attr("data-subcategory", this.subcategory);
+    this.itemsContainer.find("ul").attr("data-subcategory", this.subcategory);
     // Search for page value.
     var page = option.attr("data-page");
-    if ((typeof page !== typeof undefined)
+
+    if ((typeof page !== "undefined")
         && (page !== false)) {
-        this.itemsContainer.find("ul")
-            .attr("data-page", page);
+        this.itemsContainer.find("ul").attr("data-page", page);
         this.page = parseInt(page);
     }
+
     // Refresh Colors.
     this.refreshColorBox();
     // Refresh Position Buttons.
@@ -325,18 +315,17 @@ FaceAppFrame.prototype.subcategoryClickEvent = function (option) {
 
 /**
  * Event: Item Click.
- * @param itemNumber
  */
-FaceAppFrame.prototype.itemClickEvent = function (itemNumber) {
+View.prototype.itemClickEvent = function (itemNumber) {
     // Validate app state.
-    if (this.category < 0
-        || this.subcategory < 0) {
+    if (this.category < 0 || this.subcategory < 0) {
         return;
     }
+
     var tmp = this.getValue("item");
     this.setValue("item", itemNumber);
-    var result = this.itemListener(this.category,
-        this.subcategory, itemNumber);
+    var result = this.itemListener(this.category, this.subcategory, itemNumber);
+
     // If item rejected.
     if (result === false) {
         this.setValue("item", tmp);
@@ -345,20 +334,22 @@ FaceAppFrame.prototype.itemClickEvent = function (itemNumber) {
 
 /**
  * Event: Position Button (Up/Down) Click.
- * @param btn
  */
-FaceAppFrame.prototype.positionClickEvent = function (btn) {
+View.prototype.positionClickEvent = function (btn) {
     // TODO Also implement this event for up/down keys of keyboard.
     if (btn.attr("data-status") === "off") {
         return;
     }
+
     var action = btn.attr("data-action");
-    var result = this.distanceListener(this.category,
-        this.subcategory, action === "up");
+    var result = this.distanceListener(
+        this.category, this.subcategory, action === "up");
+    
     if (result === false) {
         btn.attr("data-status", "off");
         return;
     }
+
     // Save changes.
     this.setValue("distance", result);
     var oppositeAction = (action === "up") ? "down" : "up";
@@ -370,14 +361,14 @@ FaceAppFrame.prototype.positionClickEvent = function (btn) {
 
 /**
  * Event: Color Click.
- * @param colorNumber
  */
-FaceAppFrame.prototype.colorClickEvent = function (colorNumber) {
+View.prototype.colorClickEvent = function (colorNumber) {
     // Validate app state.
     if (this.category < 0
         || this.subcategory < 0) {
         return;
     }
+
     this.setValue("color", colorNumber);
     this.colorListener(this.category, this.subcategory, colorNumber);
 };
@@ -385,25 +376,26 @@ FaceAppFrame.prototype.colorClickEvent = function (colorNumber) {
 /**
  * Event: Button Click.
  */
-FaceAppFrame.prototype.buttonClickEvent = function () {
+View.prototype.buttonClickEvent = function () {
     // TODO Implement loading state.
     this.buttonListener();
 };
 
 /**
  * Placeholder Generator.
- * @param number
- * @param clickEvent
+ * 
  * @return {*|jQuery|HTMLElement}
  */
-FaceAppFrame.prototype.generatePlaceholder = function (number, clickEvent) {
+View.prototype.generatePlaceholder = function (number, clickEvent) {
     var parent = $("<ul>");
+
     for (var i=1; i<=number; i++) {
         var item = $("<li>");
-        item.attr("data-number", i)
-            .on("click", function() {
-                clickEvent($(this));
-            });
+
+        item.attr("data-number", i).on("click", function() {
+            clickEvent($(this));
+        });
+
         parent.append(item);
     }
 
@@ -413,99 +405,107 @@ FaceAppFrame.prototype.generatePlaceholder = function (number, clickEvent) {
 /**
  * Generate items.
  */
-FaceAppFrame.prototype.addItems = function () {
-    var fd = this;
+View.prototype.addItems = function () {
     var limit = this.itemsContainer.attr("data-limit");
-    var placeholders = this.generatePlaceholder(limit, function (element) {
+
+    var placeholders = this.generatePlaceholder(limit, (function (element) {
         var itemNumber = parseInt($(element).attr("data-number"));
-        if (fd.page > 0) {
-            var page = fd.pages[fd.category][fd.subcategory][fd.page];
-            if (page["max"] > 0
-                && itemNumber > page["max"]) {
+
+        if (this.page > 0) {
+            var page = this.pages[this.category][this.subcategory][this.page];
+
+            if (page["max"] > 0 && itemNumber > page["max"]) {
                 return;
             }
+
             itemNumber += page["min"] - 1;
         }
-        fd.itemClickEvent(itemNumber);
-    });
+
+        this.itemClickEvent(itemNumber);
+
+    }).bind(this)); // generatePlaceholder()
+
     this.itemsContainer.append(placeholders);
 };
 
 /**
  * Generate colors.
  */
-FaceAppFrame.prototype.addColors = function () {
-    var fd = this;
+View.prototype.addColors = function () {
     var limit = this.colorBox.attr("data-limit");
-    var placeholders = this.generatePlaceholder(limit, function (element) {
+
+    var placeholders = this.generatePlaceholder(limit, (function (element) {
         var colorNumber = parseInt($(element).attr("data-number"));
-        fd.colorClickEvent(colorNumber);
-    });
+        this.colorClickEvent(colorNumber);
+    }).bind(this));
+
     this.colorBox.append(placeholders);
 };
 
 /**
  * Update colors of the color box.
  */
-FaceAppFrame.prototype.refreshColorBox = function () {
+View.prototype.refreshColorBox = function () {
     var set = this.colorBoxListener(this.category, this.subcategory);
     var container = this.colorBox.find("ul");
+
     if (set === null) {
         container.removeAttr("data-set");
         return;
     }
+
     container.attr("data-set", set);
 };
 
 /**
  * Update buttons of the position box.
  */
-FaceAppFrame.prototype.refreshPositionBox = function () {
-    this.positionBox.find("li").attr("data-status",
-        (this.positionBoxListener(this.category, this.subcategory) === true) ?
-            "on" : "off");
+View.prototype.refreshPositionBox = function () {
+    this.positionBox.find("li").attr(
+        "data-status",
+        (this.positionBoxListener(this.category, this.subcategory) === true) ? "on" : "off");
 };
 
 /**
  * Create An Extra Subcategory and Add It to The Tabs.
- * @param category
- * @param number
- * @param name
+ * 
  * @return {*|jQuery}
  */
-FaceAppFrame.prototype.addSubcategory = function (category, number, name) {
+View.prototype.addSubcategory = function (category, number, name) {
     var option = $(document.createElement("li"))
         .attr("data-number", number);
+    
     if (name) {
         option.html(name);
     }
+
     if (typeof category !== "object") {
-        category = this.subTabs.find(
-            '[data-parent="' + category + '"]');
+        category = this.subTabs.find('[data-parent="' + category + '"]');
     }
+
     category.append(option);
+
     return option;
 };
 
 /**
  * Paginate A Subcategory.
- * @param category
- * @param subcategory
- * @param pages
  */
-FaceAppFrame.prototype.paginate = function (category, subcategory, pages) {
+View.prototype.paginate = function (category, subcategory, pages) {
     if (!this.pages[category])
         this.pages[category] = {};
+    
     if (!this.pages[category][subcategory])
         this.pages[category][subcategory] = {};
-    var container = this.subTabs.find(
-        '[data-parent="' + category + '"]');
+    
+    var container = this.subTabs.find('[data-parent="' + category + '"]');
+    
     for (var i = 0; i < pages.length; i++) {
         var option = (i === 0) ?
             container.find('[data-number="' + subcategory + '"]') :
             this.addSubcategory(container, subcategory);
-        option.attr("data-page", i + 1)
-            .html(pages[i]["title"]);
+        option.attr("data-page", i + 1).html(pages[i]["title"]);
+        
         this.pages[category][subcategory][i + 1] = {
             min: pages[i]["item_start"],
             max: pages[i + 1] ? pages[i + 1]["item_start"] - 1 : 0
@@ -515,42 +515,37 @@ FaceAppFrame.prototype.paginate = function (category, subcategory, pages) {
 
 /**
  * Set Item Listener. Return: bool.
- * @param listener
  */
-FaceAppFrame.prototype.setItemListener = function (listener) {
+View.prototype.setItemListener = function (listener) {
     this.itemListener = listener;
 };
 
 /**
  * Set Color Listener.
- * @param listener
  */
-FaceAppFrame.prototype.setColorListener = function (listener) {
+View.prototype.setColorListener = function (listener) {
     this.colorListener = listener;
 };
 
 /**
  * Set Distance Listener.
- * @param listener
  */
-FaceAppFrame.prototype.setDistanceListener = function (listener) {
+View.prototype.setDistanceListener = function (listener) {
     this.distanceListener = listener;
 };
 
 /**
  * Set ColorBox Listener. Return: color-set value.
- * @param listener
  */
-FaceAppFrame.prototype.setColorBoxListener = function (listener) {
+View.prototype.setColorBoxListener = function (listener) {
     this.colorBoxListener = listener;
 };
 
 /**
  * Set PositionBox Listener. Return: bool.
- * @param listener
  */
-FaceAppFrame.prototype.setPositionBoxListener = function (listener) {
+View.prototype.setPositionBoxListener = function (listener) {
     this.positionBoxListener = listener;
 };
 
-exports = module.exports = FaceAppFrame;
+export default View;

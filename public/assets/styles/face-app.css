@@ -19,7 +19,7 @@ body {
 	height: 435px;
 	padding: 0 5px;
 	margin: 0 auto;
-	background: #ffffff url('../images/facedesigner/frame.png') no-repeat center;
+	background: #ffffff url('../images/frame.png') no-repeat center;
 	border-radius: 5px;
 	box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.5);
 	font-family: Tahoma, sans-serif;
@@ -120,16 +120,16 @@ body {
 	cursor: pointer;
 }
 .face-app .frame-box .btn-up[data-status="on"] {
-	background-image: url("../images/facedesigner/icons/other/up.png");
+	background-image: url("../images/icons/other/up.png");
 }
 .face-app .frame-box .btn-up[data-status="off"] {
-	background-image: url("../images/facedesigner/icons/other/up_bw.png");
+	background-image: url("../images/icons/other/up_bw.png");
 }
 .face-app .frame-box .btn-down[data-status="on"] {
-	background-image: url("../images/facedesigner/icons/other/down.png");
+	background-image: url("../images/icons/other/down.png");
 }
 .face-app .frame-box .btn-down[data-status="off"] {
-	background-image: url("../images/facedesigner/icons/other/down_bw.png");
+	background-image: url("../images/icons/other/down_bw.png");
 }
 
 /* ------------------------------------- categories */
@@ -159,19 +159,19 @@ body {
 	background-color: #0091EA;
 }
 .face-app .section-categories li[data-number="1"] {
-	background-image: url("../images/facedesigner/icons/01.png");
+	background-image: url("../images/icons/01.png");
 }
 .face-app .section-categories li[data-number="2"] {
-	background-image: url("../images/facedesigner/icons/02.png");
+	background-image: url("../images/icons/02.png");
 }
 .face-app .section-categories li[data-number="3"] {
-	background-image: url("../images/facedesigner/icons/03.png");
+	background-image: url("../images/icons/03.png");
 }
 .face-app .section-categories li[data-number="4"] {
-	background-image: url("../images/facedesigner/icons/04.png");
+	background-image: url("../images/icons/04.png");
 }
 .face-app .section-categories li[data-number="5"] {
-	background-image: url("../images/facedesigner/icons/05.png");
+	background-image: url("../images/icons/05.png");
 }
 
 /* ------------------------------------- subcategories */
@@ -216,7 +216,6 @@ body {
 	width: 180px;
 	height: 187px;
 	margin: 16px 0 13px 5px;
-	background: url("../images/facedesigner/no_face.png") no-repeat;
 	overflow: hidden;
 }
 #fdFacePreview::after {

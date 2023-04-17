@@ -2,14 +2,13 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: './public/assets/scripts/src/FaceApp.js',
+  entry: './web-client/app.js',
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'public/assets/scripts')
+    path: path.resolve(__dirname, 'public/dist')
   },
   resolve: {
     modules: [
-      path.join(__dirname, "public/assets/scripts/src"),
       "node_modules"
     ]
   },
