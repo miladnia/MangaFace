@@ -402,9 +402,15 @@ abstract class AbstractItem implements LayerInterface {
      * @return string
      */
     static public function getDirectoryPattern() {
-        return static::$graphicsParentDir . '/'
-            . static::$graphicsDir . '/'
+        return static::$graphicsDir . '/'
             . self::PATH_PLACEHOLDER_COLOR . '/';
+    }
+
+    /**
+     * @return string
+     */
+    static public function getGraphicsDir() {
+        return static::$graphicsDir;
     }
 
     /**

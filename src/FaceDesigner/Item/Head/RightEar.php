@@ -12,6 +12,8 @@
 namespace MangaFace\FaceDesigner\Item\Head;
 
 class RightEar extends AbstractEar implements RightItemInterface {
+    
+    static protected $graphicsDir = "right_ear";
 
     /**
      * @var int[]

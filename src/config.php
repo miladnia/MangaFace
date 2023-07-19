@@ -3,7 +3,7 @@
 /**
  * This file is part of MangaFace.
  *
- * (c) Milad Nia <milad@miladnia.ir>
+ * (c) Milad Abdollahnia <miladniaa@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -50,19 +50,20 @@ function config() {
     // Head:
     Beard::config(2, 30, 75);
     Hair::config(
-        62, 0, 0, 22,
-        [33, 37, 38, 39, 41, 43, 44, 60, 62],
-        [0, 1, 2, 3, 9, 28, 35, 55],
-        [17, 19, 21, 22, 23, 26, 27],
+        62, 0, 0,
+        22, // baldStyleHair
+        [33, 37, 38, 39, 41, 43, 44, 60, 62], // coveredHairs
+        [0, 1, 2, 3, 9, 28, 35, 55], // shortHairs
+        [17, 19, 21, 22, 23, 26, 27], // mediumHairs
         [
             10, 11, 18, 30, 32, 33, 34, 36,
             37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48,
             49, 50, 51, 52, 53, 54, 58, 59, 60, 61, 62
-        ],
+        ], // longHairs
         [
             4, 5, 6, 7, 8, 12, 13, 14, 15,
             16, 20, 24, 25, 29, 31, 44, 56, 57, 60
-        ],
+        ], // veryLongHairs
         [
             1 => "Short Hair",
             31 => "Long Hair"

@@ -23,7 +23,7 @@ class Body extends AbstractItem {
     /**
      * @var string
      */
-    static protected $graphicsParentDir = "body";
+    static protected $graphicsParentDir = "body_shape";
 
     /**
      * @var string

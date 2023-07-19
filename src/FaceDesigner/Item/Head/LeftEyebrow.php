@@ -12,6 +12,8 @@
 namespace MangaFace\FaceDesigner\Item\Head;
 
 class LeftEyebrow extends AbstractEyebrow implements LeftItemInterface {
+    
+    static protected $graphicsDir = "left_eyebrow";
 
     /**
      * @var int[]

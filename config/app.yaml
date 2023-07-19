@@ -1,0 +1,3 @@
+app:
+  api_resources_path: web-client/data/mangaface/resources.json
+  api_data_format_path: web-client/data/mangaface/data_format.json

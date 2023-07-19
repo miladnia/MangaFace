@@ -40,7 +40,7 @@ class Head extends AbstractItem {
     /**
      * @var string
      */
-    static protected $graphicsDir = "shape";
+    static protected $graphicsDir = "head_shape";
 
     /**
      * @var int

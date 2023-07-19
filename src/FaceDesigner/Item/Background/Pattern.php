@@ -16,7 +16,7 @@ class Pattern extends AbstractBackground {
     /**
      * @var string
      */
-    static protected $graphicsDir = "pattern";
+    static protected $graphicsDir = "background_pattern";
 
     /**
      * @var int

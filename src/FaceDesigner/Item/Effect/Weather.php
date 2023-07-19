@@ -16,7 +16,7 @@ class Weather extends AbstractEffect {
     /**
      * @var string
      */
-    static protected $graphicsDir = "weather";
+    static protected $graphicsDir = "weather_effect";
 
     /**
      * @var int

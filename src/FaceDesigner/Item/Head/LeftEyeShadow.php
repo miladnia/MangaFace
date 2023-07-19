@@ -12,6 +12,8 @@
 namespace MangaFace\FaceDesigner\Item\Head;
 
 class LeftEyeShadow extends AbstractEyeShadow  implements LeftItemInterface {
+    
+    static protected $graphicsDir = "left_eyeshadow";
 
     /**
      * @var int[]

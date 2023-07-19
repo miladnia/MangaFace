@@ -1,0 +1,277 @@
+mangaface:
+  default_fragment_dir: default
+  default_color_dir: default
+  fragment_path_format: mangaface/<resourse_dir>/fragments/<fragment_dir>/<color_dir>/<shape_name>.png
+  icon_path_format: mangaface/<resourse_dir>/icons/<shape_name>.gif
+  
+  # TODO body shape: filename range is [0, 1].
+  fragments:
+    - dir: body_shape
+      permanent: true
+      priority: 210
+      position:
+        top: 134
+        left: 26
+
+  resources:
+    head:
+      shape:
+        id: 1000
+        dir: head_shape
+        filename_range:
+          min: 1
+          max: 30
+        fragments:
+          - priority: 410
+            position:
+              top: 0
+              left: 30
+      ears:
+        id: 1001
+        dir: ear
+        filename_range:
+          min: 1
+          max: 6
+        fragments:
+          - dir: left_ear
+            priority: 400
+            position:
+              top: 64
+              left: 137
+          - dir: right_ear
+            priority: 400
+            position:
+              top: 64
+              left: 12
+      eyebrows:
+        id: 1002
+        dir: eyebrow
+        filename_range:
+          min: 1
+          max: 27
+        movement_limit: 2
+        fragments:
+          - dir: left_eyebrow
+            priority: 480
+            position:
+              top: 52
+              left: 93
+          - dir: right_eyebrow
+            priority: 480
+            position:
+              top: 52
+              left: 39
+          - dir: left_eyeshadow
+            priority: 460
+            position:
+              top: 55
+              left: 91
+          - dir: right_eyeshadow
+            priority: 460
+            position:
+              top: 55
+              left: 38
+      eyes:
+        id: 1003
+        dir: eye
+        filename_range:
+          min: 1
+          max: 28
+        fragments:
+          - dir: left_eye
+            priority: 470
+            position:
+              top: 68
+              left: 97
+          - dir: right_eye
+            priority: 470
+            position:
+              top: 68
+              left: 41
+      nose:
+        id: 1004
+        dir: nose
+        filename_range:
+          min: 1
+          max: 34
+        movement_limit: 2
+        fragments:
+          - priority: 450
+            position:
+              top: 68
+              left: 65
+      mouth:
+        id: 1005
+        dir: mouth
+        filename_range:
+          min: 1
+          max: 23
+        movement_limit: 2
+        fragments:
+          - priority: 430
+            position:
+              top: 107
+              left: 52
+      mustache:
+        id: 1006
+        dir: mustache
+        filename_range:
+          min: 1
+          max: 29
+        movement_limit: 2
+        fragments:
+          - priority: 440
+            position:
+              top: 104
+              left: 49
+      beard:
+        id: 1007
+        dir: beard_style
+        filename_range:
+          min: 1
+          max: 2
+        fragments:
+          - priority: 420
+            position:
+              top: 75
+              left: 30
+
+    hair:
+      hair:
+        id: 1008
+        dir: hair_style
+        filename_range:
+          min: 1
+          max: 62
+        rules:
+          - match: [33, 37, 38, 39, 41, 43, 44, 60, 62] # Covered hairs
+            force:
+              1001: 0 # Remove 'ears'
+        fragments:
+          - dir: hair_front
+            priority: 600
+            position:
+              top: 0
+              left: 0
+          - dir: hair_back
+            priority: 200
+            position:
+              top: 23
+              left: 0
+
+    wearables:
+      shirts:
+        id: 1009
+        dir: shirt
+        filename_range:
+          min: 1
+          max: 25
+        fragments:
+          - priority: 300
+            position:
+              top: 124
+              left: 26
+      jackets:
+        id: 1010
+        dir: jacket
+        filename_range:
+          min: 1
+          max: 19
+        fragments:
+          - priority: 310
+            position:
+              top: 122
+              left: 24
+      scarfs:
+        id: 1011
+        dir: scarf
+        filename_range:
+          min: 1
+          max: 2
+        fragments:
+          - priority: 320
+            position:
+              top: 126
+              left: 30
+      hats:
+        id: 1012
+        dir: hat
+        filename_range:
+          min: 1
+          max: 11
+        movement_limit: 3
+        rules:
+          - match: [4, 6] # Swim caps
+            force:
+              1001: 0 # Remove 'ears'
+              1008: 0 # Remove 'hair'
+          - match: [1, 3, 5, 7, 8, 9, 10, 11] # Covered hats
+            while:
+              1008: [4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 20, 24, 25, 29, 31, 44, 56, 57, 60] # Very long hairs
+            force:
+              1008: 22 # Bald style hair
+        fragments:
+          - priority: 700
+            position:
+              top: -20
+              left: 0
+      glasses:
+        id: 1013
+        dir: glasses
+        filename_range:
+          min: 1
+          max: 34
+        movement_limit: 2
+        fragments:
+          - priority: 500
+            position:
+              top: 57
+              left: 27
+
+    backgrounds:
+      filled:
+        id: 1014
+        dir: bg_color
+        filename_range:
+          min: 1
+          max: 24
+        fragments:
+          - priority: 100
+            position:
+              top: 0
+              left: 0
+      patterns:
+        id: 1015
+        dir: bg_pattern
+        filename_range:
+          min: 1
+          max: 32
+        fragments:
+          - priority: 110
+            position:
+              top: 0
+              left: 0
+      themes:
+        id: 1016
+        dir: bg_theme
+        filename_range:
+          min: 1
+          max: 18
+        fragments:
+          - priority: 120
+            position:
+              top: 0
+              left: 0
+
+    effects:
+      weather:
+        id: 1017
+        dir: weather_effect
+        filename_range:
+          min: 1
+          max: 1
+        fragments:
+          - priority: 800
+            position:
+              top: 0
+              left: 0

@@ -16,7 +16,7 @@ class Filled extends AbstractBackground {
     /**
      * @var string
      */
-    static protected $graphicsDir = "filled";
+    static protected $graphicsDir = "background_color";
 
     /**
      * @var int

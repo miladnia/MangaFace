@@ -9,20 +9,24 @@
   "prefer-stable": true,
   "authors": [
     {
-      "name": "Milad Nia",
-      "email": "milad@miladnia.ir",
-      "homepage": "http://miladnia.ir"
+      "name": "Milad Abdollahnia",
+      "email": "miladniaa@gmail.com",
+      "homepage": "https://miladnia.ir"
     }
   ],
   "scripts": {
-    "installer": [
-      "@composer update",
+    "build": "@php ./scripts/build.php",
+    "server": "@php -S 127.0.0.1:8000 -t ./public",
+    "ts": "@php -S 127.0.0.1:8001",
+    "buildall": [
       "@build",
-      "npm install",
       "npm run build"
     ],
-    "build": "@php ./scripts/build.php",
-    "server": "@php -S 127.0.0.1:8000 -t ./public"
+    "installer": [
+      "@composer update",
+      "npm install",
+      "@buildall"
+    ]
   },
   "autoload": {
     "psr-4": {
@@ -31,7 +35,9 @@
     "files": ["src/config.php"]
   },
   "require": {
-    "php": ">=5.6",
-    "ext-gd": "*"
+    "php": ">=8.1",
+    "ext-gd": "*",
+    "symfony/yaml": "^6.3",
+    "symfony/dotenv": "^6.3"
   }
 }

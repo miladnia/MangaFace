@@ -16,7 +16,7 @@ class Theme extends AbstractBackground {
     /**
      * @var string
      */
-    static protected $graphicsDir = "theme";
+    static protected $graphicsDir = "background_theme";
 
     /**
      * @var int
