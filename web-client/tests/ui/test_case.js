@@ -11,9 +11,9 @@ import TabCom from "../../src/ui/components/tab_com.js";
 import GridCom from "../../src/ui/components/grid_com.js";
 import * as openmoji from "../fixtures/sample_images/openmoji.js"; 
 
-export function testTabCom () {
-    var catTabs = new TabCom();
-    catTabs.setListener({
+export function testTabCom ()
+{
+    var catTabs = (new TabCom).setListener({
         onTabSelected: function (tab) {
             console.log("Tab selected", tab);
             tab.getTag().enable();
@@ -55,20 +55,20 @@ export function testTabCom () {
     return container;
 }
 
-export function testGridCom () {
-    var grid = new GridCom(8, 4);
-    grid.setListener({
-        onCellSelected: function (cell) {
-            console.log("Cell selected", cell);
+export function testGridCom ()
+{
+    var container = document.createElement("div");
+
+    var grid = (new GridCom(8, 4)).setListener({
+        onCellSelected: function (position, pageKey) {
+            console.log("Cell selected", position, pageKey);
         },
-        onCellDeselected: function (cell) {
-            console.log("Cell deselected", cell);
+        onCellDeselected: function (position, pageKey) {
+            console.log("Cell deselected", position, pageKey);
         }
     });
-    
-    var container = document.createElement("div");
-    container.appendChild( grid.getView().getElement() );
 
+    // Test for images
     [
         ["emoji_1F454", 32],
         ["emoji_1F97E", 22],
@@ -79,12 +79,12 @@ export function testGridCom () {
         var imageUrlList = [];
         var svg = "data:image/svg+xml," + encodeURIComponent(openmoji[img[0]]);
 
-        for (var i = 1; i <= img[1]; i++) {
+        for (var i = 0; i < img[1]; i++)
             imageUrlList.push(svg);
-        }
 
         grid.createPage(img[0], imageUrlList);
 
+        // Buttons to navigate between pages
         var btn = document.createElement("button");
         btn.textContent = img[0];
         btn.addEventListener("click", function () {
@@ -93,11 +93,38 @@ export function testGridCom () {
         container.appendChild(btn);
     });
 
+    container.appendChild( grid.getView().getElement() );
+    // Copyright text for openmoji
     var copyrightTextBox = document.createElement("p");
     copyrightTextBox.textContent = openmoji.license;
     container.appendChild(copyrightTextBox);
 
     var grid2 = new GridCom(25, 5);
+
+    // Test for colors
+    [
+        ["#ff0000", 92],
+        ["#00ff00", 52],
+        ["#0000ff", 18],
+        ["#000000", 2]
+    ]
+    .forEach(function (color) {
+        var colorList = [];
+
+        for (var i = 0; i < color[1]; i++)
+            colorList.push(color[0]);
+
+        grid2.createPage(color[0], colorList);
+
+        // Buttons to navigate between pages
+        var btn = document.createElement("button");
+        btn.textContent = color[0];
+        btn.addEventListener("click", function () {
+            grid2.gotoPage(color[0]);
+        });
+        container.appendChild(btn);
+    });
+
     container.appendChild( grid2.getView().getElement() );
 
     return container;

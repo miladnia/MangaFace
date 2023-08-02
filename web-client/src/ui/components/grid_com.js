@@ -32,7 +32,7 @@ export default function GridCom (columns, rows) {
     this._view.getElement().setAttribute(
         this._ATTR_GRID_ID,
         this._gridId);
-    
+
     this._createCells();
 }
 
@@ -48,20 +48,26 @@ GridCom.prototype._createCells = function () {
     }
 };
 
-GridCom.prototype.createPage = function (pageKey, imageList) {
-    if (imageList.length > this._cells.length) {
-        imageList = imageList.slice(0, this._cells.length);
+GridCom.prototype.createPage = function (pageKey, itemList) {
+    if (0 == itemList.length) return;
+
+    if (itemList.length > this._cells.length) {
+        itemList = itemList.slice(0, this._cells.length);
         console.warn(
             "Could not handle items of the page '" + pageKey + "' properly.",
             "The total number of items should be equal or less than "
             + this._cells.length + ".");
     }
 
-    this._pages[pageKey] = new Page(pageKey, imageList.length);
+    this._pages[pageKey] = new Page(pageKey, itemList.length);
+    var colorItemMode = "#" == itemList[0].charAt(0); // TODO improve color detection.
 
-    for (var i = 0; i < imageList.length; i++) {
-        this._cells[i]._putItem(pageKey, imageList[i]);
-    }
+    if (colorItemMode)
+        for (var i = 0; i < itemList.length; i++)
+            this._cells[i]._putColorItem(pageKey, itemList[i]);
+    else
+        for (var i = 0; i < itemList.length; i++)
+            this._cells[i]._putItem(pageKey, itemList[i]);
 };
 
 GridCom.prototype.gotoPage = function (pageKey) {
@@ -75,7 +81,7 @@ GridCom.prototype.gotoPage = function (pageKey) {
 
     if (this._pages[pageKey].hasSelectedCell())
         this._pages[pageKey].selectedCell.getView().setSelected(true);
-    
+
     this._currentPage = this._pages[pageKey];
     this._view.getElement().setAttribute(this._ATTR_PAGE, pageKey);
 };
@@ -89,7 +95,7 @@ GridCom.prototype._selectCell = function (cell) {
             this._currentPage.key);
         return;
     }
-    
+
     if (this.hasSelectedCell()) {
         this._currentPage.selectedCell.getView().setSelected(false);
         this._listener.onCellDeselected(
@@ -122,23 +128,23 @@ GridCom.prototype.getCurrentItemsCount = function () {
 GridCom.prototype.setListener = function (listener) {
     if (listener.hasOwnProperty("onCellSelected"))
         this._listener.onCellSelected = listener.onCellSelected;
-    
+
     if (listener.hasOwnProperty("onCellDeselected"))
         this._listener.onCellDeselected = listener.onCellDeselected;
-    
+
     if (listener.hasOwnProperty("onCellReselected"))
         this._listener.onCellReselected = listener.onCellReselected;
-    
+
     return this;
 };
 
 GridCom.prototype._getFullStyleSelector = function (pageKey) {
     var selector = this._getStyleSelector()
         + '[' + this._ATTR_GRID_ID + '="' + this._gridId + '"]';
-    
+
     if ("undefined" !== typeof pageKey)
         selector += '[' + this._ATTR_PAGE + '="' + pageKey + '"]';
-    
+
     return selector;
 };
 
@@ -153,13 +159,13 @@ function Cell (parent, size) {
         "click",
         (function () { this.select(); }).bind(this)
     );
-    
+
     this._setStyle();
 }
 
 Cell.prototype._setStyle = function () {
     var selector = this._getStyleSelector();
-    
+
     if ( this._parent._hasStyleRule(selector) ) return;
 
     var margin = 1; // percentage
@@ -193,6 +199,12 @@ Cell.prototype.isSelectable = function () {
 Cell.prototype._putItem = function (pageKey, imageUrl) {
     this._parent._addStyleRule(this._getCellSelector(pageKey), {
         "background-image": 'url("' + imageUrl + '");'
+    });
+};
+
+Cell.prototype._putColorItem = function (pageKey, color) {
+    this._parent._addStyleRule(this._getCellSelector(pageKey), {
+        "background-color": color
     });
 };
 
