@@ -10,60 +10,47 @@
 export function UIComponent () {}
 
 UIComponent.prototype._view = null;
-UIComponent.prototype._styleSheet = null;
+UIComponent.prototype._style = null;
 
 UIComponent.prototype.getView = function () {
     return this._view;
 };
 
-/**
- * Create a <style> element to define CSS rules dynamically.
- */
-UIComponent.prototype._createStyleSheet = function () {
+UIComponent.prototype.getElement = function () {
+    return null !== this._view ? this._view.getElement() : null;
+};
+
+UIComponent.prototype._getStyle = function () {
+    if (null === this._style)
+        this._style = new Style();
+
+    return this._style;
+};
+
+export function Style () {
+    this._element = null;
+}
+
+Style.prototype._init = function () {
     // Just add a `<style>` element to the document,
     // `CSSStyleSheet()` constructor
     // and `Document.adoptedStyleSheets`
     // are not compatible with older browsers.
-    var style = document.createElement("style");
-    document.head.appendChild(style);
-    return style.sheet;
+    this._element = document.createElement("style");
+    document.head.appendChild(this._element);
 };
 
-UIComponent.prototype._addStyleRule = function (selector, properties) {
-    if (null === this._styleSheet) {
-        this._styleSheet = this._createStyleSheet();
-    }
+Style.prototype._addRule = function (selector, properties) {
+    if (null === this._element)
+        this._init();
 
     var propStr = "";
 
-    for (var prop in properties) {
+    for (var prop in properties)
         propStr += prop + ": " + properties[prop] + ";";
-    }
 
     var rule = selector + "{" + propStr + "}";
-    this._styleSheet.insertRule(rule, this._styleSheet.cssRules.length);
-};
-
-UIComponent.prototype._hasStyleRule = function (selector) {
-    if (null === this._styleSheet) {
-        return false;
-    }
-
-    for (var i = 0; i < this._styleSheet.cssRules.length; i++) {
-        if (selector === this._styleSheet.cssRules[i].selectorText) {
-            return true;
-        }
-    }
-
-    return false;
-};
-
-UIComponent.prototype._getStyleSelector = function () {
-    if (null === this._view) {
-        return null;
-    }
-
-    return "." + this._view.getClass();
+    this._element.sheet.insertRule(rule, this._element.sheet.cssRules.length);
 };
 
 export function View (tagName, className) {
@@ -113,8 +100,8 @@ View.prototype.setSelected = function (selected) {
     return this;
 };
 
-View.prototype.getClass = function () {
-    return this._className;
+View.prototype.getStyleSelector = function () {
+    return '.' + this._className;
 };
 
 View.prototype.appendView = function (view) {

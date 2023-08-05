@@ -55,77 +55,98 @@ export function testTabCom ()
     return container;
 }
 
-export function testGridCom ()
+export function testGrid ()
 {
-    var container = document.createElement("div");
-
-    var grid = (new GridCom(8, 4)).setListener({
-        onCellSelected: function (position, pageKey) {
-            console.log("Cell selected", position, pageKey);
-        },
-        onCellDeselected: function (position, pageKey) {
-            console.log("Cell deselected", position, pageKey);
-        }
-    });
-
-    // Test for images
-    [
+    var images = [
         ["emoji_1F454", 32],
         ["emoji_1F97E", 22],
         ["emoji_1F452", 8],
         ["emoji_1F45B", 2]
-    ]
-    .forEach(function (img) {
-        var imageUrlList = [];
-        var svg = "data:image/svg+xml," + encodeURIComponent(openmoji[img[0]]);
+    ];
+
+    var container = document.createElement("div");
+
+    var grid = (new GridCom(8, 4)).setListener({
+        onItemSelected: function (position, layer) {
+            console.log("Item selected", position, layer);
+        },
+        onItemDeselected: function (position, layer) {
+            console.log("Item deselected", position, layer);
+        },
+        onItemReselected: function (position, layer) {
+            console.log("Item reselected", position, layer);
+        }
+    });
+
+    images.forEach(function (img) {
+        var svg = "data:image/svg+xml,"
+            + encodeURIComponent(openmoji[img[0]]);
+        var layer = grid.newLayer(img[0]);
 
         for (var i = 0; i < img[1]; i++)
-            imageUrlList.push(svg);
+            layer.addImageItem(svg);
 
-        grid.createPage(img[0], imageUrlList);
+        grid.addLayer(layer);
 
         // Buttons to navigate between pages
         var btn = document.createElement("button");
         btn.textContent = img[0];
         btn.addEventListener("click", function () {
-            grid.gotoPage(img[0]);
+            grid.switchToLayer(img[0]);
         });
         container.appendChild(btn);
     });
 
-    container.appendChild( grid.getView().getElement() );
+    container.appendChild( grid.render() );
     // Copyright text for openmoji
     var copyrightTextBox = document.createElement("p");
     copyrightTextBox.textContent = openmoji.license;
     container.appendChild(copyrightTextBox);
 
-    var grid2 = new GridCom(25, 5);
+    return container;
+}
 
-    // Test for colors
-    [
-        ["#ff0000", 92],
+export function testGridColors ()
+{
+    var colors = [
+        ["#ff0000", 77],
         ["#00ff00", 52],
         ["#0000ff", 18],
         ["#000000", 2]
-    ]
-    .forEach(function (color) {
-        var colorList = [];
+    ];
+
+    var container = document.createElement("div");
+
+    var grid = (new GridCom(15, 5)).setListener({
+        onItemSelected: function (position, layer) {
+            console.log("Item selected", position, layer);
+        },
+        onItemDeselected: function (position, layer) {
+            console.log("Item deselected", position, layer);
+        },
+        onItemReselected: function (position, layer) {
+            console.log("Item reselected", position, layer);
+        }
+    });
+
+    colors.forEach(function (color) {
+        var layer = grid.newLayer(color[0]);
 
         for (var i = 0; i < color[1]; i++)
-            colorList.push(color[0]);
+            layer.addColorItem(color[0]);
 
-        grid2.createPage(color[0], colorList);
+        grid.addLayer(layer);
 
         // Buttons to navigate between pages
         var btn = document.createElement("button");
         btn.textContent = color[0];
         btn.addEventListener("click", function () {
-            grid2.gotoPage(color[0]);
+            grid.switchToLayer(color[0]);
         });
         container.appendChild(btn);
     });
 
-    container.appendChild( grid2.getView().getElement() );
+    container.appendChild( grid.render() );
 
     return container;
 }
