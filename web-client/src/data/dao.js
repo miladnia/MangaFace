@@ -43,8 +43,8 @@ export function ResourceDao()
                     new Fragment(
                         res,
                         new Position(
-                            fragment["position"]["left"],
-                            fragment["position"]["top"]),
+                            fragment["position"]["top"],
+                            fragment["position"]["left"]),
                         fragment["color_group"],
                         fragment["priority"],
                         fragment["url"])
