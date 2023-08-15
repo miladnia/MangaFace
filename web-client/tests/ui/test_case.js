@@ -9,9 +9,10 @@
 
 import TabCom from "../../src/ui/components/tab_com.js";
 import GridCom from "../../src/ui/components/grid_com.js";
+import PinboardCom from "../../src/ui/components/pinboard_com.js";
 import * as openmoji from "../fixtures/sample_images/openmoji.js"; 
 
-export function testTabCom ()
+export function testTabCom()
 {
     var catTabs = (new TabCom).setListener({
         onTabSelected: function (tab) {
@@ -55,7 +56,7 @@ export function testTabCom ()
     return container;
 }
 
-export function testGrid ()
+export function testGrid()
 {
     var images = [
         ["emoji_1F454", 32],
@@ -106,7 +107,7 @@ export function testGrid ()
     return container;
 }
 
-export function testGridColors ()
+export function testGridColors()
 {
     var colors = [
         ["#ff0000", 77],
@@ -151,7 +152,7 @@ export function testGridColors ()
     return container;
 }
 
-export function testGridFreeze ()
+export function testGridFreeze()
 {
     var images = [
         ["emoji_1F454", 32],
@@ -224,4 +225,29 @@ export function testGridFreeze ()
     container.appendChild(copyrightTextBox);
 
     return container;
+}
+
+export function testPinboardCom()
+{
+    var pinboard = new PinboardCom();
+
+    [
+        ["emoji_1F454", "50px", "150px", 170],
+        ["emoji_1F97E", "-50px", "100px", 180],
+        ["emoji_1F452", "10px", "250px", 160],
+        ["emoji_1F45B", "100px", "50px", 150]
+    ]
+    .forEach(function (img) {
+        pinboard.pinItem(
+            pinboard.newItem()
+                .setImageUrl(
+                    "data:image/svg+xml," +
+                    encodeURIComponent(openmoji[img[0]])
+                )
+                .setPosition(img[1], img[2])
+                .setPriority(img[3])
+        );
+    });
+
+    return pinboard.getView().getElement();
 }
