@@ -1,10 +1,62 @@
 mangaface:
-  default_fragment_dir: default
+  fragment_path_format: mangaface/<resourse::dir>/fragments/<fragment::dir>/<color::dir>/<shape_name>.png
+  icon_path_format: mangaface/<resourse::dir>/icons/<shape_name>.gif
   default_color_dir: default
-  fragment_path_format: mangaface/<resourse_dir>/fragments/<fragment_dir>/<color_dir>/<shape_name>.png
-  icon_path_format: mangaface/<resourse_dir>/icons/<shape_name>.gif
-  
-  # TODO body shape: filename range is [0, 1].
+  _default_fragment: &frag
+    dir: default
+    priority: 100
+    position:
+      top: 0
+      left: 0
+  _color_set:
+    skin: &skin_colors
+      - dir: plain
+        code: '#fabe9f'
+      - dir: dark
+        code: '#e0a182'
+      - dir: light
+        code: '#f9d5c3'
+    hair: &hair_colors
+      - dir: black
+        code: '#262624'
+      - dir: brown
+        code: '#a87c4f'
+      - dir: red
+        code: '#ac3831'
+      - dir: blondd
+        code: '#fabe48'
+    eye: &eye_colors
+      - dir: black
+        code: '#262624'
+      - dir: brown
+        code: '#a35d02'
+      - dir: hazel
+        code: '#d1c50b'
+      - dir: green
+        code: '#0dc438'
+      - dir: blue
+        code: '#1c71f1'
+      - dir: gray
+        code: '#a5caf3'
+    cloth: &cloth_colors
+      - dir: white
+        code: '#f5f4e8'
+      - dir: black
+        code: '#262624'
+      - dir: brown
+        code: '#5b3b26'
+      - dir: yellow
+        code: '#dfa915'
+      - dir: blue
+        code: '#2f7faf'
+      - dir: violet
+        code: '#6854a2'
+      - dir: red
+        code: '#a91a26'
+      - dir: green
+        code: '#136f36'
+
+  # TODO body shape
   fragments:
     - dir: body_shape
       permanent: true
@@ -18,120 +70,149 @@ mangaface:
       shape:
         id: 1000
         dir: head_shape
+        colors: *skin_colors
         filename_range:
           min: 1
           max: 30
         fragments:
-          - priority: 410
+          - <<: *frag
+            priority: 410
             position:
               top: 0
               left: 30
+
       ears:
         id: 1001
         dir: ear
+        colors: *skin_colors
         filename_range:
           min: 1
           max: 6
         fragments:
-          - dir: left_ear
+          - <<: *frag
+            dir: left_ear
             priority: 400
+            color_inheritance: 1000
             position:
               top: 64
               left: 137
-          - dir: right_ear
+          - <<: *frag
+            dir: right_ear
             priority: 400
             position:
               top: 64
               left: 12
+
       eyebrows:
         id: 1002
         dir: eyebrow
+        colors: *hair_colors
         filename_range:
           min: 1
           max: 27
         movement_limit: 2
         fragments:
-          - dir: left_eyebrow
+          - <<: *frag
+            dir: left_eyebrow
             priority: 480
             position:
               top: 52
               left: 93
-          - dir: right_eyebrow
+          - <<: *frag
+            dir: right_eyebrow
             priority: 480
             position:
               top: 52
               left: 39
-          - dir: left_eyeshadow
+          - <<: *frag
+            dir: left_eyeshadow
             priority: 460
             position:
               top: 55
               left: 91
-          - dir: right_eyeshadow
+          - <<: *frag
+            dir: right_eyeshadow
             priority: 460
             position:
               top: 55
               left: 38
+
       eyes:
         id: 1003
         dir: eye
+        colors: *eye_colors
         filename_range:
           min: 1
           max: 28
         fragments:
-          - dir: left_eye
+          - <<: *frag
+            dir: left_eye
             priority: 470
             position:
               top: 68
               left: 97
-          - dir: right_eye
+          - <<: *frag
+            dir: right_eye
             priority: 470
             position:
               top: 68
               left: 41
+
       nose:
         id: 1004
         dir: nose
+        colors: *skin_colors
         filename_range:
           min: 1
           max: 34
         movement_limit: 2
         fragments:
-          - priority: 450
+          - <<: *frag
+            priority: 450
             position:
               top: 68
               left: 65
+
       mouth:
         id: 1005
         dir: mouth
+        colors: *skin_colors
         filename_range:
           min: 1
           max: 23
         movement_limit: 2
         fragments:
-          - priority: 430
+          - <<: *frag
+            priority: 430
             position:
               top: 107
               left: 52
+
       mustache:
         id: 1006
         dir: mustache
+        colors: *hair_colors
         filename_range:
           min: 1
           max: 29
         movement_limit: 2
         fragments:
-          - priority: 440
+          - <<: *frag
+            priority: 440
             position:
               top: 104
               left: 49
+
       beard:
         id: 1007
         dir: beard_style
+        colors: *hair_colors
         filename_range:
           min: 1
           max: 2
         fragments:
-          - priority: 420
+          - <<: *frag
+            priority: 420
             position:
               top: 75
               left: 30
@@ -140,6 +221,7 @@ mangaface:
       hair:
         id: 1008
         dir: hair_style
+        colors: *hair_colors
         filename_range:
           min: 1
           max: 62
@@ -148,12 +230,14 @@ mangaface:
             force:
               1001: 0 # Remove 'ears'
         fragments:
-          - dir: hair_front
+          - <<: *frag
+            dir: hair_front
             priority: 600
             position:
               top: 0
               left: 0
-          - dir: hair_back
+          - <<: *frag
+            dir: hair_back
             priority: 200
             position:
               top: 23
@@ -163,39 +247,49 @@ mangaface:
       shirts:
         id: 1009
         dir: shirt
+        colors: *cloth_colors
         filename_range:
           min: 1
           max: 25
         fragments:
-          - priority: 300
+          - <<: *frag
+            priority: 300
             position:
               top: 124
               left: 26
+
       jackets:
         id: 1010
         dir: jacket
+        colors: *cloth_colors
         filename_range:
           min: 1
           max: 19
         fragments:
-          - priority: 310
+          - <<: *frag
+            priority: 310
             position:
               top: 122
               left: 24
+
       scarfs:
         id: 1011
         dir: scarf
+        colors: *cloth_colors
         filename_range:
           min: 1
           max: 2
         fragments:
-          - priority: 320
+          - <<: *frag
+            priority: 320
             position:
               top: 126
               left: 30
+
       hats:
         id: 1012
         dir: hat
+        colors: *cloth_colors
         filename_range:
           min: 1
           max: 11
@@ -211,10 +305,12 @@ mangaface:
             force:
               1008: 22 # Bald style hair
         fragments:
-          - priority: 700
+          - <<: *frag
+            priority: 700
             position:
               top: -20
               left: 0
+
       glasses:
         id: 1013
         dir: glasses
@@ -223,7 +319,8 @@ mangaface:
           max: 34
         movement_limit: 2
         fragments:
-          - priority: 500
+          - <<: *frag
+            priority: 500
             position:
               top: 57
               left: 27
@@ -236,21 +333,20 @@ mangaface:
           min: 1
           max: 24
         fragments:
-          - priority: 100
-            position:
-              top: 0
-              left: 0
+          - <<: *frag
+            priority: 100
+
       patterns:
         id: 1015
         dir: bg_pattern
+        colors: *cloth_colors
         filename_range:
           min: 1
           max: 32
         fragments:
-          - priority: 110
-            position:
-              top: 0
-              left: 0
+          - <<: *frag
+            priority: 110
+
       themes:
         id: 1016
         dir: bg_theme
@@ -258,10 +354,8 @@ mangaface:
           min: 1
           max: 18
         fragments:
-          - priority: 120
-            position:
-              top: 0
-              left: 0
+          - <<: *frag
+            priority: 120
 
     effects:
       weather:
@@ -271,7 +365,5 @@ mangaface:
           min: 1
           max: 1
         fragments:
-          - priority: 800
-            position:
-              top: 0
-              left: 0
+          - <<: *frag
+            priority: 800

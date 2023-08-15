@@ -22,19 +22,25 @@ define('APP_DIR', dirname(__DIR__));
 function createApiResources(&$manifest, $baseUrl)
 {
     $api_resources = [];
-    
+
     foreach ($manifest['resources'] as $catLabel => &$cat) {
         foreach ($cat as $resLabel => &$res) {
             $res['label'] = $resLabel;
             $res['cat_label'] = $catLabel;
-            $res['icon_url'] = str_replace('<resourse_dir>', $res['dir'] ?? '',
+            $res['icon_url'] = str_replace(
+                '<resourse::dir>', $res['dir'],
                 $baseUrl.'/'.$manifest['icon_path_format']);
-            
+
             foreach ($res['fragments'] as &$frag) {
                 $frag['url'] = str_replace(
-                    ['<resourse_dir>', '<fragment_dir>'],
-                    [$res['dir'] ?? '', $frag['dir'] ?? $manifest['default_fragment_dir']],
+                    ['<resourse::dir>', '<fragment::dir>'],
+                    [$res['dir'], $frag['dir']],
                     $baseUrl.'/'.$manifest['fragment_path_format']);
+
+                if (!isset($res['colors'])) {
+                    $frag['url'] = str_replace('<color::dir>', $manifest['default_color_dir'], $frag['url']);
+                }
+
                 unset($frag['dir']);
             }
 
