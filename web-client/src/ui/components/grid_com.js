@@ -21,6 +21,7 @@ export default function GridCom (columns, rows)
     this._layers = {};
     this._selectedLayer = null;
     this._selectedCell = null;
+    this._frozenView = false;
     this._ATTR_LAYER_ID = "data-lid";
     this._ATTR_GRID_ID = "data-gid";
     this._listener = {
@@ -103,6 +104,9 @@ GridCom.prototype.selectItem = function (position) {
 };
 
 GridCom.prototype.updateView = function () {
+    if (this._frozenView || null === this._selectedLayer)
+        return;
+
     var currentCell = this._selectedCell;
     var cellPos = null !== this._selectedCell ? this._selectedCell.getPosition() : -1;
     var itemPos = this._selectedLayer.getSelectedItemPosition();
@@ -123,6 +127,15 @@ GridCom.prototype.updateView = function () {
 
     if (null !== currentCell)
         currentCell.getView().setSelected(itemPos >= 0 && itemPos === cellPos);
+};
+
+GridCom.prototype.freezeView = function (frozen) {
+    this._frozenView = "undefined" === typeof frozen ? true : frozen;
+
+    if (! this._frozenView )
+        this.updateView();
+
+    return this;
 };
 
 GridCom.prototype.render = function () {
@@ -161,6 +174,8 @@ GridCom.prototype.getItemsLimit = function () {
 };
 
 GridCom.prototype._selectCell = function (cell) {
+    if (this._frozenView) return;
+
     this.selectItem( cell.getPosition() );
 };
 

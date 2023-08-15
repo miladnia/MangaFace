@@ -150,3 +150,78 @@ export function testGridColors ()
 
     return container;
 }
+
+export function testGridFreeze ()
+{
+    var images = [
+        ["emoji_1F454", 32],
+        ["emoji_1F97E", 16],
+        ["emoji_1F452", 8],
+        ["emoji_1F45B", 4]
+    ];
+
+    var container = document.createElement("div");
+
+    var grid = (new GridCom(8, 4)).setListener({
+        onItemSelected: function (position, layer) {
+            console.log("Item selected", position, layer);
+        },
+        onItemDeselected: function (position, layer) {
+            console.log("Item deselected", position, layer);
+        },
+        onItemReselected: function (position, layer) {
+            console.log("Item reselected", position, layer);
+        }
+    });
+
+    images.forEach(function (img, imgKey) {
+        var svg = "data:image/svg+xml,"
+            + encodeURIComponent(openmoji[img[0]]);
+        var layerId = img[0] + '_' + imgKey;
+        var layer = grid.newLayer(layerId);
+
+        for (var i = 0; i < img[1]; i++)
+            layer.addImageItem(svg);
+
+        grid.addLayer(layer);
+
+        // Buttons to navigate between pages
+        var btn = document.createElement("button");
+        btn.textContent = img[0];
+        btn.addEventListener("click", function () {
+            grid.switchToLayer(layerId);
+        });
+        container.appendChild(btn);
+    });
+
+    var btn = document.createElement("button");
+    var freezeText = btn.textContent = "Freeze view";
+    btn.addEventListener("click", function () {
+        if (freezeText === this.textContent) {
+            grid.freezeView();
+            this.textContent = "Defrost";
+        } else {
+            grid.freezeView(false);
+            this.textContent = freezeText;
+        }
+    });
+    container.appendChild(btn);
+
+    var btn = document.createElement("button");
+    btn.textContent = "Auto select";
+    btn.addEventListener("click", function () {
+        for (var i = 0; i < images.length; i++) {
+            grid.switchToLayer(images[i][0] + '_' + i);
+            grid.selectItem(Math.ceil(images[i][1] / 2));
+        }
+    });
+    container.appendChild(btn);
+
+    container.appendChild( grid.render() );
+    // Copyright text for openmoji
+    var copyrightTextBox = document.createElement("p");
+    copyrightTextBox.textContent = openmoji.license;
+    container.appendChild(copyrightTextBox);
+
+    return container;
+}
