@@ -12,8 +12,6 @@ import { Resource, ShapeType, Fragment, Range, Color, Position } from "../domain
 export function ResourceDao()
 {
     this._resourceRecords = require("../../data/mangaface/resources.json");
-    // this._colorSet = resourceManifest["color_set"];
-    // this._iconUrlFormat = resourceManifest["resource_icon_path"];
 
     this.getAsDomainModel = function () {
         var resList = [];
@@ -33,21 +31,17 @@ export function ResourceDao()
             }
 
             // Colors
-            if (data.hasOwnProperty("color_set")) {
-                var colorsSet = this._colorSet[data["color_set"]];
-                for (var colorLabel in colorsSet) {
-                    res.colors.push(
-                        new Color(
-                            colorLabel,
-                            colorsSet[colorLabel])
-                    );
-                }
+            if (data.hasOwnProperty("colors")) {
+                data["colors"].forEach(function (color) {
+                    res.colors.push( new Color(color["dir"], color["code"]) );
+                });
             }
 
             // Fragments
             data["fragments"].forEach(function (fragment) {
                 res.fragments.push(
                     new Fragment(
+                        res,
                         new Position(
                             fragment["position"]["left"],
                             fragment["position"]["top"]),
