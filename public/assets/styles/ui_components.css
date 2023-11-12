@@ -47,3 +47,13 @@
     box-shadow: 0 0 0 0.1em #000000;
     z-index: 2;
 }
+
+/* ------------------------------------- PinboardCom */
+
+.pinboard-layout {
+    position: relative;
+}
+
+.pinboard-layout .item {
+    position: absolute;
+}
