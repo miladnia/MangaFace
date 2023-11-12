@@ -3,70 +3,30 @@
 <head>
     <title>MangaFace</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="./assets/styles/face-app.css?ver=1.2.0">
-	<link rel="stylesheet" type="text/css" href="./assets/styles/face-app-icons.css?ver=1.2.0">
-	<link rel="stylesheet" type="text/css" href="./assets/styles/face-app-rtl.css?ver=1.2.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./assets/styles/ui_components.css?ver=1.0">
+    <link rel="stylesheet" type="text/css" href="./assets/themes/default/designer_screen.css?ver=1.0">
+    <style>
+        html, body { min-width: 400px; height: 100%; margin: 0; padding: 0; }
+        body { font-size: 14px; font-family: arial,sans-serif; }
+        .page-container { display: flex; height: 100%; flex-direction: column; background: url(./assets/background.jpg) no-repeat center; background-size: cover; overflow: auto; }
+        .app-container { display: flex; width: 85%; align-self: center; align-items: center; flex-grow: 1; padding: 20px 0; margin: 0 auto; }
+        .page-footer { width: 100%; padding: 1em 0; background: #232321; color: #ad7135; font-family: arial, sans-serif; font-size: 0.8em; font-weight: bold; text-align: center; }
+        .page-footer a { color: inherit; text-decoration: none; }
+        .page-footer a:last-child { font-size: smaller; }
+    </style>
 </head>
-    <body class="face-app">
-        <br>
-        <div class="frame">
-            <div class="frame-section">
-                <div id="fdFacePreview"></div>
-                <ul id="fdPositionBox" class="frame-box">
-                    <li class="g-btn btn-up" data-action="up" data-status="on"></li><li class="g-btn btn-down" data-action="down" data-status="on"></li>
-                </ul>
-                <div id="fdColorBox" class="frame-box" data-limit="8"></div>
-                <button id="fdCreateImage" class="btn-save" disabled>Save</button>
-            </div>
-            <div id="fdItems" class="frame-section section-items" data-limit="36"></div>
-            <div id="fdSubTabs" class="frame-section section-subcategories">
-                <ul class="visible" data-parent="1">
-                    <li class="active" data-number="1">Head Shape</li>
-                    <li data-number="2">Ears</li>
-                    <li data-number="3">Eyes</li>
-                    <li data-number="4">Eyebrows</li>
-                    <li data-number="5">Nose</li>
-                    <li data-number="6">Mouth</li>
-                    <li data-number="7">Mustache</li>
-                    <li data-number="8">Beard</li>
-                </ul>
-                <ul data-parent="2">
-                    <li class="active" data-number="1">Hair</li>
-                </ul>
-                <ul data-parent="3">
-                    <li class="active" data-number="1">Shirt</li>
-                    <li data-number="2">Jacket</li>
-                    <li data-number="3">Scarf</li>
-                    <li data-number="4">Hat</li>
-                </ul>
-                <ul data-parent="4">
-                    <li class="active" data-number="1">Glasses</li>
-                </ul>
-                <ul data-parent="5">
-                    <li class="active" data-number="1">Filled</li>
-                    <li data-number="2">Pattern</li>
-                    <li data-number="3">Theme</li>
-                    <li data-number="4">Weather</li>
-                </ul>
-            </div>
-            <ul id="fdTabs" class="frame-section section-categories">
-                <li class="active" data-number="1"></li>
-                <li data-number="2"></li>
-                <li data-number="3"></li>
-                <li data-number="4"></li>
-                <li data-number="5"></li>
-            </ul>
-            <div class="frame-bar">
-                <div class="title">MangaFace</div>
-                <label><input name="use_face" value="1" type="checkbox" checked><span> Show My Face in The Game and Community.</span></label>
+    <body>
+        <div class="page-container">
+            <div class="app-container" id="MF_APP_CONTAINER"></div>
+            <div class="page-footer">
+                <a href="https://miladnia.github.io/MangaFace" target="_blank">ABOUT</a> |
+                <a href="https://github.com/miladnia/MangaFace" target="_blank">SOURCE CODE</a> |
+                <a href="https://github.com/miladnia/MangaFace/blob/HEAD/LICENSE" target="_blank">LICENSE</a>
+                <br>
+                <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by freepik - www.freepik.com</a>
             </div>
         </div>
-        <div id="monitor">
-            <img id="outputImage" src="" alt="Output Image">
-        </div>
-        <div class="freepik">
-            <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by freepik - www.freepik.com</a>
-        </div>
-        <script type="text/javascript" src="./dist/main.js?ver=1.1.0"></script>
+        <script type="text/javascript" src="./app_bundle.js?ver=1.1.0"></script>
     </body>
 </html>

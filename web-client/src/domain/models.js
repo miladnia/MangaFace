@@ -18,13 +18,8 @@ export function Resource(id, label, catLabel) {
     this.shapeIconUrl = null;
 }
 
-Resource.prototype.getShapesIconList = function () {
-    var urlList = [];
-
-    for (var name = this.shapesRange.min; name <= this.shapesRange.max; name++)
-        urlList.push( this.shapeIconUrl.replace("<shape_name>", name) );
-
-    return urlList;
+Resource.prototype.getShapeIconUrl = function (shapeName) {
+    return this.shapeIconUrl.replace("<shape_name>", shapeName);
 };
 
 export function ShapeType(name, iconUrl) {
@@ -32,25 +27,29 @@ export function ShapeType(name, iconUrl) {
     this.iconUrl = iconUrl;
 }
 
-export function Fragment(position, colorGroup, priority, url) {
+export function Fragment(parentResource, position, colorGroup, priority, url) {
+    this.parentResource = parentResource; // TODO It's new! check if required.
     this.position = position;
     this.colorGroup = colorGroup;
     this.priority = priority;
     this.url = url;
 }
 
-Fragment.prototype.getUrl = function (shapeName) {
+Fragment.prototype.getUrl = function (shapeName, colorDir) {
+    // FIXME
+    colorDir = this.parentResource.colors.length ? this.parentResource.colors[0].dir : '';
+
     return this.url.replace("<shape_name>", shapeName)
-        .replace("<color_dir>", "default"); // TODO default to color dir
+        .replace("<color::dir>", colorDir);
 };
 
 export function Rule() {
     this.shape
 }
 
-export function Color(label, colorCode) {
-    this.label = label;
-    this.colorCode = colorCode;
+export function Color(dir, colorCode) {
+    this.dir = dir;
+    this.code = colorCode;
 }
 
 export function Position(top, left) {
