@@ -6,5 +6,5 @@
 /composer.lock
 /package-lock.json
 
-/public/dist
-/web-client/autoconfig
+/public/app_bundle.js
+/web-client/data

@@ -1,21 +1,15 @@
 const path = require('path');
-const webpack = require('webpack');
 
 module.exports = {
+  mode: 'development',
   entry: './web-client/app.js',
   output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'public/dist')
+    filename: 'app_bundle.js',
+    path: path.resolve(__dirname, 'public')
   },
   resolve: {
     modules: [
       "node_modules"
     ]
-  },
-  plugins: [
-      new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery'
-      })
-  ]
+  }
 };
