@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "build": "@php ./scripts/build.php",
-    "server": "@php -S 127.0.0.1:8000 -t ./public",
+    "server": "@php -S 127.0.0.1:8080 -t ./public",
     "ts": "@php -S 127.0.0.1:8001",
     "buildall": [
       "@build",
