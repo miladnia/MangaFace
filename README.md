@@ -1,5 +1,5 @@
 # MangaFace
-Create your own custom avatar with **MangaFace**. The project is based on [FaceYourManga](https://www.faceyourmanga.com/).
+Create your own custom avatar with **MangaFace**. This project is inspired by [FaceYourManga](https://www.faceyourmanga.com/).
 
 ![MangaFace](docs/preview.jpg "Demo Preview")
 
@@ -7,11 +7,9 @@ Create your own custom avatar with **MangaFace**. The project is based on [FaceY
 
 ### Requirements
 
-- PHP >= 5.6
+- PHP >= 8.1
 - Node.js >= 6.11.5
 - [Composer](https://getcomposer.org/download/)
-
-*Note: Composer in its latest version requires PHP 7.2.5 to run. A long-term-support version (2.2.x) still offers support for PHP 5.3.2+.*
 
 ### Installation
 
