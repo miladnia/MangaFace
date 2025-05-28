@@ -17,10 +17,12 @@ function App()
 
     this.run = function (containerElement) {
         console.log("App started");
+        
+        console.log("container", this.container);
+        // console.log("ResourceRepository", this.container.resourceRepository);
 
-        console.log("ResourceRepository", this.container.resourceRepository);
-
-        var viewModel = new ViewModel(null, this.container.resourceRepository);
+        var viewModel = new ViewModel(null, this.container.screenSectionRepository);
+        // var viewModel = new ViewModel(null, this.container.resourceRepository);
         var view = new DesignerScreen(viewModel);
         containerElement.appendChild( view.render().getElement() );
     };

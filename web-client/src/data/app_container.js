@@ -7,9 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { ResourceDao } from "./dao.js";
-import { ResourceRepository } from "./repositories.js";
+import { ScreenSectionDao, CommandDao } from "./dao.js";
+import { ScreenSectionRepository, CommandRepository } from "./repositories.js";
 
-export default function AppContainer() {
-    this.resourceRepository = new ResourceRepository(new ResourceDao());
+export default class AppContainer {
+    constructor() {
+        this.screenSectionRepository = new ScreenSectionRepository(new ScreenSectionDao());
+        this.commandRepository = new CommandRepository(new CommandDao());
+    }
 }

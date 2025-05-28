@@ -7,7 +7,63 @@
  * file that was distributed with this source code.
  */
 
-import { Resource, ShapeType, Fragment, Range, Color, Position } from "../domain/models.js";
+import { ScreenSection, Designer, Command, Resource, ShapeType, Fragment, Range, Color, Position } from "../domain/models.js";
+
+export class ScreenSectionDao {
+    getAsDomainModel() {
+        this.resources = require("../../data/mangaface/manifest.json");
+        let sectionsData = this.resources["interface"]["sections"];
+        let sections = [];
+
+        for (var i = 0; i < sectionsData.length; i++) {
+            let s = new ScreenSection;
+            s.label = sectionsData[i]["label"];
+            s.cover_url = sectionsData[i]["cover_url"];
+
+            let designersData = sectionsData[i]["designers"];
+
+            for (let j = 0; j < designersData.length; j++) {
+                let d = new Designer;
+                d.label = designersData[j]["label"];
+                d.command_name = designersData[j]["command_name"];
+                d.preview_url = designersData[j]["preview_url"];
+                s.designers.push(d);
+            }
+            
+            sections.push(s);
+        }
+
+        return sections;
+    }
+}
+
+export class CommandDao {
+    getAsDomainModel() {
+        this.resources = require("../../data/mangaface/manifest.json");
+        let commandsData = this.resources["commands"];
+        let commands = [];
+
+        for (let cmdName in commandsData) {
+            let cmd = new Command;
+            cmd.name = cmdName;
+            cmd.limit = commandsData[cmdName]["limit"];
+
+            let colorPaletteData = commandsData[cmdName]["color_palette"];
+
+            if ("undefined" !== typeof colorPaletteData) {
+                for (let i = 0; i < colorPaletteData.length; i++) {
+                    let color = new Color;
+                    color.colorCode = colorPaletteData[i];
+                    cmd.colorPalette.push(color);
+                }
+            }
+
+            commands[cmdName] = cmd;
+        }
+
+        return commands;
+    }
+}
 
 export function ResourceDao()
 {
@@ -33,7 +89,9 @@ export function ResourceDao()
             // Colors
             if (data.hasOwnProperty("colors")) {
                 data["colors"].forEach(function (color) {
-                    res.colors.push( new Color(color["dir"], color["code"]) );
+                    res.colors.push(
+                        new Color(color["dir"], color["dir"], color["code"])
+                    );
                 });
             }
 

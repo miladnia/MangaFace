@@ -68,32 +68,32 @@ export function testGrid()
     var container = document.createElement("div");
 
     var grid = (new GridCom(8, 4)).setListener({
-        onItemSelected: function (position, layer) {
-            console.log("Item selected", position, layer);
+        onItemSelected: function (position, section) {
+            console.log("Item selected", position, section);
         },
-        onItemDeselected: function (position, layer) {
-            console.log("Item deselected", position, layer);
+        onItemDeselected: function (position, section) {
+            console.log("Item deselected", position, section);
         },
-        onItemReselected: function (position, layer) {
-            console.log("Item reselected", position, layer);
+        onItemReselected: function (position, section) {
+            console.log("Item reselected", position, section);
         }
     });
 
     images.forEach(function (img) {
         var svg = "data:image/svg+xml,"
             + encodeURIComponent(openmoji[img[0]]);
-        var layer = grid.newLayer(img[0]);
+        var section = grid.newSection(img[0]);
 
         for (var i = 0; i < img[1]; i++)
-            layer.addImageItem(svg);
+            section.addImageItem(svg);
 
-        grid.addLayer(layer);
+        grid.addSection(section);
 
         // Buttons to navigate between pages
         var btn = document.createElement("button");
         btn.textContent = img[0];
         btn.addEventListener("click", function () {
-            grid.switchToLayer(img[0]);
+            grid.switchToSection(img[0]);
         });
         container.appendChild(btn);
     });
@@ -119,30 +119,30 @@ export function testGridColors()
     var container = document.createElement("div");
 
     var grid = (new GridCom(15, 5)).setListener({
-        onItemSelected: function (position, layer) {
-            console.log("Item selected", position, layer);
+        onItemSelected: function (position, section) {
+            console.log("Item selected", position, section);
         },
-        onItemDeselected: function (position, layer) {
-            console.log("Item deselected", position, layer);
+        onItemDeselected: function (position, section) {
+            console.log("Item deselected", position, section);
         },
-        onItemReselected: function (position, layer) {
-            console.log("Item reselected", position, layer);
+        onItemReselected: function (position, section) {
+            console.log("Item reselected", position, section);
         }
     });
 
     colors.forEach(function (color) {
-        var layer = grid.newLayer(color[0]);
+        var section = grid.newSection(color[0]);
 
         for (var i = 0; i < color[1]; i++)
-            layer.addColorItem(color[0]);
+            section.addColorItem(color[0]);
 
-        grid.addLayer(layer);
+        grid.addSection(section);
 
         // Buttons to navigate between pages
         var btn = document.createElement("button");
         btn.textContent = color[0];
         btn.addEventListener("click", function () {
-            grid.switchToLayer(color[0]);
+            grid.switchToSection(color[0]);
         });
         container.appendChild(btn);
     });
@@ -164,33 +164,33 @@ export function testGridFreeze()
     var container = document.createElement("div");
 
     var grid = (new GridCom(8, 4)).setListener({
-        onItemSelected: function (position, layer) {
-            console.log("Item selected", position, layer);
+        onItemSelected: function (position, section) {
+            console.log("Item selected", position, section);
         },
-        onItemDeselected: function (position, layer) {
-            console.log("Item deselected", position, layer);
+        onItemDeselected: function (position, section) {
+            console.log("Item deselected", position, section);
         },
-        onItemReselected: function (position, layer) {
-            console.log("Item reselected", position, layer);
+        onItemReselected: function (position, section) {
+            console.log("Item reselected", position, section);
         }
     });
 
     images.forEach(function (img, imgKey) {
         var svg = "data:image/svg+xml,"
             + encodeURIComponent(openmoji[img[0]]);
-        var layerId = img[0] + '_' + imgKey;
-        var layer = grid.newLayer(layerId);
+        var sectionId = img[0] + '_' + imgKey;
+        var section = grid.newSection(sectionId);
 
         for (var i = 0; i < img[1]; i++)
-            layer.addImageItem(svg);
+            section.addImageItem(svg);
 
-        grid.addLayer(layer);
+        grid.addSection(section);
 
         // Buttons to navigate between pages
         var btn = document.createElement("button");
         btn.textContent = img[0];
         btn.addEventListener("click", function () {
-            grid.switchToLayer(layerId);
+            grid.switchToSection(sectionId);
         });
         container.appendChild(btn);
     });
@@ -212,7 +212,7 @@ export function testGridFreeze()
     btn.textContent = "Auto select";
     btn.addEventListener("click", function () {
         for (var i = 0; i < images.length; i++) {
-            grid.switchToLayer(images[i][0] + '_' + i);
+            grid.switchToSection(images[i][0] + '_' + i);
             grid.selectItem(Math.ceil(images[i][1] / 2));
         }
     });

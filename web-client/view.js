@@ -16,144 +16,180 @@ export default function DesignerScreen(viewModel)
 {
     this._tpl = new DesignerScreenTemplate;
     this._model = viewModel;
+    this._pinboard = null; 
+    this._shapesGrid = null;
+    this._colorsGrid = null;
+    this._selectedRes = null;
+    this._selectedShape = null;
+    this._selectedColor = null;
 }
 
 DesignerScreen.prototype.render = function () {
-    console.log("[RENDERING] DesignerScreen");
-    var resList = this._model.resourceRepository.findAll();
-    var selectedRes = null;
-    var pinboard = this._buildPinboard();
+    // var screenSections = this._model.screenSectionRepository.findAll();
+    
+    // this._pinboard = this._buildPinboard();
 
-    var shapesGrid = this._buildShapesGrid(resList, (function (shapeName) {
-        this._pinResource(pinboard, selectedRes, shapeName);
+    // this._shapesGrid = this._buildShapesGrid(resList, (function (shapeName) {
+    //     this._selectedShape = shapeName;
+    //     this._pinResource(this._selectedRes, this._selectedShape, this._selectedColor);
+    // }).bind(this));
+
+    // this._colorsGrid = this._buildColorsGrid(resList, (function (colorName) {
+    //     this._selectedColor = colorName;
+    //     this._pinResource(this._selectedRes, this._selectedShape, this._selectedColor);
+    // }).bind(this));
+
+    this._buildTabs((function (designer) {
+        this._selectedDesigner = designer;
+        console.log(designer);
+        // this._shapesGrid.switchToLayer(res.id);
+        // this._colorsGrid.switchToLayer(res.id);
     }).bind(this));
-
-    var colorsGrid = this._buildColorsGrid(resList);
-
-    this._buildResTabs(resList, function (res) {
-        selectedRes = res;
-        shapesGrid.switchToLayer(res.id);
-        colorsGrid.switchToLayer(res.id);
-    });
 
     return this._tpl.getView();
 };
 
-DesignerScreen.prototype._buildResTabs = function (resourceList, onResourceSelected) {
-    var catMap = {}; // <catLabel, tabPosition>
-    var catTabs = (new TabCom).setListener({
-        onTabSelected: function (tab) {
-            var resTabs = tab.getTag();
-            resTabs.enable();
-        },
-        onTabDeselected: function (tab) {
-            var resTabs = tab.getTag();
-            resTabs.disable();
-        }
-    });
+DesignerScreen.prototype._buildTabs = function (onDesignerSelected) {
+    let screenSections = this._model.screenSectionRepository.findAll();
+    let tabs = new TabCom;
 
-    resourceList.forEach((function (res) {
-        var exTabPosition = catMap.hasOwnProperty(res.catLabel) ? catMap[res.catLabel] : -1;
+    for (let i = 0; i < screenSections.length; i++) {
+        let section = screenSections[i];
 
-        // A tab component was already created for
-        // the resources with current cat label.
-        if (exTabPosition >= 0) {
-            var resTabs = catTabs.getTabAt(exTabPosition).getTag();
-            resTabs.addTab( resTabs.newTab().setText(res.label).setTag(res) );
-            return;
-        }
-
-        var resTabs = (new TabCom).setListener({
+        // Create a new tab component for inner tabs.
+        let innerTabs = (new TabCom).setListener({
             onTabSelected: function (tab) {
-                var res = tab.getTag();
-                onResourceSelected(res);
+                let designer = tab.getTag();
+                onDesignerSelected(designer);
             }
         }).disable();
 
-        resTabs.addTab( resTabs.newTab().setText(res.label).setTag(res) );
-        catMap[res.catLabel] = catTabs.addTab( catTabs.newTab().setTag(resTabs) );
-        this._tpl.resSection.appendView( resTabs.getView() );
-    }).bind(this));
+        // Create an inner tab for each designer in the current section.
+        for (let j = 0; j < section.designers.length; j++) {
+            let designer = section.designers[j];
+            innerTabs.addTab(
+                innerTabs.newTab().setText(designer.label).setTag(designer)
+            );
+        }
 
-    this._tpl.catSection.appendView( catTabs.getView() );
+        // Create a new tab for the current section and assign the created inner tabs to it.
+        tabs.addTab(
+            tabs.newTab().setImage(section.coverUrl).setInnerTabs(innerTabs)
+        );
+
+        this._tpl.designersFrame.appendView( innerTabs.getView() );
+    }
+
+    this._tpl.sectionsFrame.appendView( tabs.getView() );
 };
 
 DesignerScreen.prototype._buildShapesGrid = function (resourceList, onShapeSelected) {
     var grid = (new GridCom(6, 6)).setListener({
         onItemSelected: function (position, layer) {
-            console.log("Selected", position, layer);
-            onShapeSelected(position + 1);
+            var item = layer.getItemAt(position);
+            onShapeSelected(item.getTag());
         },
         onItemDeselected: function (position, layer) {
-            console.log("Deselected", position, layer);
+            console.log("Shape deselected", position);
         },
         onItemReselected: function (position, layer) {
-            console.log("Reselected", position, layer);
+            console.log("Shape reselected", position);
         }
     });
 
     resourceList.forEach(function (res) {
-        var layer = grid.newLayer(res.id);
+        var layer = grid.newSection(res.id);
 
         for (var name = res.shapesRange.min; name <= res.shapesRange.max; name++)
-            layer.addImageItem( res.getShapeIconUrl(name) );
+            layer.addImageItem( res.getShapeIconUrl(name), name );
 
-        grid.addLayer(layer);
+        grid.addSection(layer);
     });
 
-    this._tpl.shapesSection.getElement().appendChild( grid.render() );
+    this._tpl.shapesFrame.append( grid.render() );
 
     return grid;
 };
 
-DesignerScreen.prototype._buildColorsGrid = function (resourceList) {
-    var grid = new GridCom(6, 2);
+DesignerScreen.prototype._buildColorsGrid = function (resourceList, onColorSelected) {
+    var grid = new GridCom(5, 3);
 
     grid.setListener({
         onItemSelected: function (position, layer) {
+            var item = layer.getItemAt(position);
+            onColorSelected(item.getTag());
         },
         onItemDeselected: function (position, layer) {
+            console.log("Color deselected", position);
+        },
+        onItemReselected: function (position, layer) {
+            console.log("Color reselected", position);
         }
     });
 
     resourceList.forEach(function (res) {
-        var layer = grid.newLayer(res.id);
+        var layer = grid.newSection(res.id);
 
         res.colors.forEach(function (color) {
-            layer.addColorItem(color.code);
+            layer.addColorItem(color.code, color.codename);
         });
 
-        grid.addLayer(layer);
+        grid.addSection(layer);
     });
 
-    this._tpl.colorsSection.getElement().appendChild( grid.render() );
+    this._tpl.colorsFrame.append( grid.render() );
 
     return grid;
 };
 
 DesignerScreen.prototype._buildPinboard = function () {
     var pinboard = new PinboardCom;
-    this._tpl.previewSection.appendView(pinboard.getView());
+    this._tpl.previewFrame.appendView(pinboard.getView());
     return pinboard;
 };
 
-DesignerScreen.prototype._pinResource = function (pinboard, res, shapeName) {
-    res.fragments.forEach(function (frag, fi) {
-        console.log(frag.getUrl(shapeName));
+DesignerScreen.prototype._pinResource = function (res, shapeName, colorName) {
+    res.fragments.forEach((function (f, i) {
+        console.log(f.getUrl(shapeName, colorName));
 
-        var itemKey = res.id + '_' + fi;
-        var item = pinboard.getItem(itemKey);
+        var itemKey = res.id + '_' + i;
+        var item = this._pinboard.getItem(itemKey);
 
         if (item) {
-            item.setImageUrl(frag.getUrl(shapeName));
+            // Update existing item.
+            item.setImageUrl(f.getUrl(shapeName, colorName));
             return;
         }
 
-        pinboard.pinItem(
+        // Create a new item.
+        this._pinboard.pinItem(
             itemKey,
-            pinboard.newItem()
-                .setImageUrl(frag.getUrl(shapeName))
-                .setPosition(frag.position.top + "px", frag.position.left + "px")
-                .setPriority(frag.priority));
-    });
+            this._pinboard.newItem()
+                .setImageUrl(f.getUrl(shapeName, colorName))
+                .setPosition(f.position.top + "px", f.position.left + "px")
+                .setPriority(f.priority));
+    }).bind(this));
+};
+
+DesignerScreen.prototype._pinAsset = function (asset) {
+    res.fragments.forEach((function (f, i) {
+        console.log(f.getUrl(shapeName, colorName));
+
+        var itemKey = res.id + '_' + i;
+        var item = this._pinboard.getItem(itemKey);
+
+        if (item) {
+            // Update existing item.
+            item.setImageUrl(f.getUrl(shapeName, colorName));
+            return;
+        }
+
+        // Create a new item.
+        this._pinboard.pinItem(
+            itemKey,
+            this._pinboard.newItem()
+                .setImageUrl(f.getUrl(shapeName, colorName))
+                .setPosition(f.position.top + "px", f.position.left + "px")
+                .setPriority(f.priority));
+    }).bind(this));
 };

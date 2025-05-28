@@ -7,6 +7,28 @@
  * file that was distributed with this source code.
  */
 
+export function ScreenSection() {
+    this.label = null;
+    this.coverUrl = null;
+    this.designers = [];
+}
+
+export function Designer() {
+    this.label = null;
+    this.commandName = null;
+    this.previewUrl = null;
+}
+
+export function Command() {
+    this.name = null;
+    this.limit = null;
+    this.colorPalette = [];
+}
+
+export function Color() {
+    this.colorCode = null;
+}
+
 export function Resource(id, label, catLabel) {
     this.id = id;
     this.label = label;
@@ -35,19 +57,20 @@ export function Fragment(parentResource, position, colorGroup, priority, url) {
     this.url = url;
 }
 
-Fragment.prototype.getUrl = function (shapeName, colorDir) {
+Fragment.prototype.getUrl = function (shapeName, color) {
     // FIXME
-    colorDir = this.parentResource.colors.length ? this.parentResource.colors[0].dir : '';
+    // color = this.parentResource.colors.length ? this.parentResource.colors[0].dir : '';
 
     return this.url.replace("<shape_name>", shapeName)
-        .replace("<color::dir>", colorDir);
+        .replace("<color::dir>", color.dir);
 };
 
 export function Rule() {
     this.shape
 }
 
-export function Color(dir, colorCode) {
+function OldColor(codename, dir, colorCode) {
+    this.codename = codename;
     this.dir = dir;
     this.code = colorCode;
 }
@@ -63,12 +86,19 @@ export function Range(min, max) {
 }
 
 export function Layout() {
-    this.units = null;    
+    this.assets = null;
 }
 
-export function Unit() {
-    this.res = null;
-    this.shape = null;
+export function Asset() {
+    this.fragment = null;
+    this.codename = null;
+    this.filename = null;
     this.color = null;
     this.distance = 0;
 }
+
+Asset.prototype.getUrl = function () {
+    return this.fragment.url
+        .replace("<shape_name>", this.filename)
+        .replace("<color::dir>", this.color.dir);
+};

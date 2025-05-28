@@ -18,19 +18,19 @@ export default function GridCom (columns, rows)
     this._view = new View("ul", "grid-layout");
     this._viewId = getRandInt(1000, 9999);
     this._cells = [];
-    this._layers = {};
-    this._selectedLayer = null;
+    this._sections = {};
+    this._selectedSection = null;
     this._selectedCell = null;
     this._frozenView = false;
-    this._ATTR_LAYER_ID = "data-lid";
+    this._ATTR_SECTION_ID = "data-lid";
     this._ATTR_GRID_ID = "data-gid";
     this._listener = {
         // Called when a item enters the selected state.
-        onItemSelected: function (position, layer) {},
+        onItemSelected: function (position, section) {},
         // Called when a item exits the selected state.
-        onItemDeselected: function (position, layer) {},
+        onItemDeselected: function (position, section) {},
         // Called when a item that is already selected is chosen again by the user.
-        onItemReselected: function (position, layer) {}
+        onItemReselected: function (position, section) {}
     };
 
     // Create cells
@@ -55,67 +55,67 @@ GridCom.prototype.setListener = function (listener) {
     return this;
 };
 
-GridCom.prototype.newLayer = function (layerId) {
-    return new Layer(this, layerId);
+GridCom.prototype.newSection = function (sectionId) {
+    return new Section(this, sectionId);
 };
 
-GridCom.prototype.addLayer = function (layer) {
-    if (this._layers.hasOwnProperty(layer.getId())) {
-        console.warn("A layer with '" + layer.getId() + "' ID already exist.");
+GridCom.prototype.addSection = function (section) {
+    if (this._sections.hasOwnProperty(section.getId())) {
+        console.warn("A section with '" + section.getId() + "' ID already exist.");
         return;
     }
 
-    this._layers[layer.getId()] = layer;
+    this._sections[section.getId()] = section;
 };
 
-GridCom.prototype.switchToLayer = function (layerId) {
-    if (! this._layers.hasOwnProperty(layerId) ) {
-        console.warn("There is not any layer with '" + layerId + "' ID.");
+GridCom.prototype.switchToSection = function (sectionId) {
+    if (! this._sections.hasOwnProperty(sectionId) ) {
+        console.warn("There is not any section with '" + sectionId + "' ID.");
         return;
     }
 
-    // If the same layer selected again
-    if (null !== this._selectedLayer && this._selectedLayer.getId() === layerId)
+    // If the same section selected again
+    if (null !== this._selectedSection && this._selectedSection.getId() === sectionId)
         return;
 
-    this._selectedLayer = this._layers[layerId];
+    this._selectedSection = this._sections[sectionId];
     this.updateView();
 };
 
 GridCom.prototype.selectItem = function (position) {
-    if (null === this._selectedLayer) return;
+    if (null === this._selectedSection) return;
 
-    if (position < 0 || position >= this._selectedLayer.countItems())
+    if (position < 0 || position >= this._selectedSection.countItems())
         return;
 
-    if (this._selectedLayer.getSelectedItemPosition() === position) {
-        this._listener.onItemReselected(position, this._selectedLayer);
+    if (this._selectedSection.getSelectedItemPosition() === position) {
+        this._listener.onItemReselected(position, this._selectedSection);
         return;
     }
 
-    var currentItemPosition = this._selectedLayer.getSelectedItemPosition();
-    this._selectedLayer.setItemSelected(position);
+    var currentItemPosition = this._selectedSection.getSelectedItemPosition();
+    this._selectedSection.setItemSelected(position);
     this.updateView();
 
     if (currentItemPosition >= 0)
-        this._listener.onItemDeselected(currentItemPosition, this._selectedLayer);
+        this._listener.onItemDeselected(currentItemPosition, this._selectedSection);
 
-    this._listener.onItemSelected(position, this._selectedLayer);
+    this._listener.onItemSelected(position, this._selectedSection);
 };
 
 GridCom.prototype.updateView = function () {
-    if (this._frozenView || null === this._selectedLayer)
+    if (this._frozenView || null === this._selectedSection)
         return;
 
     var currentCell = this._selectedCell;
     var cellPos = null !== this._selectedCell ? this._selectedCell.getPosition() : -1;
-    var itemPos = this._selectedLayer.getSelectedItemPosition();
+    var itemPos = this._selectedSection.getSelectedItemPosition();
 
-    // Update layer attribute
-    if (this._selectedLayer.getId() !== this.getElement().getAttribute(this._ATTR_LAYER_ID))
-        this.getElement().setAttribute(this._ATTR_LAYER_ID, this._selectedLayer.getId());
+    // Update section attribute
+    if (this._selectedSection.getId() !== this.getElement().getAttribute(this._ATTR_SECTION_ID))
+        this.getElement().setAttribute(this._ATTR_SECTION_ID, this._selectedSection.getId());
 
-    // If the layer has not any selected item yet
+    // If the section has not any selected item yet
     // or the item has deselected.
     if (itemPos < 0) {
         this._selectedCell = null;
@@ -152,16 +152,16 @@ GridCom.prototype.render = function () {
             "margin": cellMargin + "%"
         });
 
-    for (var layerId in this._layers) {
-        this._layers[layerId].getItems().forEach((function (item) {
-            var cellPos = item.position;
+    for (var sectionId in this._sections) {
+        this._sections[sectionId].getItems().forEach((function (item) {
+            var cellPos = item._position;
 
             this._getStyle()._addRule(
-                this._getStyleSelector(layerId) + ' '
+                this._getStyleSelector(sectionId) + ' '
                     + this._cells[cellPos]._getStyleSelector(),
-                item.colorMode
-                    ? { "background-color": item.value }
-                    : { "background-image": 'url("' + item.value + '");' }
+                "color" == item._type
+                    ? { "background-color": item._value }
+                    : { "background-image": 'url("' + item._value + '");' }
             );
         }).bind(this));
     }
@@ -179,12 +179,12 @@ GridCom.prototype._selectCell = function (cell) {
     this.selectItem( cell.getPosition() );
 };
 
-GridCom.prototype._getStyleSelector = function (layerId) {
+GridCom.prototype._getStyleSelector = function (sectionId) {
     var selector = this._view.getStyleSelector()
         + '[' + this._ATTR_GRID_ID + '="' + this._viewId + '"]';
 
-    if ("undefined" !== typeof layerId)
-        selector += '[' + this._ATTR_LAYER_ID + '="' + layerId + '"]';
+    if ("undefined" !== typeof sectionId)
+        selector += '[' + this._ATTR_SECTION_ID + '="' + sectionId + '"]';
 
     return selector;
 };
@@ -222,7 +222,7 @@ Cell.prototype._getStyleSelector = function () {
         + '[' + this._ATTR_POSITION + '="' + this._position + '"]';
 };
 
-function Layer (parent, id)
+function Section (parent, id)
 {
     this._parent = parent;
     this._id = id;
@@ -230,10 +230,10 @@ function Layer (parent, id)
     this._selectedItemPosition = -1;
 }
 
-Layer.prototype._addItem = function (item) {
+Section.prototype._addItem = function (item) {
     if (this.countItems() >= this._parent.getItemsLimit()) {
         console.warn(
-            "Could not add new item to layer '" + this._id + "'.",
+            "Could not add new item to section '" + this._id + "'.",
             "The total number of items should be equal or less than "
             + this._parent.getItemsLimit() + ".");
 
@@ -241,45 +241,54 @@ Layer.prototype._addItem = function (item) {
     }
 
     var len = this._items.push(item);
-    item.position = len - 1;
+    item._position = len - 1;
 
     return this;
 };
 
-Layer.prototype.addImageItem = function (imageUrl) {
-    return this._addItem( new CellItem(imageUrl, false) );
+Section.prototype.addImageItem = function (imageUrl, tag) {
+    return this._addItem( new CellItem("image", imageUrl, tag) );
 };
 
-Layer.prototype.addColorItem = function (color) {
-    return this._addItem( new CellItem(color, true) );
+Section.prototype.addColorItem = function (colorCode, tag) {
+    return this._addItem( new CellItem("color", colorCode, tag) );
 };
 
-Layer.prototype.setItemSelected = function (position) {
+Section.prototype.setItemSelected = function (position) {
     this._selectedItemPosition = position;
 };
 
-Layer.prototype.getSelectedItemPosition = function () {
+Section.prototype.getSelectedItemPosition = function () {
     return this._selectedItemPosition;
 };
 
-Layer.prototype.getId = function () {
+Section.prototype.getItemAt = function (position) {
+    return this._items[position];
+};
+
+Section.prototype.getId = function () {
     return this._id;
 };
 
-Layer.prototype.getItems = function () {
+Section.prototype.getItems = function () {
     return this._items;
 };
 
-Layer.prototype.countItems = function () {
+Section.prototype.countItems = function () {
     return this._items.length;
 };
 
-function CellItem (value, colorMode)
+function CellItem (type, value, tag)
 {
-    this.position = -1;
-    this.value = value;
-    this.colorMode = colorMode;
+    this._position = -1;
+    this._type = type;
+    this._value = value;
+    this._tag = tag;
 }
+
+CellItem.prototype.getTag = function () {
+    return this._tag;
+};
 
 // GridCom extends UIComponent
 Object.setPrototypeOf(GridCom.prototype, UIComponent.prototype);

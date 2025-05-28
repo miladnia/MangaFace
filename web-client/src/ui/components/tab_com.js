@@ -35,7 +35,7 @@ TabCom.prototype.addTab = function (tab) {
         this._selectTab(tab);
     }
 
-    return tab._position;
+    return this;
 };
 
 TabCom.prototype.getTabAt = function (index) {
@@ -99,11 +99,17 @@ TabCom.prototype._selectTab = function (tab) {
     if (null !== this._selectedTab) {
         this._selectedTab.getView().setSelected(false);
         this._listener.onTabDeselected(this._selectedTab);
+
+        if (null !== this._selectedTab._innerTabs)
+            this._selectedTab._innerTabs.disable();
     }
 
     this._selectedTab = tab;
     tab.getView().setSelected(true);
     this._listener.onTabSelected(tab);
+
+    if (null !== tab._innerTabs)
+        tab._innerTabs.enable();
 
     return true;
 };
@@ -114,6 +120,7 @@ function Tab (parent) {
     this._text = null;
     this._INVALID_POSITION = -1;
     this._position = this._INVALID_POSITION;
+    this._innerTabs = null;
     this._tag = null;
 
     this._view.getElement().addEventListener(
@@ -125,6 +132,17 @@ function Tab (parent) {
 Tab.prototype.setText = function (text) {
     this._text = text;
     this._view.setText(text);
+    return this;
+};
+
+Tab.prototype.setImage = function (imageUrl) {
+    this._view.getElement().style.setProperty('background-image', 'url("' + imageUrl + '")');
+    this._view.getElement().style.setProperty('background-size', '50%');
+    return this;
+};
+
+Tab.prototype.setInnerTabs = function (innerTabs) {
+    this._innerTabs = innerTabs;
     return this;
 };
 

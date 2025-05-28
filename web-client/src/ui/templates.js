@@ -11,23 +11,23 @@ import { View } from "./ui.js";
 
 export function DesignerScreenTemplate() {
     this._container = new View("div", "mf-designer-screen-tpl");
-    this.catSection = this._createSection("cat");
-    this.resSection = this._createSection("res");
-    this.shapesSection = this._createSection("shapes");
-    this.controlsSection = this._createSection("controls");
-    this.previewSection = this._createSection("preview", this.controlsSection);
-    this.colorsSection = this._createSection("colors", this.controlsSection);
+    this.sectionsFrame = this._createFrame("cat");
+    this.designersFrame = this._createFrame("res");
+    this.shapesFrame = this._createFrame("shapes");
+    this.controlsFrame = this._createFrame("controls");
+    this.previewFrame = this._createFrame("preview", this.controlsFrame);
+    this.colorsFrame = this._createFrame("colors", this.controlsFrame);
 }
 
-DesignerScreenTemplate.prototype._createSection = function (classPrefix, parent) {
-    var section = new View("div", classPrefix + "-section");
+DesignerScreenTemplate.prototype._createFrame = function (classPrefix, parent) {
+    var frame = new View("div", classPrefix + "-frame");
 
     if ("undefined" != typeof parent)
-        parent.appendView(section);
+        parent.appendView(frame);
     else
-        this._container.appendView(section);
+        this._container.appendView(frame);
 
-    return section;
+    return frame;
 };
 
 DesignerScreenTemplate.prototype.getView = function () {

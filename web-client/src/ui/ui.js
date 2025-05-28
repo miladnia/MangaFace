@@ -104,6 +104,10 @@ View.prototype.getStyleSelector = function () {
     return '.' + this._className;
 };
 
+View.prototype.append = function (element) {
+    this._element.appendChild(element);
+};
+
 View.prototype.appendView = function (view) {
-    this._element.appendChild( view.getElement() );
+    this.append( view.getElement() );
 };
