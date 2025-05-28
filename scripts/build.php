@@ -1,76 +1,70 @@
 <?php
 
-/**
- * This file is part of MangaFace.
- *
- * (c) Milad Abdollahnia <miladniaa@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+define('APP_DIR', dirname(__DIR__));
+define('CONFIG_FILE', APP_DIR . '/config/mangaface/app.yaml');
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
+require_once APP_DIR . '/vendor/autoload.php';
 
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Yaml\Yaml;
-use MangaFace\Util\StorageUtil;
+use Symfony\Component\Yaml\Exception\ParseException;
 
-define('APP_DIR', dirname(__DIR__));
 // Load environment variables.
-(new Dotenv)->loadEnv(APP_DIR.'/.env');
-
-function createApiResources(&$manifest, $baseUrl)
-{
-    $api_resources = [];
-
-    foreach ($manifest['resources'] as $catLabel => &$cat) {
-        foreach ($cat as $resLabel => &$res) {
-            $res['label'] = $resLabel;
-            $res['cat_label'] = $catLabel;
-            $res['icon_url'] = str_replace(
-                '<resourse::dir>', $res['dir'],
-                $baseUrl.'/'.$manifest['icon_path_format']);
-
-            foreach ($res['fragments'] as &$frag) {
-                $frag['url'] = str_replace(
-                    ['<resourse::dir>', '<fragment::dir>'],
-                    [$res['dir'], $frag['dir']],
-                    $baseUrl.'/'.$manifest['fragment_path_format']);
-
-                if (!isset($res['colors'])) {
-                    $frag['url'] = str_replace('<color::dir>', $manifest['default_color_dir'], $frag['url']);
-                }
-
-                unset($frag['dir']);
-            }
-
-            unset($res['dir']);
-            $api_resources[] = $res;
-        }
-    }
-
-    return $api_resources;
-}
+(new Dotenv)->loadEnv(APP_DIR . '/.env');
 
 try {
-    // Parse yaml configs.
-    $appConfig = Yaml::parseFile(APP_DIR.'/config/app.yaml')['app'];
-    $manifest = Yaml::parseFile(APP_DIR.'/config/resource_manifest/mangaface.yaml')['mangaface'];
+    $config = Yaml::parseFile(CONFIG_FILE);
 } catch (ParseException $e) {
-    echo 'Unable to parse the YAML string: ', $e->getMessage();
-    die;
+    echo '✘ [ERROR] Could not parse the config file: ' . PHP_EOL . '  ',
+        CONFIG_FILE . PHP_EOL . '  ',
+        $e->getMessage() . PHP_EOL;
+    exit(1);
 }
 
-$api_resources = createApiResources($manifest, $_ENV['APP_CDN'].'/'.$_ENV['APP_RESOURCES_BASE_DIR']);
-$api_resources_path = APP_DIR.'/'.$appConfig['api_resources_path'];
-$result = StorageUtil::saveAsJSON($api_resources, $api_resources_path, true);
+$manifestDir = APP_DIR . '/' . $config['manifest_dir'] ?? '';
+$dirList = scandir($manifestDir);
+$manifestFiles = array_filter(
+    $dirList,
+    fn($name) => !is_dir($name) && str_ends_with($name, '.yaml')
+);
 
-echo $result ? 'API resources file created: ' : 'Could not create file: ',
-    PHP_EOL . $api_resources_path . PHP_EOL.PHP_EOL;
+$apiManifest = [];
 
-// $api_data_format = [];
-// $api_data_format_path = APP_DIR.'/'.$appConfig['api_data_format_path'];
-// $result = StorageUtil::saveAsJSON($api_data_format, $api_data_format_path, true);
+foreach ($manifestFiles as $f) {
+    $filename = $manifestDir . '/' . $f;
+    $manifest = file_get_contents($filename);
+    // Replace tags with values.
+    $baseUrl = $_ENV['ASSETS_BASE_URL'] . '/' . $config['assets_dir'] ?? '';
+    $manifest = str_replace('<BASE_URL>', $baseUrl, $manifest);
 
-// echo $result ? 'API data format file created: ' : 'Could not create file: ',
-//     PHP_EOL . $api_data_format_path . PHP_EOL.PHP_EOL;
+    try {
+        $parsedManifest = Yaml::parse($manifest);
+    } catch (ParseException $e) {
+        echo '✘ [ERROR] Could not parse the manifest: ' . PHP_EOL . '  ',
+            $filename . PHP_EOL . '  ',
+            $e->getMessage() . PHP_EOL;
+        exit(1);
+    }
+
+    $packLabel = $parsedManifest['pack_label'];
+    $apiManifest[$packLabel] = $parsedManifest;
+}
+
+$apiManifestDir = APP_DIR . '/' .
+    $config['api']['public_dir'] ?? 'public' . '/' .
+    $config['api']['manifest_dir'] ?? '';
+
+is_dir($apiManifestDir) or mkdir($apiManifestDir, 0777, true);
+
+$prettyManifest = $_ENV['API_PRETTY_MANIFEST'] ?? $config['api']['pretty_manifest'] ?? true;
+
+$jsonData = json_encode(
+    $apiManifest,
+    true === $prettyManifest || 'true' === $prettyManifest ? JSON_PRETTY_PRINT : 0
+);
+
+$apiManifestFile = $apiManifestDir . '/manifest.json';
+file_put_contents($apiManifestFile, $jsonData) !== false
+    or exit('✘ [ERROR] Could not write to the file: ' . $apiManifestDir . PHP_EOL);
+
+echo 'File created: ' . $apiManifestFile . PHP_EOL;

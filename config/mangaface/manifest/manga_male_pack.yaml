@@ -1,0 +1,556 @@
+pack_label: manga_male_pack
+shape_path: <pack_label>/shapes/<resourse::dir>/<color::dir>/<shape_name>.png
+default_color_dir: default
+
+interface:
+  sections:
+    - label: head
+      cover_url: <BASE_URL>/manga_male_pack/interface/head_section.png
+      designers:
+        - label: shape
+          command_name: draw_head
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/head_shapes/<OPTION>.gif
+        - label: ears
+          command_name: draw_ears
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/ears/<OPTION>.gif
+        - label: eyebrows
+          command_name: draw_eyebrows
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyebrows/<OPTION>.gif
+        - label: eyes
+          command_name: draw_eyes
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyes/<OPTION>.gif
+        - label: nose
+          command_name: draw_nose
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/nose/<OPTION>.gif
+        - label: mouth
+          command_name: draw_mouth
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mouth/<OPTION>.gif
+        - label: mustache
+          command_name: draw_mustache
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mustache/<OPTION>.gif
+        - label: beard
+          command_name: draw_beard
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/beard/<OPTION>.gif
+    - label: hair
+      cover_url: <BASE_URL>/manga_male_pack/interface/hair_section.png
+      designers:
+        - label: hair
+          command_name: draw_hair
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/hair/<OPTION>.gif
+    - label: wearables
+      cover_url: <BASE_URL>/manga_male_pack/interface/wearables_section.png
+      designers:
+        - label: shirt
+          command_name: draw_shirt
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/shirt/<OPTION>.gif
+        - label: jacket
+          command_name: draw_jacket
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/jacket/<OPTION>.gif
+        - label: scarf
+          command_name: draw_scarf
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/scarf/<OPTION>.gif
+        - label: hat
+          command_name: draw_hat
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/hat/<OPTION>.gif
+        - label: glasses
+          command_name: draw_glasses
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/glasses/<OPTION>.gif
+    - label: backgrounds
+      cover_url: <BASE_URL>/manga_male_pack/interface/backgrounds_section.png
+      designers:
+        - label: filled_background
+          command_name: draw_filled_background
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/filled_background/<OPTION>.gif
+        - label: patterns
+          command_name: draw_patterns
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/patterns/<OPTION>.gif
+        - label: themes
+          command_name: draw_themes
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/themes/<OPTION>.gif
+    - label: effects
+      cover_url: <BASE_URL>/manga_male_pack/interface/effects_section.png
+      designers:
+        - label: weather_effect
+          command_name: draw_weather_effect
+          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/weather_effect/<OPTION>.gif
+
+color_palettes:
+  skin: &skin_colors
+    - dir: plain
+      code: '#fabe9f'
+    - dir: dark
+      code: '#e0a182'
+    - dir: light
+      code: '#f9d5c3'
+  hair: &hair_colors
+    - dir: black
+      code: '#262624'
+    - dir: brown
+      code: '#a87c4f'
+    - dir: red
+      code: '#ac3831'
+    - dir: blondd
+      code: '#fabe48'
+  eye: &eye_colors
+    - dir: black
+      code: '#262624'
+    - dir: brown
+      code: '#a35d02'
+    - dir: hazel
+      code: '#d1c50b'
+    - dir: green
+      code: '#0dc438'
+    - dir: blue
+      code: '#1c71f1'
+    - dir: gray
+      code: '#a5caf3'
+  cloth: &cloth_colors
+    - dir: white
+      code: '#f5f4e8'
+    - dir: black
+      code: '#262624'
+    - dir: brown
+      code: '#5b3b26'
+    - dir: yellow
+      code: '#dfa915'
+    - dir: blue
+      code: '#2f7faf'
+    - dir: violet
+      code: '#6854a2'
+    - dir: red
+      code: '#a91a26'
+    - dir: green
+      code: '#136f36'
+
+commands:
+  draw_head:
+    limit: 30
+    color_palette: *skin_colors
+    icons_dir: head_shapes
+  draw_ears:
+    limit: 6
+    color_palette: *skin_colors
+    icons_dir: ears
+  draw_eyebrows:
+    limit: 27
+    color_palette: *hair_colors
+    icons_dir: eyebrows
+    movement_limit: 2
+  draw_eyes:
+    limit: 28
+    color_palette: *eye_colors
+    icons_dir: eyes
+  draw_nose:
+    limit: 34
+    color_palette: *skin_colors
+    icons_dir: noses
+    movement_limit: 2
+  draw_mouth:
+    limit: 23
+    color_palette: *skin_colors
+    icons_dir: mouth
+    movement_limit: 2
+  draw_mustache:
+    limit: 29
+    color_palette: *hair_colors
+    icons_dir: mustache
+    movement_limit: 2
+  draw_beard:
+    limit: 2
+    color_palette: *hair_colors
+    icons_dir: beard_styles
+  draw_hair:
+    limit: 62
+    color_palette: *hair_colors
+    icons_dir: hair_styles
+    rules:
+      - match: [33, 37, 38, 39, 41, 43, 44, 60, 62] # Covered hairs
+        force:
+          1001: 0 # Remove 'ears'
+  draw_shirt:
+    limit: 25
+    color_palette: *cloth_colors
+    icons_dir: shirts
+  draw_jacket:
+    limit: 19
+    color_palette: *cloth_colors
+    icons_dir: jackets
+  draw_scarf:
+    limit: 2
+    color_palette: *cloth_colors
+    icons_dir: scarfs
+  draw_hat:
+    limit: 11
+    color_palette: *cloth_colors
+    icons_dir: hats
+    movement_limit: 3
+    rules:
+      - match: [4, 6] # Swim caps
+        force:
+          1001: 0 # Remove 'ears'
+          1008: 0 # Remove 'hair'
+      - match: [1, 3, 5, 7, 8, 9, 10, 11] # Covered hats
+        while:
+          1008: [4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 20, 24, 25, 29, 31, 44, 56, 57, 60] # Very long hairs
+        force:
+          1008: 22 # Bald style hair
+  draw_glasse:
+    limit: 34
+    icons_dir: glasses
+    movement_limit: 2
+  draw_filled_background:
+    limit: 24
+    icons_dir: bg_colors
+  draw_pattern:
+    limit: 32
+    color_palette: *cloth_colors
+    icons_dir: bg_patterns
+  draw_theme:
+    limit: 18
+    icons_dir: bg_themes
+  draw_weather_effect:
+    limit: 1
+    icons_dir: weather_effects
+
+default_fragment: &frag
+  dir: default
+  priority: 100
+  position:
+    top: 0
+    left: 0
+  
+layers_temp:
+  left_eyebrow:
+    <<: *frag
+    dir: left_eyebrow
+    priority: 480
+    position:
+      top: 52
+      left: 93
+  right_eyebrow:
+    <<: *frag
+    dir: right_eyebrow
+    priority: 480
+    position:
+      top: 52
+      left: 39
+  left_eyeshadow:
+    <<: *frag
+    dir: left_eyeshadow
+    priority: 460
+    position:
+      top: 55
+      left: 91
+  right_eyeshadow:
+    <<: *frag
+    dir: right_eyeshadow
+    priority: 460
+    position:
+      top: 55
+      left: 38    
+
+# TODO body shape
+fragments:
+  - dir: body_shapes
+    permanent: true
+    priority: 210
+    position:
+      top: 134
+      left: 26
+
+layers:
+  head_shape:
+    id: 1000
+    icons_dir: head_shapes
+    colors: *skin_colors
+    filename_range:
+      min: 1
+      max: 30
+    fragments:
+      - <<: *frag
+        priority: 410
+        position:
+          top: 0
+          left: 30
+
+  ears:
+    id: 1001
+    icons_dir: ears
+    colors: *skin_colors
+    filename_range:
+      min: 1
+      max: 6
+    fragments:
+      - <<: *frag
+        dir: left_ear
+        priority: 400
+        color_inheritance: 1000
+        position:
+          top: 64
+          left: 137
+      - <<: *frag
+        dir: right_ear
+        priority: 400
+        position:
+          top: 64
+          left: 12
+
+  eyebrows:
+    id: 1002
+    icons_dir: eyebrows
+    colors: *hair_colors
+    filename_range:
+      min: 1
+      max: 27
+    movement_limit: 2
+    fragments:
+      - <<: *frag
+        dir: left_eyebrow
+        priority: 480
+        position:
+          top: 52
+          left: 93
+      - <<: *frag
+        dir: right_eyebrow
+        priority: 480
+        position:
+          top: 52
+          left: 39
+      - <<: *frag
+        dir: left_eyeshadow
+        priority: 460
+        position:
+          top: 55
+          left: 91
+      - <<: *frag
+        dir: right_eyeshadow
+        priority: 460
+        position:
+          top: 55
+          left: 38
+
+  eyes:
+    id: 1003
+    icons_dir: eyes
+    colors: *eye_colors
+    filename_range:
+      min: 1
+      max: 28
+    fragments:
+      - <<: *frag
+        dir: left_eye
+        priority: 470
+        position:
+          top: 68
+          left: 97
+      - <<: *frag
+        dir: right_eye
+        priority: 470
+        position:
+          top: 68
+          left: 41
+
+  nose:
+    id: 1004
+    icons_dir: noses
+    colors: *skin_colors
+    filename_range:
+      min: 1
+      max: 34
+    movement_limit: 2
+    fragments:
+      - <<: *frag
+        priority: 450
+        position:
+          top: 68
+          left: 65
+
+  mouth:
+    id: 1005
+    icons_dir: mouth
+    colors: *skin_colors
+    filename_range:
+      min: 1
+      max: 23
+    movement_limit: 2
+    fragments:
+      - <<: *frag
+        priority: 430
+        position:
+          top: 107
+          left: 52
+
+  mustache:
+    id: 1006
+    icons_dir: mustache
+    colors: *hair_colors
+    filename_range:
+      min: 1
+      max: 29
+    movement_limit: 2
+    fragments:
+      - <<: *frag
+        priority: 440
+        position:
+          top: 104
+          left: 49
+
+  beard:
+    id: 1007
+    icons_dir: beard_styles
+    colors: *hair_colors
+    filename_range:
+      min: 1
+      max: 2
+    fragments:
+      - <<: *frag
+        priority: 420
+        position:
+          top: 75
+          left: 30
+  
+  hair:
+    id: 1008
+    icons_dir: hair_styles
+    colors: *hair_colors
+    filename_range:
+      min: 1
+      max: 62
+    rules:
+      - match: [33, 37, 38, 39, 41, 43, 44, 60, 62] # Covered hairs
+        force:
+          1001: 0 # Remove 'ears'
+    fragments:
+      - <<: *frag
+        dir: hair_front
+        priority: 600
+        position:
+          top: 0
+          left: 0
+      - <<: *frag
+        dir: hair_back
+        priority: 200
+        position:
+          top: 23
+          left: 0
+  
+  shirt:
+    id: 1009
+    icons_dir: shirts
+    colors: *cloth_colors
+    filename_range:
+      min: 1
+      max: 25
+    fragments:
+      - <<: *frag
+        priority: 300
+        position:
+          top: 124
+          left: 26
+
+  jackets:
+    id: 1010
+    icons_dir: jackets
+    colors: *cloth_colors
+    filename_range:
+      min: 1
+      max: 19
+    fragments:
+      - <<: *frag
+        priority: 310
+        position:
+          top: 122
+          left: 24
+
+  scarf:
+    id: 1011
+    icons_dir: scarfs
+    colors: *cloth_colors
+    filename_range:
+      min: 1
+      max: 2
+    fragments:
+      - <<: *frag
+        priority: 320
+        position:
+          top: 126
+          left: 30
+  
+  hat:
+    id: 1012
+    icons_dir: hats
+    colors: *cloth_colors
+    filename_range:
+      min: 1
+      max: 11
+    movement_limit: 3
+    rules:
+      - match: [4, 6] # Swim caps
+        force:
+          1001: 0 # Remove 'ears'
+          1008: 0 # Remove 'hair'
+      - match: [1, 3, 5, 7, 8, 9, 10, 11] # Covered hats
+        while:
+          1008: [4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 20, 24, 25, 29, 31, 44, 56, 57, 60] # Very long hairs
+        force:
+          1008: 22 # Bald style hair
+    fragments:
+      - <<: *frag
+        priority: 700
+        position:
+          top: -20
+          left: 0
+  glasses:
+    id: 1013
+    icons_dir: glasses
+    filename_range:
+      min: 1
+      max: 34
+    movement_limit: 2
+    fragments:
+      - <<: *frag
+        priority: 500
+        position:
+          top: 57
+          left: 27
+  
+  filled_background:
+    id: 1014
+    icons_dir: bg_colors
+    filename_range:
+      min: 1
+      max: 24
+    fragments:
+      - <<: *frag
+        priority: 100
+
+  patterns:
+    id: 1015
+    icons_dir: bg_patterns
+    colors: *cloth_colors
+    filename_range:
+      min: 1
+      max: 32
+    fragments:
+      - <<: *frag
+        priority: 110
+
+  theme:
+    id: 1016
+    icons_dir: bg_themes
+    filename_range:
+      min: 1
+      max: 18
+    fragments:
+      - <<: *frag
+        priority: 120
+  
+  weather:
+    id: 1017
+    icons_dir: weather_effects
+    filename_range:
+      min: 1
+      max: 1
+    fragments:
+      - <<: *frag
+        priority: 800

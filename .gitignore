@@ -7,4 +7,4 @@
 /package-lock.json
 
 /public/app_bundle.js
-/web-client/data
+/public/data/
