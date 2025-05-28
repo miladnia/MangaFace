@@ -37,7 +37,7 @@ use MangaFace\FaceDesigner\Item\Wearable\Jacket;
 use MangaFace\FaceDesigner\Item\Wearable\Scarf;
 use MangaFace\FaceDesigner\Item\Wearable\Shirt;
 
-function config() {
+function init() {
     // Items:
     Head::config(30, 30, 0);
     Body::config(1, 26, 134);

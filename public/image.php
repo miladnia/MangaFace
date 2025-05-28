@@ -3,7 +3,7 @@
 /**
  * This file is part of MangaFace.
  *
- * (c) Milad Nia <milad@miladnia.ir>
+ * (c) Milad Abdollahnia <miladniaa@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,8 +13,7 @@ require_once dirname(__DIR__) . "/vendor/autoload.php";
 
 use MangaFace\FaceDesigner\Designer;
 
-// Execute Configs.
-MangaFace\config();
+MangaFace\init();
 // Get input.
 $input = json_decode(file_get_contents("php://input"), true);
 $designer = new Designer(__DIR__ . "/assets/graphics", 180, 187);
