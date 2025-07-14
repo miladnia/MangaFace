@@ -153,7 +153,7 @@ GridCom.prototype.render = function () {
         });
 
     for (var sectionId in this._sections) {
-        this._sections[sectionId].getItems().forEach((function (item) {
+        this._sections[sectionId].getItems().forEach((item) => {
             var cellPos = item._position;
 
             this._getStyle()._addRule(
@@ -163,7 +163,7 @@ GridCom.prototype.render = function () {
                     ? { "background-color": item._value }
                     : { "background-image": 'url("' + item._value + '");' }
             );
-        }).bind(this));
+        });
     }
 
     return this.getElement();

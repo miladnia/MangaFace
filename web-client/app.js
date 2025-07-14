@@ -11,20 +11,22 @@ import AppContainer from "./src/data/app_container.js";
 import ViewModel from "./src/ui/view_model.js";
 import DesignerScreen from "./view.js";
 
-function App()
-{
-    this.container = new AppContainer;
+class App {
+    constructor() {
+        this.container = new AppContainer();
+    }
 
-    this.run = function (containerElement) {
-        console.log("App started");
-        
-        console.log("container", this.container);
-        // console.log("ResourceRepository", this.container.resourceRepository);
-
-        var viewModel = new ViewModel(null, this.container.screenSectionRepository);
-        // var viewModel = new ViewModel(null, this.container.resourceRepository);
-        var view = new DesignerScreen(viewModel);
-        containerElement.appendChild( view.render().getElement() );
+    run(containerElement) {
+        const designerScreen = new DesignerScreen(
+            new ViewModel(
+                null,
+                this.container.screenSectionRepository,
+                this.container.commandRepository,
+            )
+        );
+        designerScreen.render().then((view) => {
+            containerElement.appendChild(view.getElement());
+        });
     };
 }
 

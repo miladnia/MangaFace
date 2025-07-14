@@ -1,5 +1,5 @@
 manifest_dir: config/mangaface/manifest
-assets_dir: public/assets/mangaface
+assets_dir: assets/mangaface
 
 api:
   public_dir: public

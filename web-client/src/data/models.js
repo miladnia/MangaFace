@@ -7,26 +7,38 @@
  * file that was distributed with this source code.
  */
 
-export function ScreenSection() {
-    this.label = null;
-    this.coverUrl = null;
-    this.designers = [];
+export class ScreenSection {
+    constructor({ label, coverUrl }) {
+        this.label = label;
+        this.coverUrl = coverUrl;
+        this.designers = [];
+    }
 }
 
-export function Designer() {
-    this.label = null;
-    this.commandName = null;
-    this.previewUrl = null;
+export class Designer {
+    constructor({ label, commandName, previewUrl }) {
+        this.label = label;
+        this.commandName = commandName;
+        this._previewUrl = previewUrl;
+    }
+
+    getPreviewUrl(option) {
+        return this._previewUrl.replace("<OPTION>", option);
+    }
 }
 
-export function Command() {
-    this.name = null;
-    this.limit = null;
-    this.colorPalette = [];
+export class Command {
+    constructor({ name, items }) {
+        this.name = name;
+        this.items = items;
+        this.colorPalette = [];
+    }
 }
 
-export function Color() {
-    this.colorCode = null;
+export class Color {
+    constructor({ colorCode }) {
+        this.colorCode = colorCode;
+    }
 }
 
 export function Resource(id, label, catLabel) {
@@ -50,7 +62,8 @@ export function ShapeType(name, iconUrl) {
 }
 
 export function Fragment(parentResource, position, colorGroup, priority, url) {
-    this.parentResource = parentResource; // TODO It's new! check if required.
+    // TODO `parentResource`: It's new! check if required.
+    this.parentResource = parentResource;
     this.position = position;
     this.colorGroup = colorGroup;
     this.priority = priority;

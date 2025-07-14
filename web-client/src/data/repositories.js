@@ -7,53 +7,32 @@
  * file that was distributed with this source code.
  */
 
-export class ScreenSectionRepository {
-    constructor(screenSectionDao) {
-        
+class Repository {
+    constructor(dao) {
+        this._dao = dao;
     }
-
-    // this._records = screenSectionDao.getAsDomainModel();
     
-    findAll() {
-        return this._records;
+    async findAll(pack) {
+        return await this._dao.getAsDomainModel(pack);
     }
 }
 
-export class CommandRepository {
-    constructor(commandDao) {
-        
-    }
-
-    // this._records = commandDao.getAsDomainModel();
-    
-    findAll() {
-        return this._records;
-    }
-    
-    findByName(commandName) {
-        if (!this._records.hasProperty(commandName))
-            return null;
-        
-        return this._records[commandName];
-    }
+export class ScreenSectionRepository extends Repository {
+    // ScreenSectionRepository
 }
 
-export function ResourceRepository(resourceDao)
-{
-    this._resList = resourceDao.getAsDomainModel();
-    
-    this.findAll = function () {
-        return this._resList;
-    };
-    
-    this.findById = function (id) {
-        // TODO optimize
-        for (var i = 0; i < this._resList.length; i++) {
-            if (id === this._resList[i].id) {
-                return this._resList[i];
-            }
+export class CommandRepository extends Repository {    
+    async findByName(pack, name) {
+        if (!name) {
+            throw new Error("Illegal Argument Exception: 'name' should not be empty.");
         }
 
-        return null;
-    };
+        const commands = await this._dao.getAsDomainModel(pack);
+
+        if (!commands[name]) {
+            return null;
+        }
+        
+        return commands[name];
+    }
 }

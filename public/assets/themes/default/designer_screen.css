@@ -163,18 +163,28 @@
 .mf-designer-screen-tpl .shapes-frame .cell,
     .mf-designer-screen-tpl .colors-frame .cell {
     border-radius: 10%;
+	overflow: hidden;
 }
 .mf-designer-screen-tpl .shapes-frame .cell:hover,
     .mf-designer-screen-tpl .colors-frame .cell:hover {
     opacity: 0.5;
 }
 .mf-designer-screen-tpl .shapes-frame .cell[data-selected],
-    .mf-designer-screen-tpl .colors-frame .cell[data-selected] {
+.mf-designer-screen-tpl .colors-frame .cell[data-selected] {
     box-shadow: 0 0 0 0.15em rgb(234 28 121);
 }
 .mf-designer-screen-tpl .shapes-frame .cell[data-selected]:hover,
     .mf-designer-screen-tpl .colors-frame .cell[data-selected]:hover {
     opacity: 1;
+}
+.mf-designer-screen-tpl .shapes-frame .cell[data-selected]::after {
+	content: "";
+	background-color: rgba(234, 28, 121, 0.75);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 /* ------------------------------------- #facePreview */
