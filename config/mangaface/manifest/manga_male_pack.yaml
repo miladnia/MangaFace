@@ -1,78 +1,103 @@
-pack_label: manga_male_pack
-shape_path: <pack_label>/shapes/<resourse::dir>/<color::dir>/<shape_name>.png
-default_color_dir: default
+metadata:
+  pack_label: manga_male_pack
+  shape_path: <pack_label>/shapes/<resourse::dir>/<color::dir>/<shape_name>.png
+  default_color_dir: default
+  initializer_commands:
+    - command: draw_head_command
+      item: 0
+      color: '#fabe9f'
+    - command: draw_ears_command
+      item: 0
+      color: '#fabe9f'
+    - command: draw_eyebrows_command
+      item: 0
+      color: '#262624'
+    - command: draw_eyes_command
+      item: 0
+      color: '#262624'
+    - command: draw_nose_command
+      item: 0
+      color: '#fabe9f'
+    - command: draw_mouth_command
+      item: 0
+      color: '#fabe9f'
+    - command: draw_shirt_command
+      item: 0
+      color: '#f5f4e8'
+    - command: draw_filled_background_command
+      item: 0
+      color: '#ffffff'
 
-interface:
-  sections:
-    - label: head
-      cover_url: <BASE_URL>/manga_male_pack/interface/head_section.png
-      designers:
-        - label: shape
-          command_name: draw_head
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/head_shapes/<OPTION>.gif
-        - label: ears
-          command_name: draw_ears
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/ears/<OPTION>.gif
-        - label: eyebrows
-          command_name: draw_eyebrows
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyebrows/<OPTION>.gif
-        - label: eyes
-          command_name: draw_eyes
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyes/<OPTION>.gif
-        - label: nose
-          command_name: draw_nose
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/nose_shapes/<OPTION>.gif
-        - label: mouth
-          command_name: draw_mouth
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mouth_shapes/<OPTION>.gif
-        - label: mustache
-          command_name: draw_mustache
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mustache_styles/<OPTION>.gif
-        - label: beard
-          command_name: draw_beard
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/beard_styles/<OPTION>.gif
-    - label: hair
-      cover_url: <BASE_URL>/manga_male_pack/interface/hair_section.png
-      designers:
-        - label: hair
-          command_name: draw_hair
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/hair/<OPTION>.gif
-    - label: wearables
-      cover_url: <BASE_URL>/manga_male_pack/interface/wearables_section.png
-      designers:
-        - label: shirt
-          command_name: draw_shirt
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/shirts/<OPTION>.gif
-        - label: jacket
-          command_name: draw_jacket
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/jackets/<OPTION>.gif
-        - label: scarf
-          command_name: draw_scarf
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/scarfs/<OPTION>.gif
-        - label: hat
-          command_name: draw_hat
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/hats/<OPTION>.gif
-        - label: glasses
-          command_name: draw_glasses
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/glasses/<OPTION>.gif
-    - label: backgrounds
-      cover_url: <BASE_URL>/manga_male_pack/interface/backgrounds_section.png
-      designers:
-        - label: filled_background
-          command_name: draw_filled_background
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_colors/<OPTION>.gif
-        - label: patterns
-          command_name: draw_patterns
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_patterns/<OPTION>.gif
-        - label: themes
-          command_name: draw_themes
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_themes/<OPTION>.gif
-    - label: effects
-      cover_url: <BASE_URL>/manga_male_pack/interface/effects_section.png
-      designers:
-        - label: weather_effect
-          command_name: draw_weather_effect
-          preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/weather_effects/<OPTION>.gif
+navigators:
+  - label: head
+    cover_url: <BASE_URL>/manga_male_pack/interface/head_section.png
+    designers:
+      - label: shape
+        title: Shape
+        command: draw_head_command
+      - label: ears
+        title: Ears
+        command: draw_ears_command
+      - label: eyebrows
+        title: Eyebrows
+        command: draw_eyebrows_command
+      - label: eyes
+        title: Eyes
+        command: draw_eyes_command
+      - label: nose
+        title: Nose
+        command: draw_nose_command
+      - label: mouth
+        title: Mouth
+        command: draw_mouth_command
+      - label: mustache
+        title: Mustache
+        command: draw_mustache_command
+      - label: beard
+        title: Beard
+        command: draw_beard_command
+  - label: hair
+    cover_url: <BASE_URL>/manga_male_pack/interface/hair_section.png
+    designers:
+      - label: hair
+        title: Hair
+        command: draw_hair_command
+  - label: wearables
+    cover_url: <BASE_URL>/manga_male_pack/interface/wearables_section.png
+    designers:
+      - label: shirt
+        title: Shirt
+        command: draw_shirt_command
+      - label: jacket
+        title: Jacket
+        command: draw_jacket_command
+      - label: scarf
+        title: Scarf
+        command: draw_scarf_command
+      - label: hat
+        title: Hat
+        command: draw_hat_command
+      - label: glasses
+        title: Glasses
+        command: draw_glasses_command
+  - label: backgrounds
+    cover_url: <BASE_URL>/manga_male_pack/interface/backgrounds_section.png
+    designers:
+      - label: filled_background
+        title: Filled Background
+        command: draw_filled_background_command
+      - label: patterns
+        title: Patterns
+        command: draw_patterns_command
+      - label: themes
+        title: Themes
+        command: draw_themes_command
+  - label: effects
+    cover_url: <BASE_URL>/manga_male_pack/interface/effects_section.png
+    designers:
+      - label: weather_effect
+        title: Weather Effect
+        command: draw_weather_effect_command
 
 color_palettes:
   skin: &skin_colors
@@ -123,89 +148,114 @@ color_palettes:
       code: '#136f36'
 
 commands:
-  draw_head:
-    items: 30
+  - label: draw_body_shape_command
+    items_count: 1
     color_palette: *skin_colors
-    icons_dir: head_shapes
+    item_preview_url: ''
     subscribed_layers:
-      - head_shape
-  draw_ears:
-    items: 6
+      - body_shape_layer
+  - label: draw_head_command
+    items_count: 30
     color_palette: *skin_colors
-    icons_dir: ears
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/head_shapes/<ITEM>.gif
+    subscribed_layers:
+      - head_shape_layer
+  - label: draw_ears_command
+    items_count: 6
+    color_palette: *skin_colors
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/ears/<ITEM>.gif
     subscribed_layers:
       - left_ear_layer
       - right_ear_layer
-  draw_eyebrows:
-    items: 27
+  - label: draw_eyebrows_command
+    items_count: 27
     color_palette: *hair_colors
-    icons_dir: eyebrows
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyebrows/<ITEM>.gif
     movement_limit: 2
     subscribed_layers:
-      - left_eyebrow
-      - right_eyebrow
-      - left_eyeshadow
-      - right_eyeshadow
-  draw_eyes:
-    items: 28
+      - left_eyebrow_layer
+      - right_eyebrow_layer
+      - left_eyeshadow_layer
+      - right_eyeshadow_layer
+  - label: draw_eyes_command
+    items_count: 28
     color_palette: *eye_colors
-    icons_dir: eyes
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyes/<ITEM>.gif
     subscribed_layers:
       - left_eye_layer
       - right_eye_layer
-  draw_nose:
-    items: 34
+  - label: draw_nose_command
+    items_count: 34
     color_palette: *skin_colors
-    icons_dir: noses
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/nose_shapes/<ITEM>.gif
     movement_limit: 2
     subscribed_layers:
       - nose_layer
-  draw_mouth:
-    items: 23
+  - label: draw_mouth_command
+    items_count: 23
     color_palette: *skin_colors
-    icons_dir: mouth
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mouth_shapes/<ITEM>.gif
     movement_limit: 2
     subscribed_layers:
       - mouth_layer
-  draw_mustache:
-    items: 29
+  - label: draw_mustache_command
+    items_count: 29
     color_palette: *hair_colors
-    icons_dir: mustache
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mustache_styles/<ITEM>.gif
     movement_limit: 2
-  draw_beard:
-    items: 2
+    subscribed_layers:
+      - mustache_layer
+  - label: draw_beard_command
+    items_count: 2
     color_palette: *hair_colors
-    icons_dir: beard_styles
-  draw_hair:
-    items: 62
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/beard_styles/<ITEM>.gif
+    subscribed_layers:
+      - beard_layer
+  - label: draw_hair_command
+    items_count: 62
     color_palette: *hair_colors
-    icons_dir: hair_styles
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/hair/<ITEM>.gif
+    subscribed_layers:
+      - hair_front_layer
+      - hair_back_layer
     rules:
-      - match: [33, 37, 38, 39, 41, 43, 44, 60, 62] # Covered hairs
-        force:
-          1001: 0 # Remove 'ears'
-  draw_shirt:
-    items: 25
+        # Handle ear-covering hair styles
+      - match_items_count: [33, 37, 38, 39, 41, 43, 44, 60, 62]
+        force_layers:
+            # Hide the left ear
+          - layer: left_ear_layer
+            item: 0
+            # Hide the right ear
+          - layer: right_ear_layer
+            item: 0
+  - label: draw_shirt_command
+    items_count: 25
     color_palette: *cloth_colors
-    icons_dir: shirts
-  draw_jacket:
-    items: 19
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/shirts/<ITEM>.gif
+    subscribed_layers:
+      - shirt_layer
+  - label: draw_jacket_command
+    items_count: 19
     color_palette: *cloth_colors
-    icons_dir: jackets
-  draw_scarf:
-    items: 2
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/jackets/<ITEM>.gif
+    subscribed_layers:
+      - jackets_layer
+  - label: draw_scarf_command
+    items_count: 2
     color_palette: *cloth_colors
-    icons_dir: scarfs
-  draw_hat:
-    items: 11
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/scarfs/<ITEM>.gif
+    subscribed_layers:
+      - scarf_layer
+  - label: draw_hat_command
+    items_count: 11
     color_palette: *cloth_colors
     movement_limit: 3
-    icons_dir: hats
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/hats/<ITEM>.gif
     subscribed_layers:
       - hat_layer
     rules:
         # Rule 1: Handle swim caps / head covers
-      - match_items: [4, 6]
+      - match_items_count: [4, 6]
         force_layers:
             # Hide the left ear
           - layer: left_ear_layer
@@ -217,310 +267,192 @@ commands:
           - layer: hair_layer
             item: 0
         # Rule 2: Handle all the hats covering the hair
-      - match_items: [1, 3, 5, 7, 8, 9, 10, 11]
+      - match_items_count: [1, 3, 5, 7, 8, 9, 10, 11]
         when:
             # When the hair style is long
           - layer: hair_layer
-            match_items: [4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 20, 24, 25, 29, 31, 44, 56, 57, 60]
+            match_items_count: [4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 20, 24, 25, 29, 31, 44, 56, 57, 60]
         force_layers:
             # Change hair style to bald
           - layer: hair_layer
             item: 22
-  draw_glasses:
-    items: 34
-    icons_dir: glasses
+  - label: draw_glasses_command
+    items_count: 34
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/glasses/<ITEM>.gif
     movement_limit: 2
-  draw_filled_background:
-    items: 24
-    icons_dir: bg_colors
-  draw_patterns:
-    items: 32
+    subscribed_layers:
+      - glasses_layer
+  - label: draw_filled_background_command
+    items_count: 24
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_colors/<ITEM>.gif
+    subscribed_layers:
+      - filled_background_layer
+  - label: draw_patterns_command
+    items_count: 32
     color_palette: *cloth_colors
-    icons_dir: bg_patterns
-  draw_themes:
-    items: 18
-    icons_dir: bg_themes
-  draw_weather_effect:
-    items: 1
-    icons_dir: weather_effects
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_patterns/<ITEM>.gif
+    subscribed_layers:
+      - pattern_layer
+  - label: draw_themes_command
+    items_count: 18
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_themes/<ITEM>.gif
+    subscribed_layers:
+      - theme_layer
+  - label: draw_weather_effect_command
+    items_count: 1
+    item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/weather_effects/<ITEM>.gif
+    subscribed_layers:
+      - weather_effect_layer
 
-default_fragment: &frag
-  dir: default
-  priority: 100
-  position:
-    top: 0
-    left: 0
-  
-layers_temp:
-  left_eyebrow:
-    dir: left_eyebrow
-    priority: 480
+layers:
+  - label: filled_background_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_color/<COLOR>/<ASSET>.png
     position:
-      top: 52
-      left: 93
-  right_eyebrow:
-    dir: right_eyebrow
-    priority: 480
-    position:
-      top: 52
-      left: 39
-  left_eyeshadow:
-    dir: left_eyeshadow
-    priority: 460
-    position:
-      top: 55
-      left: 91
-  right_eyeshadow:
-    dir: right_eyeshadow
-    priority: 460
-    position:
-      top: 55
-      left: 38
+      top: 0
+      left: 0
 
-# TODO body shape
-fragments:
-  - dir: body_shapes
-    permanent: true
-    priority: 210
+  - label: pattern_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_pattern/<COLOR>/<ASSET>.png
+    position:
+      top: 0
+      left: 0
+
+  - label: theme_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_theme/<COLOR>/<ASSET>.png
+    position:
+      top: 0
+      left: 0
+
+  - label: body_shape_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/body_shape/<COLOR>/<ASSET>.png
     position:
       top: 134
       left: 26
 
-layers:
-  - label: head_shape_layer
-    icons_dir: head_shapes
-    colors: *skin_colors
-    priority: 410
+  - label: hair_back_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/hair_back/<COLOR>/<ASSET>.png
     position:
-      top: 0
+      top: 23
+      left: 0
+
+  - label: shirt_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/shirt/<COLOR>/<ASSET>.png
+    position:
+      top: 124
+      left: 26
+
+  - label: jackets_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/jacket/<COLOR>/<ASSET>.png
+    position:
+      top: 122
+      left: 24
+
+  - label: scarf_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/scarf/<COLOR>/<ASSET>.png
+    position:
+      top: 126
       left: 30
-  
-  # Layers for ears
-  - label: left_ear_layer
-    icons_dir: left_ear
-    priority: 400
-    color_inheritance: 1000
-    position:
-      top: 64
-      left: 137
+
   - label: right_ear_layer
-    icons_dir: right_ear
-    priority: 400
+    asset_url: <BASE_URL>/manga_male_pack/shapes/right_ear/<COLOR>/<ASSET>.png
     position:
       top: 64
       left: 12
 
-  # Layers for eyebrows
-  - label: left_eyebrow
-    dir: left_eyebrow
-    priority: 480
+  - label: left_ear_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/left_ear/<COLOR>/<ASSET>.png
+    color_inheritance: 1000
     position:
-      top: 52
-      left: 93
-  - label: right_eyebrow
-    dir: right_eyebrow
-    priority: 480
-    position:
-      top: 52
-      left: 39
-  - label: left_eyeshadow
-    dir: left_eyeshadow
-    priority: 460
-    position:
-      top: 55
-      left: 91
-  - label: right_eyeshadow
-    dir: right_eyeshadow
-    priority: 460
-    position:
-      top: 55
-      left: 38
+      top: 64
+      left: 137
 
-  # Layers for eyes
-  - label: left_eye_layer
-    dir: left_eye
-    priority: 470
+  - label: head_shape_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/head_shape/<COLOR>/<ASSET>.png
+    colors: *skin_colors
     position:
-      top: 68
-      left: 97
-  - label: right_eye_layer
-    dir: right_eye
-    priority: 470
-    position:
-      top: 68
-      left: 41
+      top: 0
+      left: 30
 
-  - label: nose_layer
-    priority: 450
+  - label: beard_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/beard/<COLOR>/<ASSET>.png
     position:
-      top: 68
-      left: 65
+      top: 75
+      left: 30
 
   - label: mouth_layer
-    priority: 430
+    asset_url: <BASE_URL>/manga_male_pack/shapes/mouth/<COLOR>/<ASSET>.png
     position:
       top: 107
       left: 52
 
   - label: mustache_layer
-    icons_dir: mustache
-    colors: *hair_colors
-    filename_range:
-      min: 1
-      max: 29
-    movement_limit: 2
-    fragments:
-      - <<: *frag
-        priority: 440
-        position:
-          top: 104
-          left: 49
+    asset_url: <BASE_URL>/manga_male_pack/shapes/mustache/<COLOR>/<ASSET>.png
+    position:
+      top: 104
+      left: 49
 
-  - label: beard_layer
-    icons_dir: beard_styles
-    colors: *hair_colors
-    filename_range:
-      min: 1
-      max: 2
-    fragments:
-      - <<: *frag
-        priority: 420
-        position:
-          top: 75
-          left: 30
-  
-  - label: hair_layer
-    icons_dir: hair_styles
-    colors: *hair_colors
-    filename_range:
-      min: 1
-      max: 62
-    rules:
-      - match: [33, 37, 38, 39, 41, 43, 44, 60, 62] # Covered hairs
-        force:
-          1001: 0 # Remove 'ears'
-    fragments:
-      - <<: *frag
-        dir: hair_front
-        priority: 600
-        position:
-          top: 0
-          left: 0
-      - <<: *frag
-        dir: hair_back
-        priority: 200
-        position:
-          top: 23
-          left: 0
-  
-  - label: shirt_layer
-    icons_dir: shirts
-    colors: *cloth_colors
-    filename_range:
-      min: 1
-      max: 25
-    fragments:
-      - <<: *frag
-        priority: 300
-        position:
-          top: 124
-          left: 26
+  - label: nose_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/nose/<COLOR>/<ASSET>.png
+    position:
+      top: 68
+      left: 65
 
-  - label: jackets_layer
-    icons_dir: jackets
-    colors: *cloth_colors
-    filename_range:
-      min: 1
-      max: 19
-    fragments:
-      - <<: *frag
-        priority: 310
-        position:
-          top: 122
-          left: 24
+  - label: left_eyeshadow
+    asset_url: <BASE_URL>/manga_male_pack/shapes/left_eyeshadow/<COLOR>/<ASSET>.png
+    position:
+      top: 55
+      left: 91
 
-  - label: scarf_layer
-    icons_dir: scarfs
-    colors: *cloth_colors
-    filename_range:
-      min: 1
-      max: 2
-    fragments:
-      - <<: *frag
-        priority: 320
-        position:
-          top: 126
-          left: 30
-  
-  - label: hat_layer
-    icons_dir: hats
-    colors: *cloth_colors
-    filename_range:
-      min: 1
-      max: 11
-    movement_limit: 3
-    rules:
-      - match: [4, 6] # Swim caps
-        force:
-          1001: 0 # Remove 'ears'
-          1008: 0 # Remove 'hair'
-      - match: [1, 3, 5, 7, 8, 9, 10, 11] # Covered hats
-        while:
-          1008: [4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 20, 24, 25, 29, 31, 44, 56, 57, 60] # Very long hairs
-        force:
-          1008: 22 # Bald style hair
-    fragments:
-      - <<: *frag
-        priority: 700
-        position:
-          top: -20
-          left: 0
+  - label: right_eyeshadow
+    asset_url: <BASE_URL>/manga_male_pack/shapes/right_eyeshadow/<COLOR>/<ASSET>.png
+    position:
+      top: 55
+      left: 38
+
+  - label: left_eye_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/left_eye/<COLOR>/<ASSET>.png
+    position:
+      top: 68
+      left: 97
+
+  - label: right_eye_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/right_eye/<COLOR>/<ASSET>.png
+    position:
+      top: 68
+      left: 41
+
+  - label: left_eyebrow
+    asset_url: <BASE_URL>/manga_male_pack/shapes/left_eyebrow/<COLOR>/<ASSET>.png
+    position:
+      top: 52
+      left: 93
+
+  - label: right_eyebrow
+    asset_url: <BASE_URL>/manga_male_pack/shapes/right_eyebrow/<COLOR>/<ASSET>.png
+    position:
+      top: 52
+      left: 39
+
   - label: glasses_layer
-    icons_dir: glasses
-    filename_range:
-      min: 1
-      max: 34
-    movement_limit: 2
-    fragments:
-      - <<: *frag
-        priority: 500
-        position:
-          top: 57
-          left: 27
-  
-  - label: filled_background_layer
-    icons_dir: bg_colors
-    filename_range:
-      min: 1
-      max: 24
-    fragments:
-      - <<: *frag
-        priority: 100
+    asset_url: <BASE_URL>/manga_male_pack/shapes/glasses/<COLOR>/<ASSET>.png
+    position:
+      top: 57
+      left: 27
 
-  - label: patterns_layer
-    icons_dir: bg_patterns
-    colors: *cloth_colors
-    filename_range:
-      min: 1
-      max: 32
-    fragments:
-      - <<: *frag
-        priority: 110
+  - label: hair_front_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/hair_front/<COLOR>/<ASSET>.png
+    position:
+      top: 0
+      left: 0
 
-  - label: theme_layer
-    icons_dir: bg_themes
-    filename_range:
-      min: 1
-      max: 18
-    fragments:
-      - <<: *frag
-        priority: 120
-  
-  - label: weather_layer
-    icons_dir: weather_effects
-    filename_range:
-      min: 1
-      max: 1
-    fragments:
-      - <<: *frag
-        priority: 800
+  - label: hat_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/hat/<COLOR>/<ASSET>.png
+    position:
+      top: -20
+      left: 0
+
+  - label: weather_effect_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/weather_effect/<COLOR>/<ASSET>.png
+    position:
+      top: 0
+      left: 0
