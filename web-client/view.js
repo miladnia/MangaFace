@@ -7,12 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { DesignerScreenTemplate } from "./src/ui/templates.js";
-import TabCom from "./src/ui/components/tab_com.js";
-import GridCom from "./src/ui/components/grid_com.js";
-import PinboardCom from "./src/ui/components/pinboard_com.js";
+import { DesignerScreenTemplate } from './src/ui/templates.js';
+import TabCom from './src/ui/components/tab_com.js';
+import GridCom from './src/ui/components/grid_com.js';
+import PinboardCom from './src/ui/components/pinboard_com.js';
 
-const DEFAULT_PACK = "manga_male_pack";
 
 export default function DesignerScreen(viewModel)
 {
@@ -29,10 +28,11 @@ export default function DesignerScreen(viewModel)
 DesignerScreen.prototype.render = async function () {
     this._pinboard = this._buildPinboard();
 
+    this._selectedColorId = 'light';
     this._grid = await this._renderGrid((itemId) => {
         this._selectedShapeId = itemId;
         this._execCommand(
-            this._selectedDesigner.commandName,
+            this._selectedDesigner.commandLabel,
             this._selectedShapeId,
             this._selectedColorId);
     });
@@ -45,22 +45,22 @@ DesignerScreen.prototype.render = async function () {
     await this._renderTabs((designer) => {
         this._selectedDesigner = designer;
         console.log(designer);
-        this._grid.switchToSection(designer.label);
-        // this._colorsGrid.switchToSection(designer.label);
+        this._grid.switchToSection(designer.title);
+        // this._colorsGrid.switchToSection(designer.title);
     });
 
     return this._tpl.getView();
 };
 
 DesignerScreen.prototype._renderTabs = async function (onDesignerSelected) {
-    const screenSections = await this._model.screenSectionRepository.findAll(DEFAULT_PACK);
+    const navigators = await this._model.navigatorRepository.findAll();
     const tabs = new TabCom;
 
-    for (let i = 0; i < screenSections.length; i++) {
-        let section = screenSections[i];
+    for (let i = 0; i < navigators.length; i++) {
+        const navigator = navigators[i];
 
         // Create a new tab component for inner tabs.
-        let innerTabs = (new TabCom).setListener({
+        const innerTabs = (new TabCom).setListener({
             onTabSelected: function (tab) {
                 let designer = tab.getTag();
                 onDesignerSelected(designer);
@@ -68,16 +68,16 @@ DesignerScreen.prototype._renderTabs = async function (onDesignerSelected) {
         }).disable();
 
         // Create an inner tab for each designer in the current section.
-        for (let j = 0; j < section.designers.length; j++) {
-            let designer = section.designers[j];
+        for (let j = 0; j < navigator.options.length; j++) {
+            let designer = navigator.options[j];
             innerTabs.addTab(
-                innerTabs.newTab().setText(designer.label).setTag(designer)
+                innerTabs.newTab().setText(designer.title).setTag(designer)
             );
         }
 
         // Create a new tab for the current section and assign the created inner tabs to it.
         tabs.addTab(
-            tabs.newTab().setImage(section.coverUrl).setInnerTabs(innerTabs)
+            tabs.newTab().setImage(navigator.coverUrl).setInnerTabs(innerTabs)
         );
 
         this._tpl.designersFrame.appendView( innerTabs.getView() );
@@ -87,7 +87,7 @@ DesignerScreen.prototype._renderTabs = async function (onDesignerSelected) {
 };
 
 DesignerScreen.prototype._renderGrid = async function (onItemSelected) {
-    const screenSections = await this._model.screenSectionRepository.findAll(DEFAULT_PACK);
+    const navigators = await this._model.navigatorRepository.findAll();
 
     const grid = (new GridCom(6, 6)).setListener({
         onItemSelected: function (position, section) {
@@ -96,20 +96,20 @@ DesignerScreen.prototype._renderGrid = async function (onItemSelected) {
             onItemSelected(itemId);
         },
         onItemDeselected: function (position, section) {
-            console.log("Shape deselected", position);
+            console.log('Shape deselected', position);
         },
         onItemReselected: function (position, section) {
-            console.log("Shape reselected", position);
+            console.log('Shape reselected', position);
         }
     });
 
-    for (const section of screenSections) {
-        for (const designer of section.designers) {
-            const gridSection = grid.newSection(designer.label);
-            const command = await this._model.commandRepository.findByName(DEFAULT_PACK, designer.commandName);
+    for (const navigator of navigators) {
+        for (const designer of navigator.options) {
+            const gridSection = grid.newSection(designer.title);
+            const command = await this._model.commandRepository.findByLabel(designer.commandLabel);
 
-            for (let i = 1; i <= command.items; i++) {
-                gridSection.addImageItem(designer.getPreviewUrl(i), i);
+            for (let i = 1; i <= command.itemsCount; i++) {
+                gridSection.addImageItem(command.getItemPreviewUrl(i), i);
             }
 
             grid.addSection(gridSection);
@@ -122,8 +122,8 @@ DesignerScreen.prototype._renderGrid = async function (onItemSelected) {
 };
 
 DesignerScreen.prototype._renderColorPalette = async function (resourceList, onColorSelected) {
-    const screenSections = await this._model.screenSectionRepository.findAll(DEFAULT_PACK);
-    var grid = new GridCom(5, 3);
+    const navigators = await this._model.navigatorRepository.findAll();
+    const grid = new GridCom(5, 3);
 
     grid.setListener({
         onItemSelected: function (position, layer) {
@@ -131,15 +131,15 @@ DesignerScreen.prototype._renderColorPalette = async function (resourceList, onC
             onColorSelected(item.getTag());
         },
         onItemDeselected: function (position, layer) {
-            console.log("Color deselected", position);
+            console.log('Color deselected', position);
         },
         onItemReselected: function (position, layer) {
-            console.log("Color reselected", position);
+            console.log('Color reselected', position);
         }
     });
 
     resourceList.forEach(function (res) {
-        var layer = grid.newSection(res.id);
+        const layer = grid.newSection(res.id);
 
         res.colors.forEach(function (color) {
             layer.addColorItem(color.code, color.codename);
@@ -159,49 +159,26 @@ DesignerScreen.prototype._buildPinboard = function () {
     return pinboard;
 };
 
-DesignerScreen.prototype._execCommand = async function (commandName, shapeName, colorName) {
-    const command = await this._model.commandRepository.findByName(DEFAULT_PACK, commandName);
-    res.fragments.forEach((function (f, i) {
-        console.log(f.getUrl(shapeName, colorName));
+DesignerScreen.prototype._execCommand = async function (commandLabel, item, color) {
+    const command = await this._model.commandRepository.findByLabel(commandLabel);
+    command.subscribedLayers.forEach(async (layerLabel) => {
+        const layer = await this._model.layerRepository.findByLabel(layerLabel);
+        console.log('layerLabel', layerLabel);
+        console.log('layer', layer);
+        
+        var layerPin = this._pinboard.getItem(layerLabel);
 
-        var itemKey = res.id + '_' + i;
-        var item = this._pinboard.getItem(itemKey);
-
-        if (item) {
+        if (layerPin) {
             // Update existing item.
-            item.setImageUrl(f.getUrl(shapeName, colorName));
+            layerPin.setImageUrl(layer.getAssetUrl(item, color));
             return;
         }
 
-        // Create a new item.
         this._pinboard.pinItem(
-            itemKey,
+            layerLabel,
             this._pinboard.newItem()
-                .setImageUrl(f.getUrl(shapeName, colorName))
-                .setPosition(f.position.top + "px", f.position.left + "px")
-                .setPriority(f.priority));
-    }).bind(this));
-};
-
-DesignerScreen.prototype._pinAsset = function (asset) {
-    res.fragments.forEach((function (f, i) {
-        console.log(f.getUrl(shapeName, colorName));
-
-        var itemKey = res.id + '_' + i;
-        var item = this._pinboard.getItem(itemKey);
-
-        if (item) {
-            // Update existing item.
-            item.setImageUrl(f.getUrl(shapeName, colorName));
-            return;
-        }
-
-        // Create a new item.
-        this._pinboard.pinItem(
-            itemKey,
-            this._pinboard.newItem()
-                .setImageUrl(f.getUrl(shapeName, colorName))
-                .setPosition(f.position.top + "px", f.position.left + "px")
-                .setPriority(f.priority));
-    }).bind(this));
+                .setImageUrl(layer.getAssetUrl(item, color))
+                .setPosition(layer.position.top + 'px', layer.position.left + 'px')
+                .setPriority(layer.priority));
+    });
 };

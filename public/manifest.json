@@ -1,132 +1,151 @@
 {
     "manga_male_pack": {
-        "pack_label": "manga_male_pack",
-        "shape_path": "<pack_label>\/shapes\/<resourse::dir>\/<color::dir>\/<shape_name>.png",
-        "default_color_dir": "default",
-        "interface": {
-            "sections": [
+        "metadata": {
+            "pack_label": "manga_male_pack",
+            "shape_path": "<pack_label>\/shapes\/<resourse::dir>\/<color::dir>\/<shape_name>.png",
+            "default_color_dir": "default",
+            "initializer_commands": [
                 {
-                    "label": "head",
-                    "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/head_section.png",
-                    "designers": [
-                        {
-                            "label": "shape",
-                            "command_name": "draw_head",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/head_shapes\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "ears",
-                            "command_name": "draw_ears",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/ears\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "eyebrows",
-                            "command_name": "draw_eyebrows",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/eyebrows\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "eyes",
-                            "command_name": "draw_eyes",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/eyes\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "nose",
-                            "command_name": "draw_nose",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/nose_shapes\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "mouth",
-                            "command_name": "draw_mouth",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/mouth_shapes\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "mustache",
-                            "command_name": "draw_mustache",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/mustache_styles\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "beard",
-                            "command_name": "draw_beard",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/beard_styles\/<OPTION>.gif"
-                        }
-                    ]
+                    "command": "draw_head_command",
+                    "item": 0,
+                    "color": "#fabe9f"
                 },
                 {
-                    "label": "hair",
-                    "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/hair_section.png",
-                    "designers": [
-                        {
-                            "label": "hair",
-                            "command_name": "draw_hair",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/hair\/<OPTION>.gif"
-                        }
-                    ]
+                    "command": "draw_ears_command",
+                    "item": 0,
+                    "color": "#fabe9f"
                 },
                 {
-                    "label": "wearables",
-                    "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/wearables_section.png",
-                    "designers": [
-                        {
-                            "label": "shirt",
-                            "command_name": "draw_shirt",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/shirts\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "jacket",
-                            "command_name": "draw_jacket",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/jackets\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "scarf",
-                            "command_name": "draw_scarf",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/scarfs\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "hat",
-                            "command_name": "draw_hat",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/hats\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "glasses",
-                            "command_name": "draw_glasses",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/glasses\/<OPTION>.gif"
-                        }
-                    ]
+                    "command": "draw_eyebrows_command",
+                    "item": 0,
+                    "color": "#262624"
                 },
                 {
-                    "label": "backgrounds",
-                    "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/backgrounds_section.png",
-                    "designers": [
-                        {
-                            "label": "filled_background",
-                            "command_name": "draw_filled_background",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/bg_colors\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "patterns",
-                            "command_name": "draw_patterns",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/bg_patterns\/<OPTION>.gif"
-                        },
-                        {
-                            "label": "themes",
-                            "command_name": "draw_themes",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/bg_themes\/<OPTION>.gif"
-                        }
-                    ]
+                    "command": "draw_eyes_command",
+                    "item": 0,
+                    "color": "#262624"
                 },
                 {
-                    "label": "effects",
-                    "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/effects_section.png",
-                    "designers": [
-                        {
-                            "label": "weather_effect",
-                            "command_name": "draw_weather_effect",
-                            "preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/weather_effects\/<OPTION>.gif"
-                        }
-                    ]
+                    "command": "draw_nose_command",
+                    "item": 0,
+                    "color": "#fabe9f"
+                },
+                {
+                    "command": "draw_mouth_command",
+                    "item": 0,
+                    "color": "#fabe9f"
+                },
+                {
+                    "command": "draw_shirt_command",
+                    "item": 0,
+                    "color": "#f5f4e8"
+                },
+                {
+                    "command": "draw_filled_background_command",
+                    "item": 0,
+                    "color": "#ffffff"
                 }
             ]
         },
+        "navigators": [
+            {
+                "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/head_section.png",
+                "options": [
+                    {
+                        "title": "Shape",
+                        "command": "draw_head_shape_command"
+                    },
+                    {
+                        "title": "Ears",
+                        "command": "draw_ears_command"
+                    },
+                    {
+                        "title": "Eyebrows",
+                        "command": "draw_eyebrows_command"
+                    },
+                    {
+                        "title": "Eyes",
+                        "command": "draw_eyes_command"
+                    },
+                    {
+                        "title": "Nose",
+                        "command": "draw_nose_command"
+                    },
+                    {
+                        "title": "Mouth",
+                        "command": "draw_mouth_command"
+                    },
+                    {
+                        "title": "Mustache",
+                        "command": "draw_mustache_command"
+                    },
+                    {
+                        "title": "Beard",
+                        "command": "draw_beard_command"
+                    }
+                ]
+            },
+            {
+                "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/hair_section.png",
+                "options": [
+                    {
+                        "title": "Hair",
+                        "command": "draw_hair_command"
+                    }
+                ]
+            },
+            {
+                "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/wearables_section.png",
+                "options": [
+                    {
+                        "title": "Shirt",
+                        "command": "draw_shirt_command"
+                    },
+                    {
+                        "title": "Jacket",
+                        "command": "draw_jacket_command"
+                    },
+                    {
+                        "title": "Scarf",
+                        "command": "draw_scarf_command"
+                    },
+                    {
+                        "title": "Hat",
+                        "command": "draw_hat_command"
+                    },
+                    {
+                        "title": "Glasses",
+                        "command": "draw_glasses_command"
+                    }
+                ]
+            },
+            {
+                "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/backgrounds_section.png",
+                "options": [
+                    {
+                        "title": "Filled Background",
+                        "command": "draw_filled_background_command"
+                    },
+                    {
+                        "title": "Patterns",
+                        "command": "draw_patterns_command"
+                    },
+                    {
+                        "title": "Themes",
+                        "command": "draw_themes_command"
+                    }
+                ]
+            },
+            {
+                "cover_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/effects_section.png",
+                "options": [
+                    {
+                        "title": "Weather Effect",
+                        "command": "draw_weather_effect_command"
+                    }
+                ]
+            }
+        ],
         "color_palettes": {
             "skin": [
                 {
@@ -221,9 +240,10 @@
                 }
             ]
         },
-        "commands": {
-            "draw_head": {
-                "items": 30,
+        "commands": [
+            {
+                "label": "draw_body_shape_command",
+                "items_count": 1,
                 "color_palette": [
                     {
                         "dir": "plain",
@@ -238,13 +258,14 @@
                         "code": "#f9d5c3"
                     }
                 ],
-                "icons_dir": "head_shapes",
-                "layers": [
-                    "head_shape"
+                "item_preview_url": "",
+                "subscribed_layers": [
+                    "body_shape_layer"
                 ]
             },
-            "draw_ears": {
-                "items": 6,
+            {
+                "label": "draw_head_shape_command",
+                "items_count": 30,
                 "color_palette": [
                     {
                         "dir": "plain",
@@ -259,10 +280,37 @@
                         "code": "#f9d5c3"
                     }
                 ],
-                "icons_dir": "ears"
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/head_shapes\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "head_shape_layer"
+                ]
             },
-            "draw_eyebrows": {
-                "items": 27,
+            {
+                "label": "draw_ears_command",
+                "items_count": 6,
+                "color_palette": [
+                    {
+                        "dir": "plain",
+                        "code": "#fabe9f"
+                    },
+                    {
+                        "dir": "dark",
+                        "code": "#e0a182"
+                    },
+                    {
+                        "dir": "light",
+                        "code": "#f9d5c3"
+                    }
+                ],
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/ears\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "left_ear_layer",
+                    "right_ear_layer"
+                ]
+            },
+            {
+                "label": "draw_eyebrows_command",
+                "items_count": 27,
                 "color_palette": [
                     {
                         "dir": "black",
@@ -281,11 +329,18 @@
                         "code": "#fabe48"
                     }
                 ],
-                "icons_dir": "eyebrows",
-                "movement_limit": 2
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/eyebrows\/<ITEM>.gif",
+                "movement_limit": 2,
+                "subscribed_layers": [
+                    "left_eyebrow_layer",
+                    "right_eyebrow_layer",
+                    "left_eyeshadow_layer",
+                    "right_eyeshadow_layer"
+                ]
             },
-            "draw_eyes": {
-                "items": 28,
+            {
+                "label": "draw_eyes_command",
+                "items_count": 28,
                 "color_palette": [
                     {
                         "dir": "black",
@@ -312,10 +367,15 @@
                         "code": "#a5caf3"
                     }
                 ],
-                "icons_dir": "eyes"
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/eyes\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "left_eye_layer",
+                    "right_eye_layer"
+                ]
             },
-            "draw_nose": {
-                "items": 34,
+            {
+                "label": "draw_nose_command",
+                "items_count": 34,
                 "color_palette": [
                     {
                         "dir": "plain",
@@ -330,11 +390,15 @@
                         "code": "#f9d5c3"
                     }
                 ],
-                "icons_dir": "noses",
-                "movement_limit": 2
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/nose_shapes\/<ITEM>.gif",
+                "movement_limit": 2,
+                "subscribed_layers": [
+                    "nose_layer"
+                ]
             },
-            "draw_mouth": {
-                "items": 23,
+            {
+                "label": "draw_mouth_command",
+                "items_count": 23,
                 "color_palette": [
                     {
                         "dir": "plain",
@@ -349,11 +413,15 @@
                         "code": "#f9d5c3"
                     }
                 ],
-                "icons_dir": "mouth",
-                "movement_limit": 2
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/mouth_shapes\/<ITEM>.gif",
+                "movement_limit": 2,
+                "subscribed_layers": [
+                    "mouth_layer"
+                ]
             },
-            "draw_mustache": {
-                "items": 29,
+            {
+                "label": "draw_mustache_command",
+                "items_count": 29,
                 "color_palette": [
                     {
                         "dir": "black",
@@ -372,11 +440,15 @@
                         "code": "#fabe48"
                     }
                 ],
-                "icons_dir": "mustache",
-                "movement_limit": 2
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/mustache_styles\/<ITEM>.gif",
+                "movement_limit": 2,
+                "subscribed_layers": [
+                    "mustache_layer"
+                ]
             },
-            "draw_beard": {
-                "items": 2,
+            {
+                "label": "draw_beard_command",
+                "items_count": 2,
                 "color_palette": [
                     {
                         "dir": "black",
@@ -395,10 +467,14 @@
                         "code": "#fabe48"
                     }
                 ],
-                "icons_dir": "beard_styles"
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/beard_styles\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "beard_layer"
+                ]
             },
-            "draw_hair": {
-                "items": 62,
+            {
+                "label": "draw_hair_command",
+                "items_count": 62,
                 "color_palette": [
                     {
                         "dir": "black",
@@ -417,10 +493,14 @@
                         "code": "#fabe48"
                     }
                 ],
-                "icons_dir": "hair_styles",
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/hair\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "hair_front_layer",
+                    "hair_back_layer"
+                ],
                 "rules": [
                     {
-                        "match": [
+                        "match_items_count": [
                             33,
                             37,
                             38,
@@ -431,14 +511,22 @@
                             60,
                             62
                         ],
-                        "force": {
-                            "1001": 0
-                        }
+                        "force_layers": [
+                            {
+                                "layer": "left_ear_layer",
+                                "item": 0
+                            },
+                            {
+                                "layer": "right_ear_layer",
+                                "item": 0
+                            }
+                        ]
                     }
                 ]
             },
-            "draw_shirt": {
-                "items": 25,
+            {
+                "label": "draw_shirt_command",
+                "items_count": 25,
                 "color_palette": [
                     {
                         "dir": "white",
@@ -473,10 +561,14 @@
                         "code": "#136f36"
                     }
                 ],
-                "icons_dir": "shirts"
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/shirts\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "shirt_layer"
+                ]
             },
-            "draw_jacket": {
-                "items": 19,
+            {
+                "label": "draw_jacket_command",
+                "items_count": 19,
                 "color_palette": [
                     {
                         "dir": "white",
@@ -511,10 +603,14 @@
                         "code": "#136f36"
                     }
                 ],
-                "icons_dir": "jackets"
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/jackets\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "jackets_layer"
+                ]
             },
-            "draw_scarf": {
-                "items": 2,
+            {
+                "label": "draw_scarf_command",
+                "items_count": 2,
                 "color_palette": [
                     {
                         "dir": "white",
@@ -549,10 +645,14 @@
                         "code": "#136f36"
                     }
                 ],
-                "icons_dir": "scarfs"
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/scarfs\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "scarf_layer"
+                ]
             },
-            "draw_hat": {
-                "items": 11,
+            {
+                "label": "draw_hat_command",
+                "items_count": 11,
                 "color_palette": [
                     {
                         "dir": "white",
@@ -588,19 +688,23 @@
                     }
                 ],
                 "movement_limit": 3,
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/hats\/<ITEM>.gif",
                 "subscribed_layers": [
                     "hat_layer"
                 ],
-                "icons_dir": "hats",
                 "rules": [
                     {
-                        "match_items": [
+                        "match_items_count": [
                             4,
                             6
                         ],
                         "force_layers": [
                             {
-                                "layer": "ears_layer",
+                                "layer": "left_ear_layer",
+                                "item": 0
+                            },
+                            {
+                                "layer": "right_ear_layer",
                                 "item": 0
                             },
                             {
@@ -610,7 +714,7 @@
                         ]
                     },
                     {
-                        "match_items": [
+                        "match_items_count": [
                             1,
                             3,
                             5,
@@ -620,46 +724,61 @@
                             10,
                             11
                         ],
-                        "while": {
-                            "1008": [
-                                4,
-                                5,
-                                6,
-                                7,
-                                8,
-                                12,
-                                13,
-                                14,
-                                15,
-                                16,
-                                20,
-                                24,
-                                25,
-                                29,
-                                31,
-                                44,
-                                56,
-                                57,
-                                60
-                            ]
-                        },
-                        "force": {
-                            "1008": 22
-                        }
+                        "when": [
+                            {
+                                "layer": "hair_layer",
+                                "match_items_count": [
+                                    4,
+                                    5,
+                                    6,
+                                    7,
+                                    8,
+                                    12,
+                                    13,
+                                    14,
+                                    15,
+                                    16,
+                                    20,
+                                    24,
+                                    25,
+                                    29,
+                                    31,
+                                    44,
+                                    56,
+                                    57,
+                                    60
+                                ]
+                            }
+                        ],
+                        "force_layers": [
+                            {
+                                "layer": "hair_layer",
+                                "item": 22
+                            }
+                        ]
                     }
                 ]
             },
-            "draw_glasses": {
-                "items": 34,
-                "icons_dir": "glasses",
-                "movement_limit": 2
+            {
+                "label": "draw_glasses_command",
+                "items_count": 34,
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/glasses\/<ITEM>.gif",
+                "movement_limit": 2,
+                "subscribed_layers": [
+                    "glasses_layer"
+                ]
             },
-            "draw_filled_background": {
-                "items": 24,
-                "icons_dir": "bg_colors"
+            {
+                "label": "draw_filled_background_command",
+                "items_count": 24,
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/bg_colors\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "filled_background_layer"
+                ]
             },
-            "draw_patterns": {
-                "items": 32,
+            {
+                "label": "draw_patterns_command",
+                "items_count": 32,
                 "color_palette": [
                     {
                         "dir": "white",
@@ -694,890 +813,244 @@
                         "code": "#136f36"
                     }
                 ],
-                "icons_dir": "bg_patterns"
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/bg_patterns\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "pattern_layer"
+                ]
             },
-            "draw_themes": {
-                "items": 18,
-                "icons_dir": "bg_themes"
+            {
+                "label": "draw_themes_command",
+                "items_count": 18,
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/bg_themes\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "theme_layer"
+                ]
             },
-            "draw_weather_effect": {
-                "items": 1,
-                "icons_dir": "weather_effects"
+            {
+                "label": "draw_weather_effect_command",
+                "items_count": 1,
+                "item_preview_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/interface\/design_preview\/weather_effects\/<ITEM>.gif",
+                "subscribed_layers": [
+                    "weather_effect_layer"
+                ]
             }
-        },
-        "default_fragment": {
-            "dir": "default",
-            "priority": 100,
-            "position": {
-                "top": 0,
-                "left": 0
-            }
-        },
-        "layers_temp": {
-            "left_eyebrow": {
-                "dir": "left_eyebrow",
-                "priority": 480,
+        ],
+        "layers": [
+            {
+                "label": "filled_background_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/bg_color\/<COLOR>\/<ITEM>.png",
                 "position": {
-                    "top": 52,
-                    "left": 93
+                    "top": 0,
+                    "left": 0
                 }
             },
-            "right_eyebrow": {
-                "dir": "right_eyebrow",
-                "priority": 480,
+            {
+                "label": "pattern_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/bg_pattern\/<COLOR>\/<ITEM>.png",
                 "position": {
-                    "top": 52,
-                    "left": 39
+                    "top": 0,
+                    "left": 0
                 }
             },
-            "left_eyeshadow": {
-                "dir": "left_eyeshadow",
-                "priority": 460,
+            {
+                "label": "theme_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/bg_theme\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 0,
+                    "left": 0
+                }
+            },
+            {
+                "label": "body_shape_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/body_shape\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 134,
+                    "left": 26
+                }
+            },
+            {
+                "label": "hair_back_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/hair_back\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 23,
+                    "left": 0
+                }
+            },
+            {
+                "label": "shirt_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/shirt\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 124,
+                    "left": 26
+                }
+            },
+            {
+                "label": "jackets_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/jacket\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 122,
+                    "left": 24
+                }
+            },
+            {
+                "label": "scarf_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/scarf\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 126,
+                    "left": 30
+                }
+            },
+            {
+                "label": "right_ear_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/right_ear\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 64,
+                    "left": 12
+                }
+            },
+            {
+                "label": "left_ear_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/left_ear\/<COLOR>\/<ITEM>.png",
+                "color_inheritance": 1000,
+                "position": {
+                    "top": 64,
+                    "left": 137
+                }
+            },
+            {
+                "label": "head_shape_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/head_shape\/<COLOR>\/<ITEM>.png",
+                "colors": [
+                    {
+                        "dir": "plain",
+                        "code": "#fabe9f"
+                    },
+                    {
+                        "dir": "dark",
+                        "code": "#e0a182"
+                    },
+                    {
+                        "dir": "light",
+                        "code": "#f9d5c3"
+                    }
+                ],
+                "position": {
+                    "top": 0,
+                    "left": 30
+                }
+            },
+            {
+                "label": "beard_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/beard\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 75,
+                    "left": 30
+                }
+            },
+            {
+                "label": "mouth_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/mouth\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 107,
+                    "left": 52
+                }
+            },
+            {
+                "label": "mustache_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/mustache\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 104,
+                    "left": 49
+                }
+            },
+            {
+                "label": "nose_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/nose\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 68,
+                    "left": 65
+                }
+            },
+            {
+                "label": "left_eyeshadow",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/left_eyeshadow\/<COLOR>\/<ITEM>.png",
                 "position": {
                     "top": 55,
                     "left": 91
                 }
             },
-            "right_eyeshadow": {
-                "dir": "right_eyeshadow",
-                "priority": 460,
+            {
+                "label": "right_eyeshadow",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/right_eyeshadow\/<COLOR>\/<ITEM>.png",
                 "position": {
                     "top": 55,
                     "left": 38
                 }
-            }
-        },
-        "fragments": [
+            },
             {
-                "dir": "body_shapes",
-                "permanent": true,
-                "priority": 210,
+                "label": "left_eye_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/left_eye\/<COLOR>\/<ITEM>.png",
                 "position": {
-                    "top": 134,
-                    "left": 26
+                    "top": 68,
+                    "left": 97
                 }
-            }
-        ],
-        "layers": [
-            {
-                "label": "head_shape_layer",
-                "icons_dir": "head_shapes",
-                "colors": [
-                    {
-                        "dir": "plain",
-                        "code": "#fabe9f"
-                    },
-                    {
-                        "dir": "dark",
-                        "code": "#e0a182"
-                    },
-                    {
-                        "dir": "light",
-                        "code": "#f9d5c3"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 30
-                },
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 410,
-                        "position": {
-                            "top": 0,
-                            "left": 30
-                        }
-                    }
-                ]
             },
             {
-                "label": "ears_layer",
-                "icons_dir": "ears",
-                "colors": [
-                    {
-                        "dir": "plain",
-                        "code": "#fabe9f"
-                    },
-                    {
-                        "dir": "dark",
-                        "code": "#e0a182"
-                    },
-                    {
-                        "dir": "light",
-                        "code": "#f9d5c3"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 6
-                },
-                "fragments": [
-                    {
-                        "dir": "left_ear",
-                        "priority": 400,
-                        "position": {
-                            "top": 64,
-                            "left": 137
-                        },
-                        "color_inheritance": 1000
-                    },
-                    {
-                        "dir": "right_ear",
-                        "priority": 400,
-                        "position": {
-                            "top": 64,
-                            "left": 12
-                        }
-                    }
-                ]
+                "label": "right_eye_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/right_eye\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 68,
+                    "left": 41
+                }
             },
             {
-                "label": "eyebrows",
-                "icons_dir": "eyebrows",
-                "colors": [
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#a87c4f"
-                    },
-                    {
-                        "dir": "red",
-                        "code": "#ac3831"
-                    },
-                    {
-                        "dir": "blondd",
-                        "code": "#fabe48"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 27
-                },
-                "movement_limit": 2,
-                "fragments": [
-                    {
-                        "dir": "left_eyebrow",
-                        "priority": 480,
-                        "position": {
-                            "top": 52,
-                            "left": 93
-                        }
-                    },
-                    {
-                        "dir": "right_eyebrow",
-                        "priority": 480,
-                        "position": {
-                            "top": 52,
-                            "left": 39
-                        }
-                    },
-                    {
-                        "dir": "left_eyeshadow",
-                        "priority": 460,
-                        "position": {
-                            "top": 55,
-                            "left": 91
-                        }
-                    },
-                    {
-                        "dir": "right_eyeshadow",
-                        "priority": 460,
-                        "position": {
-                            "top": 55,
-                            "left": 38
-                        }
-                    }
-                ]
+                "label": "left_eyebrow",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/left_eyebrow\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 52,
+                    "left": 93
+                }
             },
             {
-                "label": "eyes_layer",
-                "icons_dir": "eyes",
-                "colors": [
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#a35d02"
-                    },
-                    {
-                        "dir": "hazel",
-                        "code": "#d1c50b"
-                    },
-                    {
-                        "dir": "green",
-                        "code": "#0dc438"
-                    },
-                    {
-                        "dir": "blue",
-                        "code": "#1c71f1"
-                    },
-                    {
-                        "dir": "gray",
-                        "code": "#a5caf3"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 28
-                },
-                "fragments": [
-                    {
-                        "dir": "left_eye",
-                        "priority": 470,
-                        "position": {
-                            "top": 68,
-                            "left": 97
-                        }
-                    },
-                    {
-                        "dir": "right_eye",
-                        "priority": 470,
-                        "position": {
-                            "top": 68,
-                            "left": 41
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "nose_layer",
-                "icons_dir": "noses",
-                "colors": [
-                    {
-                        "dir": "plain",
-                        "code": "#fabe9f"
-                    },
-                    {
-                        "dir": "dark",
-                        "code": "#e0a182"
-                    },
-                    {
-                        "dir": "light",
-                        "code": "#f9d5c3"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 34
-                },
-                "movement_limit": 2,
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 450,
-                        "position": {
-                            "top": 68,
-                            "left": 65
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "mouth_layer",
-                "icons_dir": "mouth",
-                "colors": [
-                    {
-                        "dir": "plain",
-                        "code": "#fabe9f"
-                    },
-                    {
-                        "dir": "dark",
-                        "code": "#e0a182"
-                    },
-                    {
-                        "dir": "light",
-                        "code": "#f9d5c3"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 23
-                },
-                "movement_limit": 2,
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 430,
-                        "position": {
-                            "top": 107,
-                            "left": 52
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "mustache_layer",
-                "icons_dir": "mustache",
-                "colors": [
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#a87c4f"
-                    },
-                    {
-                        "dir": "red",
-                        "code": "#ac3831"
-                    },
-                    {
-                        "dir": "blondd",
-                        "code": "#fabe48"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 29
-                },
-                "movement_limit": 2,
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 440,
-                        "position": {
-                            "top": 104,
-                            "left": 49
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "beard_layer",
-                "icons_dir": "beard_styles",
-                "colors": [
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#a87c4f"
-                    },
-                    {
-                        "dir": "red",
-                        "code": "#ac3831"
-                    },
-                    {
-                        "dir": "blondd",
-                        "code": "#fabe48"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 2
-                },
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 420,
-                        "position": {
-                            "top": 75,
-                            "left": 30
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "hair_layer",
-                "icons_dir": "hair_styles",
-                "colors": [
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#a87c4f"
-                    },
-                    {
-                        "dir": "red",
-                        "code": "#ac3831"
-                    },
-                    {
-                        "dir": "blondd",
-                        "code": "#fabe48"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 62
-                },
-                "rules": [
-                    {
-                        "match": [
-                            33,
-                            37,
-                            38,
-                            39,
-                            41,
-                            43,
-                            44,
-                            60,
-                            62
-                        ],
-                        "force": {
-                            "1001": 0
-                        }
-                    }
-                ],
-                "fragments": [
-                    {
-                        "dir": "hair_front",
-                        "priority": 600,
-                        "position": {
-                            "top": 0,
-                            "left": 0
-                        }
-                    },
-                    {
-                        "dir": "hair_back",
-                        "priority": 200,
-                        "position": {
-                            "top": 23,
-                            "left": 0
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "shirt_layer",
-                "icons_dir": "shirts",
-                "colors": [
-                    {
-                        "dir": "white",
-                        "code": "#f5f4e8"
-                    },
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#5b3b26"
-                    },
-                    {
-                        "dir": "yellow",
-                        "code": "#dfa915"
-                    },
-                    {
-                        "dir": "blue",
-                        "code": "#2f7faf"
-                    },
-                    {
-                        "dir": "violet",
-                        "code": "#6854a2"
-                    },
-                    {
-                        "dir": "red",
-                        "code": "#a91a26"
-                    },
-                    {
-                        "dir": "green",
-                        "code": "#136f36"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 25
-                },
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 300,
-                        "position": {
-                            "top": 124,
-                            "left": 26
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "jackets_layer",
-                "icons_dir": "jackets",
-                "colors": [
-                    {
-                        "dir": "white",
-                        "code": "#f5f4e8"
-                    },
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#5b3b26"
-                    },
-                    {
-                        "dir": "yellow",
-                        "code": "#dfa915"
-                    },
-                    {
-                        "dir": "blue",
-                        "code": "#2f7faf"
-                    },
-                    {
-                        "dir": "violet",
-                        "code": "#6854a2"
-                    },
-                    {
-                        "dir": "red",
-                        "code": "#a91a26"
-                    },
-                    {
-                        "dir": "green",
-                        "code": "#136f36"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 19
-                },
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 310,
-                        "position": {
-                            "top": 122,
-                            "left": 24
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "scarf_layer",
-                "icons_dir": "scarfs",
-                "colors": [
-                    {
-                        "dir": "white",
-                        "code": "#f5f4e8"
-                    },
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#5b3b26"
-                    },
-                    {
-                        "dir": "yellow",
-                        "code": "#dfa915"
-                    },
-                    {
-                        "dir": "blue",
-                        "code": "#2f7faf"
-                    },
-                    {
-                        "dir": "violet",
-                        "code": "#6854a2"
-                    },
-                    {
-                        "dir": "red",
-                        "code": "#a91a26"
-                    },
-                    {
-                        "dir": "green",
-                        "code": "#136f36"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 2
-                },
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 320,
-                        "position": {
-                            "top": 126,
-                            "left": 30
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "hat_layer",
-                "icons_dir": "hats",
-                "colors": [
-                    {
-                        "dir": "white",
-                        "code": "#f5f4e8"
-                    },
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#5b3b26"
-                    },
-                    {
-                        "dir": "yellow",
-                        "code": "#dfa915"
-                    },
-                    {
-                        "dir": "blue",
-                        "code": "#2f7faf"
-                    },
-                    {
-                        "dir": "violet",
-                        "code": "#6854a2"
-                    },
-                    {
-                        "dir": "red",
-                        "code": "#a91a26"
-                    },
-                    {
-                        "dir": "green",
-                        "code": "#136f36"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 11
-                },
-                "movement_limit": 3,
-                "rules": [
-                    {
-                        "match": [
-                            4,
-                            6
-                        ],
-                        "force": {
-                            "1001": 0,
-                            "1008": 0
-                        }
-                    },
-                    {
-                        "match": [
-                            1,
-                            3,
-                            5,
-                            7,
-                            8,
-                            9,
-                            10,
-                            11
-                        ],
-                        "while": {
-                            "1008": [
-                                4,
-                                5,
-                                6,
-                                7,
-                                8,
-                                12,
-                                13,
-                                14,
-                                15,
-                                16,
-                                20,
-                                24,
-                                25,
-                                29,
-                                31,
-                                44,
-                                56,
-                                57,
-                                60
-                            ]
-                        },
-                        "force": {
-                            "1008": 22
-                        }
-                    }
-                ],
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 700,
-                        "position": {
-                            "top": -20,
-                            "left": 0
-                        }
-                    }
-                ]
+                "label": "right_eyebrow",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/right_eyebrow\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 52,
+                    "left": 39
+                }
             },
             {
                 "label": "glasses_layer",
-                "icons_dir": "glasses",
-                "filename_range": {
-                    "min": 1,
-                    "max": 34
-                },
-                "movement_limit": 2,
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 500,
-                        "position": {
-                            "top": 57,
-                            "left": 27
-                        }
-                    }
-                ]
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/glasses\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 57,
+                    "left": 27
+                }
             },
             {
-                "label": "filled_background_layer",
-                "icons_dir": "bg_colors",
-                "filename_range": {
-                    "min": 1,
-                    "max": 24
-                },
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 100,
-                        "position": {
-                            "top": 0,
-                            "left": 0
-                        }
-                    }
-                ]
+                "label": "hair_front_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/hair_front\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 0,
+                    "left": 0
+                }
             },
             {
-                "label": "patterns_layer",
-                "icons_dir": "bg_patterns",
-                "colors": [
-                    {
-                        "dir": "white",
-                        "code": "#f5f4e8"
-                    },
-                    {
-                        "dir": "black",
-                        "code": "#262624"
-                    },
-                    {
-                        "dir": "brown",
-                        "code": "#5b3b26"
-                    },
-                    {
-                        "dir": "yellow",
-                        "code": "#dfa915"
-                    },
-                    {
-                        "dir": "blue",
-                        "code": "#2f7faf"
-                    },
-                    {
-                        "dir": "violet",
-                        "code": "#6854a2"
-                    },
-                    {
-                        "dir": "red",
-                        "code": "#a91a26"
-                    },
-                    {
-                        "dir": "green",
-                        "code": "#136f36"
-                    }
-                ],
-                "filename_range": {
-                    "min": 1,
-                    "max": 32
-                },
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 110,
-                        "position": {
-                            "top": 0,
-                            "left": 0
-                        }
-                    }
-                ]
+                "label": "hat_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/hat\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": -20,
+                    "left": 0
+                }
             },
             {
-                "label": "theme_layer",
-                "icons_dir": "bg_themes",
-                "filename_range": {
-                    "min": 1,
-                    "max": 18
-                },
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 120,
-                        "position": {
-                            "top": 0,
-                            "left": 0
-                        }
-                    }
-                ]
-            },
-            {
-                "label": "weather_layer",
-                "icons_dir": "weather_effects",
-                "filename_range": {
-                    "min": 1,
-                    "max": 1
-                },
-                "fragments": [
-                    {
-                        "dir": "default",
-                        "priority": 800,
-                        "position": {
-                            "top": 0,
-                            "left": 0
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    "sample_pack": {
-        "pack_label": "sample_pack",
-        "default_fragment_dir": "default",
-        "default_color_dir": "default",
-        "fragment_path_format": "sample_pack\/<resourse_dir>\/fragments\/<fragment_dir>\/<color_dir>\/<shape_name>.png",
-        "icon_path_format": "sample_pack\/<resourse_dir>\/icons\/<shape_name>.gif",
-        "resources": {
-            "sample_category_label_01": {
-                "sample_resource_label_01": {
-                    "id": "int",
-                    "dir": "string",
-                    "colors": [
-                        {
-                            "dir": "string",
-                            "code": "string"
-                        }
-                    ],
-                    "filename_range": {
-                        "min": "int",
-                        "max": "int"
-                    },
-                    "movement_limit": "int",
-                    "rules": [
-                        {
-                            "match": "int[]",
-                            "while": {
-                                "1000": "int[]"
-                            },
-                            "force": {
-                                "1000": "int"
-                            }
-                        }
-                    ],
-                    "fragments": [
-                        {
-                            "dir": "string",
-                            "priority": "int",
-                            "color_inheritance": "int",
-                            "position": {
-                                "top": "int",
-                                "left": "int"
-                            }
-                        }
-                    ]
+                "label": "weather_effect_layer",
+                "asset_url": "http:\/\/127.0.0.1:8080\/assets\/mangaface\/manga_male_pack\/shapes\/weather_effect\/<COLOR>\/<ITEM>.png",
+                "position": {
+                    "top": 0,
+                    "left": 0
                 }
             }
-        }
+        ]
     }
 }

@@ -7,33 +7,59 @@
  * file that was distributed with this source code.
  */
 
-export class ScreenSection {
-    constructor({ label, coverUrl }) {
-        this.label = label;
+export class Navigator {
+    constructor({ coverUrl, options }) {
         this.coverUrl = coverUrl;
-        this.designers = [];
+        this.options = options;
     }
 }
 
-export class Designer {
-    constructor({ label, commandName, previewUrl }) {
-        this.label = label;
-        this.commandName = commandName;
-        this._previewUrl = previewUrl;
-    }
 
-    getPreviewUrl(option) {
-        return this._previewUrl.replace("<OPTION>", option);
+export class NavigatorOption {
+    constructor({ title, commandLabel }) {
+        this.title = title;
+        this.commandLabel = commandLabel;
     }
 }
+
 
 export class Command {
-    constructor({ name, items }) {
-        this.name = name;
-        this.items = items;
-        this.colorPalette = [];
+    constructor({ label, itemsCount, itemPreviewUrl, subscribedLayers, colorPalette = [] }) {
+        this.label = label;
+        this.itemsCount = itemsCount;
+        this._itemPreviewUrl = itemPreviewUrl;
+        this.subscribedLayers = subscribedLayers;
+        this.colorPalette = colorPalette;
+    }
+
+    getItemPreviewUrl(item) {
+        return this._itemPreviewUrl.replace('<ITEM>', item);
     }
 }
+
+
+export class Layer {
+    constructor({ label, priority, position, assetUrl }) {
+        this.label = label;
+        this.priority = priority;
+        this.position = position;
+        this._assetUrl = assetUrl;
+    }
+
+    getAssetUrl(itemNumber, color) {
+        return this._assetUrl.replace('<ITEM>', itemNumber)
+            .replace('<COLOR>', color);
+    }
+}
+
+
+export class Position {
+    constructor({ top, left }) {
+        this.top = top;
+        this.left = left;
+    }
+}
+
 
 export class Color {
     constructor({ colorCode }) {
@@ -41,77 +67,15 @@ export class Color {
     }
 }
 
-export function Resource(id, label, catLabel) {
-    this.id = id;
-    this.label = label;
-    this.catLabel = catLabel;
-    this.shapesRange = null;
-    this.colors = [];
-    this.movementLimit = 0;
-    this.fragments = [];
-    this.shapeIconUrl = null;
+
+export class Rule {
+    constructor({ itemsToMatch, forcedLayers, conditions }) {
+        this.itemsToMatch = itemsToMatch;
+        this.forcedLayers = forcedLayers;
+        this.conditions = conditions;
+    }
+
+    matchItem({ item }) {
+        return this.itemsToMatch.includes(item);
+    }
 }
-
-Resource.prototype.getShapeIconUrl = function (shapeName) {
-    return this.shapeIconUrl.replace("<shape_name>", shapeName);
-};
-
-export function ShapeType(name, iconUrl) {
-    this.name = name;
-    this.iconUrl = iconUrl;
-}
-
-export function Fragment(parentResource, position, colorGroup, priority, url) {
-    // TODO `parentResource`: It's new! check if required.
-    this.parentResource = parentResource;
-    this.position = position;
-    this.colorGroup = colorGroup;
-    this.priority = priority;
-    this.url = url;
-}
-
-Fragment.prototype.getUrl = function (shapeName, color) {
-    // FIXME
-    // color = this.parentResource.colors.length ? this.parentResource.colors[0].dir : '';
-
-    return this.url.replace("<shape_name>", shapeName)
-        .replace("<color::dir>", color.dir);
-};
-
-export function Rule() {
-    this.shape
-}
-
-function OldColor(codename, dir, colorCode) {
-    this.codename = codename;
-    this.dir = dir;
-    this.code = colorCode;
-}
-
-export function Position(top, left) {
-    this.top = top;
-    this.left = left;
-}
-
-export function Range(min, max) {
-    this.min = min;
-    this.max = max;
-}
-
-export function Layout() {
-    this.assets = null;
-}
-
-export function Asset() {
-    this.fragment = null;
-    this.codename = null;
-    this.filename = null;
-    this.color = null;
-    this.distance = 0;
-}
-
-Asset.prototype.getUrl = function () {
-    return this.fragment.url
-        .replace("<shape_name>", this.filename)
-        .replace("<color::dir>", this.color.dir);
-};

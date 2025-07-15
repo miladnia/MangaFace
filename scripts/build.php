@@ -46,7 +46,7 @@ foreach ($manifestFiles as $f) {
         exit(1);
     }
 
-    $packLabel = $parsedManifest['pack_label'];
+    $packLabel = $parsedManifest['metadata']['pack_label'];
     $apiManifest[$packLabel] = $parsedManifest;
 }
 

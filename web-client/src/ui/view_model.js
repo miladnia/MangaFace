@@ -9,12 +9,14 @@
 
 export default function ViewModel(
     layout,
-    screenSectionRepository,
-    commandRepository
+    navigatorRepository,
+    commandRepository,
+    layerRepository,
 ) {
     this._layout = layout;
-    this.screenSectionRepository = screenSectionRepository;
+    this.navigatorRepository = navigatorRepository;
     this.commandRepository = commandRepository;
+    this.layerRepository = layerRepository;
 }
 
 /**

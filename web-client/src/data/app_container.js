@@ -7,12 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { ScreenSectionDao, CommandDao } from "./dao.js";
-import { ScreenSectionRepository, CommandRepository } from "./repositories.js";
+import { NavigatorDao, CommandDao, LayerDao } from "./dao.js";
+import { NavigatorRepository, CommandRepository, LayerRepository } from "./repositories.js";
+
 
 export default class AppContainer {
-    constructor() {
-        this.screenSectionRepository = new ScreenSectionRepository(new ScreenSectionDao());
-        this.commandRepository = new CommandRepository(new CommandDao());
+    constructor(packLabel) {
+        this.navigatorRepository = new NavigatorRepository(new NavigatorDao(packLabel));
+        this.commandRepository = new CommandRepository(new CommandDao(packLabel));
+        this.layerRepository = new LayerRepository(new LayerDao(packLabel));
     }
 }

@@ -7,84 +7,75 @@
  * file that was distributed with this source code.
  */
 
-import { ScreenSection, Designer, Command, Resource, ShapeType, Fragment, Range, Color, Position } from "./models.js";
+import { NavigatorMapper, CommandMapper, LayerMapper } from './mappers.js';
 
-let _resources = null;
 
-async function fetchResources(pack) {
-    if (!_resources) {
-        const response = await fetch('/manifest.json');
-
-        if (!response.ok) {
-            throw new Error(`[HTTP] status: ${response.status}`);
-        }
-        
-        _resources = await response.json();
-        
-        if (!_resources[pack]) {
-            throw new Error(`Invalid resource structure.`);
-        }
+class Dao {
+    constructor(packLabel) {
+        this.packLabel = packLabel;
+        this._manifest = null;
     }
 
-    return _resources[pack];
+    async fetchManifestCollection(collectionName) {
+        if (!this._manifest) {
+            const response = await fetch('/manifest.json');
+
+            if (!response.ok) {
+                throw new Error(`[HTTP] status: ${response.status}`);
+            }
+            
+            this._manifest = await response.json();
+            
+            if (!this._manifest[this.packLabel] || !this._manifest[this.packLabel][collectionName]) {
+                throw new Error(`Invalid manifest structure!`);
+            }
+        }
+
+        return this._manifest[this.packLabel][collectionName];
+    }
 }
 
-export class ScreenSectionDao {
-    async getAsDomainModel(pack) {
-        const resources = await fetchResources(pack);
-        const sectionsData = resources["interface"]["sections"];
-        const sections = [];
 
-        sectionsData.forEach((sectionData) => {
-            const screenSection = new ScreenSection({
-                label: sectionData["label"],
-                coverUrl: sectionData["cover_url"],
-            });
+export class NavigatorDao extends Dao {
+    async getAsDomainModel() {
+        const navigatorRecords = await this.fetchManifestCollection('navigators');
+        const navigators = [];
 
-            const designersData = sectionData["designers"];
-            designersData.forEach((designerData) => {
-                screenSection.designers.push(
-                    new Designer({
-                        label: designerData["label"],
-                        commandName: designerData["command_name"],
-                        previewUrl: designerData["preview_url"],
-                    })
-                )
-            });
-            
-            sections.push(screenSection);
+        navigatorRecords.forEach((record) => {
+            const navigator = NavigatorMapper.toDomain(record);    
+            navigators.push(navigator);
         });
 
-        return sections;
+        return navigators;
     }
 }
 
-export class CommandDao {
-    async getAsDomainModel(pack) {
-        const resources = await fetchResources(pack);
-        const commandsData = resources["commands"];
+
+export class CommandDao extends Dao {
+    async getAsDomainModel() {
+        const commandRecords = await this.fetchManifestCollection('commands');
         const commands = {};
 
-        for (let command_name in commandsData) {
-             const command = new Command({
-                name: command_name,
-                items: commandsData[command_name]["items"],
-            });
-
-            const colorPaletteData = commandsData[command_name]["color_palette"];
-            if ("undefined" !== typeof colorPaletteData) {
-                colorPaletteData.forEach((paletteData) => {
-                    command.colorPalette.push(
-                        new Color({
-                            colorCode: paletteData["code"],
-                        })
-                    );
-                });
-            }
-
-            commands[command_name] = command;
-        }
+        commandRecords.forEach(record => {
+            const command = CommandMapper.toDomain(record);
+            commands[command.label] = command;
+        });
 
         return commands;
+    }
+}
+
+
+export class LayerDao extends Dao {
+    async getAsDomainModel() {
+        const layerRecords = await this.fetchManifestCollection('layers');
+        const layers = {};
+
+        layerRecords.forEach((record, priority) => {
+            const layer = LayerMapper.toDomain(record, priority);
+            layers[layer.label] = layer;
+        });
+        
+        return layers;
     }
 }

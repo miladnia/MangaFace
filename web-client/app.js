@@ -11,17 +11,20 @@ import AppContainer from "./src/data/app_container.js";
 import ViewModel from "./src/ui/view_model.js";
 import DesignerScreen from "./view.js";
 
+
 class App {
     constructor() {
-        this.container = new AppContainer();
+        const DEFAULT_PACK_LABEL = "manga_male_pack";
+        this.container = new AppContainer(DEFAULT_PACK_LABEL);
     }
 
     run(containerElement) {
         const designerScreen = new DesignerScreen(
             new ViewModel(
                 null,
-                this.container.screenSectionRepository,
+                this.container.navigatorRepository,
                 this.container.commandRepository,
+                this.container.layerRepository,
             )
         );
         designerScreen.render().then((view) => {
