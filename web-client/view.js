@@ -49,7 +49,26 @@ DesignerScreen.prototype.render = async function () {
         // this._colorsGrid.switchToSection(designer.title);
     });
 
+    this._runInitializerScript();
+
     return this._tpl.getView();
+};
+
+DesignerScreen.prototype._runInitializerScript = async function () {
+    // TODO get the name of the initializer script as a metadata
+    const script = await this._model.scriptRepository.findByLabel('initializer_script');
+    if (!script) {
+        console.warn('No initializer script found.');
+        return;
+    }
+
+    script.jobs.forEach((job) => {
+        this._execCommand(
+            job.commandLabel,
+            job.itemNumber,
+            job.colorValue
+        );
+    });
 };
 
 DesignerScreen.prototype._renderTabs = async function (onDesignerSelected) {
@@ -159,25 +178,28 @@ DesignerScreen.prototype._buildPinboard = function () {
     return pinboard;
 };
 
-DesignerScreen.prototype._execCommand = async function (commandLabel, item, color) {
+DesignerScreen.prototype._execCommand = async function (commandLabel, itemNumber, colorValue) {
     const command = await this._model.commandRepository.findByLabel(commandLabel);
     command.subscribedLayers.forEach(async (layerLabel) => {
         const layer = await this._model.layerRepository.findByLabel(layerLabel);
+        const assetUrl = layer.getAssetUrl(itemNumber, colorValue);
+
+        console.log('commandLabel, itemNumber, colorValue', commandLabel, itemNumber, colorValue);
         console.log('layerLabel', layerLabel);
         console.log('layer', layer);
         
         var layerPin = this._pinboard.getItem(layerLabel);
 
         if (layerPin) {
-            // Update existing item.
-            layerPin.setImageUrl(layer.getAssetUrl(item, color));
+            // Update the existing item
+            layerPin.setImageUrl(assetUrl);
             return;
         }
 
         this._pinboard.pinItem(
             layerLabel,
             this._pinboard.newItem()
-                .setImageUrl(layer.getAssetUrl(item, color))
+                .setImageUrl(assetUrl)
                 .setPosition(layer.position.top + 'px', layer.position.left + 'px')
                 .setPriority(layer.priority));
     });

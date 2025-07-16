@@ -24,12 +24,12 @@ export class NavigatorOption {
 
 
 export class Command {
-    constructor({ label, itemsCount, itemPreviewUrl, subscribedLayers, colorPalette = [] }) {
+    constructor({ label, itemsCount, itemPreviewUrl, subscribedLayers, colors = [] }) {
         this.label = label;
         this.itemsCount = itemsCount;
         this._itemPreviewUrl = itemPreviewUrl;
         this.subscribedLayers = subscribedLayers;
-        this.colorPalette = colorPalette;
+        this.colors = colors;
     }
 
     getItemPreviewUrl(item) {
@@ -46,9 +46,9 @@ export class Layer {
         this._assetUrl = assetUrl;
     }
 
-    getAssetUrl(itemNumber, color) {
+    getAssetUrl(itemNumber, colorValue) {
         return this._assetUrl.replace('<ITEM>', itemNumber)
-            .replace('<COLOR>', color);
+            .replace('<COLOR>', colorValue);
     }
 }
 
@@ -62,7 +62,8 @@ export class Position {
 
 
 export class Color {
-    constructor({ colorCode }) {
+    constructor({ value, colorCode }) {
+        this.value = value;
         this.colorCode = colorCode;
     }
 }
@@ -77,5 +78,21 @@ export class Rule {
 
     matchItem({ item }) {
         return this.itemsToMatch.includes(item);
+    }
+}
+
+export class Script {
+    constructor({ label, description, jobs }) {
+        this.label = label;
+        this.description = description;
+        this.jobs = jobs;
+    }
+}
+
+export class Job {
+    constructor({ commandLabel, itemNumber, colorValue }) {
+        this.commandLabel = commandLabel;
+        this.itemNumber = itemNumber;
+        this.colorValue = colorValue;
     }
 }

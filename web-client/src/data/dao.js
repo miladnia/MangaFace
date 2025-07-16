@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { NavigatorMapper, CommandMapper, LayerMapper } from './mappers.js';
+import { NavigatorMapper, CommandMapper, LayerMapper, ScriptMapper } from './mappers.js';
 
 
 class Dao {
@@ -26,8 +26,12 @@ class Dao {
             
             this._manifest = await response.json();
             
-            if (!this._manifest[this.packLabel] || !this._manifest[this.packLabel][collectionName]) {
-                throw new Error(`Invalid manifest structure!`);
+            if (!this._manifest[this.packLabel]) {
+                throw new Error(`Invalid manifest structure! The pack label "${this.packLabel}" does not exist.`);
+            }
+            
+            if (!this._manifest[this.packLabel][collectionName]) {
+                throw new Error(`Invalid manifest structure! The collection "${collectionName}" does not exist in the pack label "${this.packLabel}".`);
             }
         }
 
@@ -77,5 +81,20 @@ export class LayerDao extends Dao {
         });
         
         return layers;
+    }
+}
+
+
+export class ScriptDao extends Dao {
+    async getAsDomainModel() {
+        const scriptRecords = await this.fetchManifestCollection('scripts');
+        const scripts = {};
+
+        scriptRecords.forEach(record => {
+            const script = ScriptMapper.toDomain(record);
+            scripts[script.label] = script;
+        });
+
+        return scripts;
     }
 }

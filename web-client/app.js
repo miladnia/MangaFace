@@ -25,6 +25,7 @@ class App {
                 this.container.navigatorRepository,
                 this.container.commandRepository,
                 this.container.layerRepository,
+                this.container.scriptRepository,
             )
         );
         designerScreen.render().then((view) => {

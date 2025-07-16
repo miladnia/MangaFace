@@ -23,7 +23,7 @@ export class NavigatorRepository extends Repository {
 }
 
 
-export class CommandRepository extends Repository {    
+export class CommandRepository extends Repository {
     async findByLabel(label) {
         if (!label) {
             throw new Error("Illegal Argument Exception: 'label' should not be empty.");
@@ -40,7 +40,7 @@ export class CommandRepository extends Repository {
 }
 
 
-export class LayerRepository extends Repository {    
+export class LayerRepository extends Repository {
     async findByLabel(label) {
         if (!label) {
             throw new Error("Illegal Argument Exception: 'label' should not be empty.");
@@ -53,5 +53,29 @@ export class LayerRepository extends Repository {
         }
         
         return layers[label];
+    }
+}
+
+
+export class ScriptRepository extends Repository {
+    async findByLabel(label) {
+        if (!label) {
+            throw new Error("Illegal Argument Exception: 'label' should not be empty.");
+        }
+
+        const scripts = await this._dao.getAsDomainModel();
+
+        if (!scripts[label]) {
+            return null;
+        }
+        
+        return scripts[label];
+    }
+}
+
+
+export class MetadataRepository extends Repository {
+    async findByKey(key) {
+        return null;
     }
 }

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Navigator, NavigatorOption, Command, Layer, Position, Color } from './models.js';
+import { Navigator, NavigatorOption, Command, Layer, Position, Color, Script, Job } from './models.js';
 
 
 export class NavigatorMapper {
@@ -32,8 +32,11 @@ export class CommandMapper {
             itemsCount: record['items_count'],
             itemPreviewUrl: record['item_preview_url'],
             subscribedLayers: record['subscribed_layers'],
-            colorPalette: (record['color_palette'] || []).map(
-                r => new Color({ colorCode: r['code'] })
+            colors: (record['colors'] || []).map(
+                r => new Color({
+                    value: r['value'],
+                    colorCode: r['preview_color_code']
+                })
             ),
         });
     }
@@ -50,6 +53,23 @@ export class LayerMapper {
                 top: record['position']['top'],
                 left: record['position']['left'],
             }),
+        });
+    }
+}
+
+
+export class ScriptMapper {
+    static toDomain(record) {
+        return new Script({
+            label: record['label'],
+            description: record['description'],
+            jobs: (record['jobs'] || []).map(
+                job => new Job({
+                    commandLabel: job['command'],
+                    itemNumber: job['item'],
+                    colorValue: job['color'] || null,
+                })
+            ),
         });
     }
 }
