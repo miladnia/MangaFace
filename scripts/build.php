@@ -21,7 +21,7 @@ try {
     exit(1);
 }
 
-$manifestDir = APP_DIR . '/' . $config['manifest_dir'] ?? '';
+$manifestDir = APP_DIR . '/' . ($config['manifest_dir'] ?? '');
 $dirList = scandir($manifestDir);
 $manifestFiles = array_filter(
     $dirList,
@@ -51,8 +51,8 @@ foreach ($manifestFiles as $f) {
 }
 
 $apiManifestDir = APP_DIR . '/' .
-    $config['api']['public_dir'] ?? 'public' . '/' .
-    $config['api']['manifest_dir'] ?? '';
+    ($config['api']['public_dir'] ?? 'public') . '/' .
+    ($config['api']['manifest_dir'] ?? '');
 
 is_dir($apiManifestDir) or mkdir($apiManifestDir, 0777, true);
 
