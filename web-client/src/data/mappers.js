@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Navigator, NavigatorOption, Command, Layer, Position, Color, Script, Job } from './models.js';
+import { Navigator, NavigatorOption, Command, Layer, Position, Color, Script, Task } from './models.js';
 
 
 export class NavigatorMapper {
@@ -17,7 +17,7 @@ export class NavigatorMapper {
             options: record['options'].map(
                 r => new NavigatorOption({
                     title: r['title'],
-                    commandLabel: r['command']
+                    commandName: r['command_name']
                 })
             ),
         });
@@ -28,14 +28,14 @@ export class NavigatorMapper {
 export class CommandMapper {
     static toDomain(record) {
         return new Command({
-            label: record['label'],
-            itemsCount: record['items_count'],
+            name: record['name'],
+            itemCount: record['item_count'],
             itemPreviewUrl: record['item_preview_url'],
             subscribedLayers: record['subscribed_layers'],
             colors: (record['colors'] || []).map(
                 r => new Color({
-                    value: r['value'],
-                    colorCode: r['preview_color_code']
+                    color: r['color'],
+                    previewColorCode: r['preview_color_code']
                 })
             ),
         });
@@ -46,7 +46,7 @@ export class CommandMapper {
 export class LayerMapper {
     static toDomain(record, priority) {
         return new Layer({
-            label: record['label'],
+            name: record['name'],
             priority: priority,
             assetUrl: record['asset_url'],
             position: new Position({
@@ -61,13 +61,13 @@ export class LayerMapper {
 export class ScriptMapper {
     static toDomain(record) {
         return new Script({
-            label: record['label'],
+            name: record['name'],
             description: record['description'],
-            jobs: (record['jobs'] || []).map(
-                job => new Job({
-                    commandLabel: job['command'],
-                    itemNumber: job['item'],
-                    colorValue: job['color'] || null,
+            tasks: (record['tasks'] || []).map(
+                job => new Task({
+                    commandName: job['command_name'],
+                    itemIndex: job['item_index'],
+                    color: job['color'] || '',
                 })
             ),
         });

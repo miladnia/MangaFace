@@ -68,32 +68,32 @@ export function testGrid()
     var container = document.createElement("div");
 
     var grid = (new GridCom(8, 4)).setListener({
-        onItemSelected: function (position, section) {
-            console.log("Item selected", position, section);
+        onPlaceholderSelected: function (position, page) {
+            console.log("Item selected", position, page);
         },
-        onItemDeselected: function (position, section) {
-            console.log("Item deselected", position, section);
+        onPlaceholderDeselected: function (position, page) {
+            console.log("Item deselected", position, page);
         },
-        onItemReselected: function (position, section) {
-            console.log("Item reselected", position, section);
+        onPlaceholderReselected: function (position, page) {
+            console.log("Item reselected", position, page);
         }
     });
 
     images.forEach(function (img) {
         var svg = "data:image/svg+xml,"
             + encodeURIComponent(openmoji[img[0]]);
-        var section = grid.newSection(img[0]);
+        var gridPage = grid.newPage(img[0]);
 
         for (var i = 0; i < img[1]; i++)
-            section.addImageItem(svg);
+            gridPage.addImagePlaceholder(svg, i);
 
-        grid.addSection(section);
+        grid.addPage(gridPage);
 
         // Buttons to navigate between pages
         var btn = document.createElement("button");
         btn.textContent = img[0];
         btn.addEventListener("click", function () {
-            grid.switchToSection(img[0]);
+            grid.switchToPage(img[0]);
         });
         container.appendChild(btn);
     });
@@ -119,30 +119,30 @@ export function testGridColors()
     var container = document.createElement("div");
 
     var grid = (new GridCom(15, 5)).setListener({
-        onItemSelected: function (position, section) {
-            console.log("Item selected", position, section);
+        onPlaceholderSelected: function (position, page) {
+            console.log("Item selected", position, page);
         },
-        onItemDeselected: function (position, section) {
-            console.log("Item deselected", position, section);
+        onPlaceholderDeselected: function (position, page) {
+            console.log("Item deselected", position, page);
         },
-        onItemReselected: function (position, section) {
-            console.log("Item reselected", position, section);
+        onPlaceholderReselected: function (position, page) {
+            console.log("Item reselected", position, page);
         }
     });
 
     colors.forEach(function (color) {
-        var section = grid.newSection(color[0]);
+        const gridPage = grid.newPage(color[0]);
 
         for (var i = 0; i < color[1]; i++)
-            section.addColorItem(color[0]);
+            gridPage.addColorPlaceholder(color[0], i);
 
-        grid.addSection(section);
+        grid.addPage(gridPage);
 
         // Buttons to navigate between pages
-        var btn = document.createElement("button");
+        const btn = document.createElement("button");
         btn.textContent = color[0];
         btn.addEventListener("click", function () {
-            grid.switchToSection(color[0]);
+            grid.switchToPage(color[0]);
         });
         container.appendChild(btn);
     });
@@ -164,33 +164,33 @@ export function testGridFreeze()
     var container = document.createElement("div");
 
     var grid = (new GridCom(8, 4)).setListener({
-        onItemSelected: function (position, section) {
-            console.log("Item selected", position, section);
+        onPlaceholderSelected: function (position, page) {
+            console.log("Item selected", position, page);
         },
-        onItemDeselected: function (position, section) {
-            console.log("Item deselected", position, section);
+        onPlaceholderDeselected: function (position, page) {
+            console.log("Item deselected", position, page);
         },
-        onItemReselected: function (position, section) {
-            console.log("Item reselected", position, section);
+        onPlaceholderReselected: function (position, page) {
+            console.log("Item reselected", position, page);
         }
     });
 
     images.forEach(function (img, imgKey) {
         var svg = "data:image/svg+xml,"
             + encodeURIComponent(openmoji[img[0]]);
-        var sectionId = img[0] + '_' + imgKey;
-        var section = grid.newSection(sectionId);
+        var pageKey = img[0] + '_' + imgKey;
+        var gridPage = grid.newPage(pageKey);
 
         for (var i = 0; i < img[1]; i++)
-            section.addImageItem(svg);
+            gridPage.addImagePlaceholder(svg, i);
 
-        grid.addSection(section);
+        grid.addPage(gridPage);
 
         // Buttons to navigate between pages
         var btn = document.createElement("button");
         btn.textContent = img[0];
         btn.addEventListener("click", function () {
-            grid.switchToSection(sectionId);
+            grid.switchToPage(pageKey);
         });
         container.appendChild(btn);
     });
@@ -212,8 +212,8 @@ export function testGridFreeze()
     btn.textContent = "Auto select";
     btn.addEventListener("click", function () {
         for (var i = 0; i < images.length; i++) {
-            grid.switchToSection(images[i][0] + '_' + i);
-            grid.selectItem(Math.ceil(images[i][1] / 2));
+            grid.switchToPage(images[i][0] + '_' + i);
+            grid.selectPagePlaceholder(Math.ceil(images[i][1] / 2));
         }
     });
     container.appendChild(btn);

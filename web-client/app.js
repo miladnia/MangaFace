@@ -14,8 +14,8 @@ import DesignerScreen from "./view.js";
 
 class App {
     constructor() {
-        const DEFAULT_PACK_LABEL = "manga_male_pack";
-        this.container = new AppContainer(DEFAULT_PACK_LABEL);
+        const DEFAULT_PACK_NAME = "manga_male_pack";
+        this.container = new AppContainer(DEFAULT_PACK_NAME);
     }
 
     run(containerElement) {
@@ -29,7 +29,8 @@ class App {
             )
         );
         designerScreen.render().then((view) => {
-            containerElement.appendChild(view.getElement());
+            const viewElement = view.getElement();
+            containerElement.appendChild(viewElement);
         });
     };
 }

@@ -12,10 +12,10 @@ import { NavigatorRepository, CommandRepository, LayerRepository, ScriptReposito
 
 
 export default class AppContainer {
-    constructor(packLabel) {
-        this.navigatorRepository = new NavigatorRepository(new NavigatorDao(packLabel));
-        this.commandRepository = new CommandRepository(new CommandDao(packLabel));
-        this.layerRepository = new LayerRepository(new LayerDao(packLabel));
-        this.scriptRepository = new ScriptRepository(new ScriptDao(packLabel));
+    constructor(packName) {
+        this.navigatorRepository = new NavigatorRepository(new NavigatorDao(packName));
+        this.commandRepository = new CommandRepository(new CommandDao(packName));
+        this.layerRepository = new LayerRepository(new LayerDao(packName));
+        this.scriptRepository = new ScriptRepository(new ScriptDao(packName));
     }
 }

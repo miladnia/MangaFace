@@ -16,17 +16,17 @@ export class Navigator {
 
 
 export class NavigatorOption {
-    constructor({ title, commandLabel }) {
+    constructor({ title, commandName }) {
         this.title = title;
-        this.commandLabel = commandLabel;
+        this.commandName = commandName;
     }
 }
 
 
 export class Command {
-    constructor({ label, itemsCount, itemPreviewUrl, subscribedLayers, colors = [] }) {
-        this.label = label;
-        this.itemsCount = itemsCount;
+    constructor({ name, itemCount, itemPreviewUrl, subscribedLayers, colors = [] }) {
+        this.name = name;
+        this.itemCount = itemCount;
         this._itemPreviewUrl = itemPreviewUrl;
         this.subscribedLayers = subscribedLayers;
         this.colors = colors;
@@ -39,8 +39,8 @@ export class Command {
 
 
 export class Layer {
-    constructor({ label, priority, position, assetUrl }) {
-        this.label = label;
+    constructor({ name, priority, position, assetUrl }) {
+        this.name = name;
         this.priority = priority;
         this.position = position;
         this._assetUrl = assetUrl;
@@ -62,9 +62,9 @@ export class Position {
 
 
 export class Color {
-    constructor({ value, colorCode }) {
-        this.value = value;
-        this.colorCode = colorCode;
+    constructor({ color, previewColorCode }) {
+        this.color = color;
+        this.previewColorCode = previewColorCode;
     }
 }
 
@@ -82,17 +82,17 @@ export class Rule {
 }
 
 export class Script {
-    constructor({ label, description, jobs }) {
-        this.label = label;
+    constructor({ name, description, tasks }) {
+        this.name = name;
         this.description = description;
-        this.jobs = jobs;
+        this.tasks = tasks;
     }
 }
 
-export class Job {
-    constructor({ commandLabel, itemNumber, colorValue }) {
-        this.commandLabel = commandLabel;
-        this.itemNumber = itemNumber;
-        this.colorValue = colorValue;
+export class Task {
+    constructor({ commandName, itemIndex, color }) {
+        this.commandName = commandName;
+        this.itemIndex = itemIndex;
+        this.color = color;
     }
 }

@@ -4,7 +4,7 @@
   "description": "Create your own custom avatar.",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "http-server ./ -p 8001 -o /web-client/tests/ui/test.html",
     "build": "webpack"
   },
   "keywords": [
@@ -19,7 +19,7 @@
     "node": ">=6.11.5"
   },
   "devDependencies": {
-    "webpack": "^4.30.0",
+    "webpack": "^5.100.2",
     "webpack-cli": "^3.3.2"
   }
 }

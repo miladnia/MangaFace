@@ -10,39 +10,53 @@
 import { NavigatorMapper, CommandMapper, LayerMapper, ScriptMapper } from './mappers.js';
 
 
-class Dao {
-    constructor(packLabel) {
-        this.packLabel = packLabel;
-        this._manifest = null;
-    }
+class Manifest {
+    static #manifestData = null;
 
-    async fetchManifestCollection(collectionName) {
-        if (!this._manifest) {
-            const response = await fetch('/manifest.json');
+    static async getData() {
+        if (!this.#manifestData) {
+            const response = await fetch('/data/mangaface/manifest.json');
 
             if (!response.ok) {
-                throw new Error(`[HTTP] status: ${response.status}`);
+                throw new Error(`[manifest] HTTP status: ${response.status}`);
             }
-            
-            this._manifest = await response.json();
-            
-            if (!this._manifest[this.packLabel]) {
-                throw new Error(`Invalid manifest structure! The pack label "${this.packLabel}" does not exist.`);
-            }
-            
-            if (!this._manifest[this.packLabel][collectionName]) {
-                throw new Error(`Invalid manifest structure! The collection "${collectionName}" does not exist in the pack label "${this.packLabel}".`);
-            }
+
+            this.#manifestData = await response.json();
         }
 
-        return this._manifest[this.packLabel][collectionName];
+        return this.#manifestData;
+    }
+
+    static async getCollection(packName, collectionName) {
+        const manifestData = await this.getData();
+
+        if (!manifestData[packName]) {
+            throw new Error(`[manifest] Invalid manifest structure: The pack "${packName}" does not exist.`);
+        }
+
+        if (!manifestData[packName][collectionName]) {
+            throw new Error(`[manifest] Invalid manifest structure: The collection "${collectionName}" does not exist in the pack label "${this.packLabel}".`);
+        }
+
+        return manifestData[packName][collectionName];
+    }
+}
+
+
+class Dao {
+    constructor(packName) {
+        this.packName = packName;
+    }
+
+    async getCollection(collectionName) {
+        return await Manifest.getCollection(this.packName, collectionName);
     }
 }
 
 
 export class NavigatorDao extends Dao {
     async getAsDomainModel() {
-        const navigatorRecords = await this.fetchManifestCollection('navigators');
+        const navigatorRecords = await this.getCollection('navigators');
         const navigators = [];
 
         navigatorRecords.forEach((record) => {
@@ -57,12 +71,12 @@ export class NavigatorDao extends Dao {
 
 export class CommandDao extends Dao {
     async getAsDomainModel() {
-        const commandRecords = await this.fetchManifestCollection('commands');
+        const commandRecords = await this.getCollection('commands');
         const commands = {};
 
         commandRecords.forEach(record => {
             const command = CommandMapper.toDomain(record);
-            commands[command.label] = command;
+            commands[command.name] = command;
         });
 
         return commands;
@@ -72,12 +86,12 @@ export class CommandDao extends Dao {
 
 export class LayerDao extends Dao {
     async getAsDomainModel() {
-        const layerRecords = await this.fetchManifestCollection('layers');
+        const layerRecords = await this.getCollection('layers');
         const layers = {};
 
         layerRecords.forEach((record, priority) => {
             const layer = LayerMapper.toDomain(record, priority);
-            layers[layer.label] = layer;
+            layers[layer.name] = layer;
         });
         
         return layers;
@@ -87,12 +101,12 @@ export class LayerDao extends Dao {
 
 export class ScriptDao extends Dao {
     async getAsDomainModel() {
-        const scriptRecords = await this.fetchManifestCollection('scripts');
+        const scriptRecords = await this.getCollection('scripts');
         const scripts = {};
 
         scriptRecords.forEach(record => {
             const script = ScriptMapper.toDomain(record);
-            scripts[script.label] = script;
+            scripts[script.name] = script;
         });
 
         return scripts;

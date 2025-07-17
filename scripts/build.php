@@ -46,8 +46,8 @@ foreach ($manifestFiles as $f) {
         exit(1);
     }
 
-    $packLabel = $parsedManifest['metadata']['pack_label'];
-    $apiManifest[$packLabel] = $parsedManifest;
+    $packName = $parsedManifest['metadata']['pack_name'];
+    $apiManifest[$packName] = $parsedManifest;
 }
 
 $apiManifestDir = APP_DIR . '/' .
