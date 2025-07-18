@@ -9,47 +9,50 @@
 
 import { UIComponent, View } from "../ui.js";
 
-export default function PinboardCom() {
-    this._view = new View("div", "pinboard-layout");
-    this._items = {};
+
+export default class PinboardCom extends UIComponent {
+    _items = {};
+
+    constructor() {
+        super("div", "pinboard-layout");
+    }
+
+    newItem() {
+        return new Item();
+    }
+
+    pinItem(itemKey, item) {
+        this._items[itemKey] = item;
+        this._view.appendView(item.getView());
+    }
+
+    getItem(itemKey) {
+        return this._items.hasOwnProperty(itemKey) ? this._items[itemKey] : null;
+    }
 }
 
-PinboardCom.prototype.newItem = function () {
-    return new Item();
-};
+class Item {
+    constructor() {
+        this._view = new View("img", "item");
+    }
 
-PinboardCom.prototype.pinItem = function (itemKey, item) {
-    this._items[itemKey] = item;
-    this._view.appendView(item.getView());
-};
+    setImageUrl(imageUrl) {
+        this._view.getElement().setAttribute("src", imageUrl);
+        return this;
+    }
 
-PinboardCom.prototype.getItem = function (itemKey) {
-    return this._items.hasOwnProperty(itemKey) ? this._items[itemKey] : null;
-};
+    setPosition(top, left) {
+        this._view.getElement().style.top = top;
+        this._view.getElement().style.left = left;
+        return this;
+    }
 
-function Item () {
-    this._view = new View("img", "item");
-};
+    setPriority(priority) {
+        this._view.getElement().style.zIndex = priority;
+        return this;
+    }
 
-Item.prototype.setImageUrl = function (imageUrl) {
-    this._view.getElement().setAttribute("src", imageUrl);
-    return this;
-};
-
-Item.prototype.setPosition = function (top, left) {
-    this._view.getElement().style.top = top;
-    this._view.getElement().style.left = left;
-    return this;
-};
-
-Item.prototype.setPriority = function (priority) {
-    this._view.getElement().style.zIndex = priority;
-    return this;
-};
-
-Item.prototype.getView = function () {
-    return this._view;
-};
-
-// PinboardCom extends UIComponent
-Object.setPrototypeOf(PinboardCom.prototype, UIComponent.prototype);
+    getView() {
+        return this._view;
+    }
+}

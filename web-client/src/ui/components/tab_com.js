@@ -9,168 +9,171 @@
 
 import { UIComponent, View } from "../ui.js";
 
-export default function TabCom () {
-    this._view = new View("ul", "tab-layout");
-    this._tabs = [];
-    this._selectedTab = null;
-    this._enabled = true;
-    this._listener = {
+
+export default class TabCom extends UIComponent {
+    _tabs = [];
+    _selectedTab = null;
+    _enabled = true;
+    _listener = {
         // Called when a tab enters the selected state.
-        onTabSelected: function (tab) {},
+        onTabSelected: (tab) => {},
         // Called when a tab exits the selected state.
-        onTabDeselected: function (tab) {}
+        onTabDeselected: (tab) => {},
     };
-}
 
-TabCom.prototype.newTab = function () {
-    return new Tab(this);
-};
-
-TabCom.prototype.addTab = function (tab) {
-    var len = this._tabs.push(tab);
-    tab._position = len - 1;
-    this._view.appendView( tab.getView() );
-
-    if (0 === tab._position) {
-        this._selectTab(tab);
+    constructor() {
+        super("ul", "tab-layout");
     }
 
-    return this;
-};
-
-TabCom.prototype.getTabAt = function (index) {
-    return (index < 0 || index >= this._tabs.length) ? null : this._tabs[index];
-};
-
-TabCom.prototype.getSelectedTabPosition = function () {
-    return null !== this._selectedTab ?
-        this._selectedTab.getPosition() : -1;
-};
-
-TabCom.prototype.setListener = function (listener) {
-    if (listener.hasOwnProperty("onTabSelected"))
-        this._listener.onTabSelected = listener.onTabSelected;
-
-    if (listener.hasOwnProperty("onTabDeselected"))
-        this._listener.onTabDeselected = listener.onTabDeselected;
-    
-    return this;
-};
-
-TabCom.prototype.disable = function () {
-    if (this._enabled) {
-        this._enabled = false;
-        this._view.hide();
-    }
-    
-    return this;
-};
-
-TabCom.prototype.enable = function () {
-    if (! this._enabled ) {
-        this._enabled = true;
-        this._view.show();
-        this._refresh() || this._init();
+    newTab() {
+        return new Tab(this);
     }
 
-    return this;
-};
+    addTab(tab) {
+        var len = this._tabs.push(tab);
+        tab._position = len - 1;
+        this._view.appendView( tab.getView() );
 
-TabCom.prototype._refresh = function () {
-    if (this._enabled && null !== this._selectedTab) {
-        this._listener.onTabSelected(this._selectedTab);
+        if (0 === tab._position) {
+            this._selectTab(tab);
+        }
+
+        return this;
+    }
+
+    getTabAt(index) {
+        return (index < 0 || index >= this._tabs.length) ? null : this._tabs[index];
+    }
+
+    getSelectedTabPosition() {
+        return null !== this._selectedTab ?
+            this._selectedTab.getPosition() : -1;
+    }
+
+    setListener(listener) {
+        if (listener.hasOwnProperty("onTabSelected"))
+            this._listener.onTabSelected = listener.onTabSelected;
+
+        if (listener.hasOwnProperty("onTabDeselected"))
+            this._listener.onTabDeselected = listener.onTabDeselected;
+        
+        return this;
+    }
+
+    disable() {
+        if (this._enabled) {
+            this._enabled = false;
+            this._view.hide();
+        }
+        
+        return this;
+    }
+
+    enable() {
+        if (! this._enabled ) {
+            this._enabled = true;
+            this._view.show();
+            this._refresh() || this._init();
+        }
+
+        return this;
+    }
+
+    _refresh() {
+        if (this._enabled && null !== this._selectedTab) {
+            this._listener.onTabSelected(this._selectedTab);
+            return true;
+        }
+
+        return false;
+    }
+
+    _init() {
+        return this._selectTab( this.getTabAt(0) );
+    }
+
+    _selectTab(tab) {
+        if (! this._enabled )
+            return false;
+        
+        if (null === tab || tab.isSelected() )
+            return false;
+
+        if (null !== this._selectedTab) {
+            this._selectedTab.getView().setSelected(false);
+            this._listener.onTabDeselected(this._selectedTab);
+
+            if (null !== this._selectedTab._innerTabs)
+                this._selectedTab._innerTabs.disable();
+        }
+
+        this._selectedTab = tab;
+        tab.getView().setSelected(true);
+        this._listener.onTabSelected(tab);
+
+        if (null !== tab._innerTabs)
+            tab._innerTabs.enable();
+
         return true;
     }
-
-    return false;
-};
-
-TabCom.prototype._init = function () {
-    return this._selectTab( this.getTabAt(0) );
-};
-
-TabCom.prototype._selectTab = function (tab) {
-    if (! this._enabled )
-        return false;
-    
-    if (null === tab || tab.isSelected() )
-        return false;
-
-    if (null !== this._selectedTab) {
-        this._selectedTab.getView().setSelected(false);
-        this._listener.onTabDeselected(this._selectedTab);
-
-        if (null !== this._selectedTab._innerTabs)
-            this._selectedTab._innerTabs.disable();
-    }
-
-    this._selectedTab = tab;
-    tab.getView().setSelected(true);
-    this._listener.onTabSelected(tab);
-
-    if (null !== tab._innerTabs)
-        tab._innerTabs.enable();
-
-    return true;
-};
-
-function Tab (parent) {
-    this._view = new View("li", "tab");
-    this._parent = parent;
-    this._text = null;
-    this._INVALID_POSITION = -1;
-    this._position = this._INVALID_POSITION;
-    this._innerTabs = null;
-    this._tag = null;
-
-    this._view.getElement().addEventListener(
-        "click",
-        (function () { this.select(); }).bind(this)
-    );
 }
 
-Tab.prototype.setText = function (text) {
-    this._text = text;
-    this._view.setText(text);
-    return this;
-};
 
-Tab.prototype.setImage = function (imageUrl) {
-    this._view.getElement().style.setProperty('background-image', 'url("' + imageUrl + '")');
-    this._view.getElement().style.setProperty('background-size', '50%');
-    return this;
-};
+class Tab {
+    constructor(parent) {
+        this._view = new View("li", "tab");
+        this._parent = parent;
+        this._text = null;
+        this._INVALID_POSITION = -1;
+        this._position = this._INVALID_POSITION;
+        this._innerTabs = null;
+        this._tag = null;
 
-Tab.prototype.setInnerTabs = function (innerTabs) {
-    this._innerTabs = innerTabs;
-    return this;
-};
+        this._view.getElement().addEventListener(
+            "click", () => this.select()
+        );
+    }
 
-Tab.prototype.setTag = function (tag) {
-    this._tag = tag;
-    return this;
-};
+    setText(text) {
+        this._text = text;
+        this._view.setText(text);
+        return this;
+    }
 
-Tab.prototype.getTag = function () {
-    return this._tag;
-};
+    setImage(imageUrl) {
+        this._view.getElement().style.setProperty('background-image', 'url("' + imageUrl + '")');
+        this._view.getElement().style.setProperty('background-size', '50%');
+        return this;
+    }
 
-Tab.prototype.getPosition = function () {
-    return this._position;
-};
+    setInnerTabs(innerTabs) {
+        this._innerTabs = innerTabs;
+        return this;
+    }
 
-Tab.prototype.isSelected = function () {
-    return this._INVALID_POSITION !== this._position &&
-        this._parent.getSelectedTabPosition() === this._position;
-};
+    setTag(tag) {
+        this._tag = tag;
+        return this;
+    }
 
-Tab.prototype.select = function () {
-    this._parent._selectTab(this);
-};
+    getTag() {
+        return this._tag;
+    }
 
-Tab.prototype.getView = function () {
-    return this._view;
-};
+    getPosition() {
+        return this._position;
+    }
 
-// TabCom extends UIComponent
-Object.setPrototypeOf(TabCom.prototype, UIComponent.prototype);
+    isSelected() {
+        return this._INVALID_POSITION !== this._position &&
+            this._parent.getSelectedTabPosition() === this._position;
+    }
+
+    select() {
+        this._parent._selectTab(this);
+    }
+
+    getView() {
+        return this._view;
+    }
+}

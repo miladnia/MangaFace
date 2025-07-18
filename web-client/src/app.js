@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import AppContainer from "./src/data/app_container.js";
-import ViewModel from "./src/ui/view_model.js";
+import AppContainer from "./data/app_container.js";
+import ViewModel from "./ui/view_model.js";
 import DesignerScreen from "./view.js";
 
 
-class App {
+export default class App {
     constructor() {
         const DEFAULT_PACK_NAME = "manga_male_pack";
         this.container = new AppContainer(DEFAULT_PACK_NAME);
@@ -34,7 +34,3 @@ class App {
         });
     };
 }
-
-window.onload = function () {
-    (new App).run( document.getElementById("MF_APP_CONTAINER") );
-};
