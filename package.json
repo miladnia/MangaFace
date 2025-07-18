@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "http-server -o",
-    "test": "http-server ./ -p 8081 -o /web-client/tests/ui/test.html"
+    "test": "http-server ./ -p 8081 -o /web-client/tests/ui/index.html"
   },
   "keywords": [
     "avatar",

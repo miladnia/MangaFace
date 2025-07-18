@@ -8,11 +8,11 @@
  */
 
 import { UIComponent, View } from "../ui.js";
-import { getRandInt } from "../../utils/rand.js";
 
 
 export default class GridCom extends UIComponent {
-    _viewId = getRandInt(1000, 9999);
+    static #instanceCount = 0;
+    _viewId = 0;
     _cells = [];
     _pages = {};
     _currentPage = null;
@@ -30,6 +30,7 @@ export default class GridCom extends UIComponent {
 
     constructor(columns, rows) {
         super("ul", "grid-layout");
+        this._viewId = GridCom.#instanceCount++;
         this._columns = columns > 0 ? columns : 1;
         this._rows = rows > 0 ? rows : 1;
         this._cellCount = this._rows * this._columns;
@@ -303,7 +304,7 @@ class Page {
     setPlaceholderSelected(placeholderKey) {
         const placeholder = this._placeholdersKeyMap[placeholderKey];
         if (!placeholder) {
-            console.warn(`No placeholder found with key '${placeholderKey}' in page '${this._key}'`);
+            console.warn(`No placeholder found with key '${placeholderKey}' in page '${this._key}' of grid #${this._parent._viewId}`);
             return;
         }
         this._selectedPosition = placeholder._cellPosition;

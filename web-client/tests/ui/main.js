@@ -7,12 +7,9 @@
  * file that was distributed with this source code.
  */
 
-/**
- * The maximum is exclusive and the minimum is inclusive.
- */
-export function getRandInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
+import { UITester } from "../../tools/tester.js";
+import * as testCase from "./test_cases.js";
 
-    return Math.floor(Math.random() * (max - min) + min);
-}
+window.onload = function () {
+    new UITester().addTestCase(testCase).runUITests();
+};
