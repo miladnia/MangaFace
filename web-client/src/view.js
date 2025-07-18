@@ -11,7 +11,7 @@ import { DesignerScreenTemplate } from './ui/templates.js';
 import TabCom from './ui/components/tab_com.js';
 import GridCom from './ui/components/grid_com.js';
 import PinboardCom from './ui/components/pinboard_com.js';
-import { Task } from './data/models.js';
+import { Task, TaskPool } from './data/models.js';
 
 
 export default class DesignerScreen {
@@ -21,9 +21,7 @@ export default class DesignerScreen {
         this._pinboard = null; 
         this._itemGrid = null;
         this._colorGrid = null;
-        
-        this._latestTask = null;
-        this._taskHistory = [];
+        this._taskPool = new TaskPool();
     }
 
     async render() {
@@ -201,16 +199,39 @@ export default class DesignerScreen {
 
     async _runTask(task) {
         console.log("task", task);
-        this._taskHistory[task.commandName] = task;
+        this._taskPool.addTask(task);
+
         const command = await this._model.commandRepository.findByName(task.commandName);
+        if (!command) {
+            console.warn(`InvalidTask: command '${task.commandName}' not found!`);
+            return;
+        }
+
+        if (command.hasColorDependency()) {
+            const latestTaskOfDependencyCommand = this._taskPool.getLatestTaskOfCommand(
+                command.colorDependency);
+            // Override the color if the command has a color dependency
+            task.color = latestTaskOfDependencyCommand?.color || command.defaultColor;
+        }
+
+        if (!task.color && command.isColorRequired()) {
+            console.warn('InvalidTask: color is required!', task);
+            return;
+        }
+
         command.subscribedLayers.forEach(async (layerName) => {
             const layer = await this._model.layerRepository.findByName(layerName);
-            const assetUrl = layer.getAssetUrl(task.itemIndex, task.color);
-            const layerPin = this._pinboard.getItem(layerName);
+            if (!layer) {
+                console.warn(`InvalidTask: layer '${layerName}' not found!`, task);
+                return;
+            }
 
-            if (layerPin) {
+            const assetUrl = layer.getAssetUrl(task.itemIndex, task.color);
+            const assetPin = this._pinboard.getItem(layerName);
+
+            if (assetPin) {
                 // Update the existing item
-                layerPin.setImageUrl(assetUrl);
+                assetPin.setImageUrl(assetUrl);
                 return;
             }
 

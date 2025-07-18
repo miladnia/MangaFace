@@ -24,16 +24,34 @@ export class NavigatorOption {
 
 
 export class Command {
-    constructor({ name, itemCount, itemPreviewUrl, subscribedLayers, colors = [] }) {
+    constructor({
+            name,
+            itemCount,
+            itemPreviewUrl,
+            subscribedLayers,
+            colorDependency,
+            defaultColor,
+            colors = []
+        }) {
         this.name = name;
         this.itemCount = itemCount;
         this._itemPreviewUrl = itemPreviewUrl;
         this.subscribedLayers = subscribedLayers;
+        this.colorDependency = colorDependency;
+        this.defaultColor = defaultColor;
         this.colors = colors;
     }
 
     getItemPreviewUrl(item) {
         return this._itemPreviewUrl.replace('<ITEM>', item);
+    }
+
+    isColorRequired() {
+        return (this.colors.length > 0 || this.colorDependency);
+    }
+
+    hasColorDependency() {
+        return !!this.colorDependency;
     }
 }
 
@@ -94,5 +112,18 @@ export class Task {
         this.commandName = commandName;
         this.itemIndex = itemIndex;
         this.color = color;
+    }
+}
+
+
+export class TaskPool {
+    #tasks = [];
+
+    addTask(task) {
+        this.#tasks[task.commandName] = task;
+    }
+
+    getLatestTaskOfCommand(commandName) {
+        return this.#tasks[commandName] || null;
     }
 }

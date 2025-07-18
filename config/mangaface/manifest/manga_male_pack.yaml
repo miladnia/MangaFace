@@ -7,12 +7,12 @@ _anchors:
   _color_palettes:
     # Skin colors
     _skin_colors: &skin_colors
+      - color: light
+        preview_color_code: '#f9d5c3'
       - color: plain
         preview_color_code: '#fabe9f'
       - color: dark
         preview_color_code: '#e0a182'
-      - color: light
-        preview_color_code: '#f9d5c3'
     # Hair colors
     _hair_colors: &hair_colors
       - color: black
@@ -119,13 +119,12 @@ scripts:
         item_index: 1
         color: plain
 
-      - command_name: draw_head_shape_command
+      - command_name: draw_head_shape_commandd
         item_index: 1
         color: plain
 
       - command_name: draw_ears_command
         item_index: 1
-        color: plain
 
       - command_name: draw_eyebrows_command
         item_index: 1
@@ -137,11 +136,9 @@ scripts:
 
       - command_name: draw_nose_command
         item_index: 1
-        color: plain
 
       - command_name: draw_mouth_command
         item_index: 1
-        color: plain
 
       - command_name: draw_shirt_command
         item_index: 1
@@ -152,12 +149,14 @@ scripts:
 
 
 commands:
+  # Draw body_shape
   - name: draw_body_shape_command
     item_count: 1
     item_preview_url: ''
     protected: true
     subscribed_layers:
       - body_shape_layer
+  # Draw head_shape
   - name: draw_head_shape_command
     item_count: 30
     colors: *skin_colors
@@ -165,21 +164,28 @@ commands:
     protected: true
     subscribed_layers:
       - head_shape_layer
+  # Draw ears
   - name: draw_ears_command
     item_count: 6
+    color_dependency: draw_head_shape_command
+    default_color: plain
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/ears/<ITEM>.gif
     subscribed_layers:
       - left_ear_layer
       - right_ear_layer
+  # Draw eyebrows
   - name: draw_eyebrows_command
     item_count: 27
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyebrows/<ITEM>.gif
     movement_limit: 2
+    color_dependency: draw_hair_command
+    default_color: black
     subscribed_layers:
       - left_eyebrow_layer
       - right_eyebrow_layer
       - left_eyeshadow_layer
       - right_eyeshadow_layer
+  # Draw eyes
   - name: draw_eyes_command
     item_count: 28
     colors: *eye_colors
@@ -187,18 +193,25 @@ commands:
     subscribed_layers:
       - left_eye_layer
       - right_eye_layer
+  # Draw nose
   - name: draw_nose_command
     item_count: 34
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/nose_shapes/<ITEM>.gif
     movement_limit: 2
+    color_dependency: draw_head_shape_command
+    default_color: plain
     subscribed_layers:
       - nose_layer
+  # Draw mouth
   - name: draw_mouth_command
     item_count: 23
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mouth_shapes/<ITEM>.gif
     movement_limit: 2
+    color_dependency: draw_head_shape_command
+    default_color: plain
     subscribed_layers:
       - mouth_layer
+  # Draw mustache
   - name: draw_mustache_command
     item_count: 29
     colors: *hair_colors
@@ -206,12 +219,14 @@ commands:
     movement_limit: 2
     subscribed_layers:
       - mustache_layer
+  # Draw beard
   - name: draw_beard_command
     item_count: 2
     colors: *hair_colors
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/beard_styles/<ITEM>.gif
     subscribed_layers:
       - beard_layer
+  # Draw hair
   - name: draw_hair_command
     item_count: 62
     colors: *hair_colors
@@ -229,24 +244,28 @@ commands:
             # Hide the right ear
           - layer: right_ear_layer
             item: 0
+  # Draw shirt
   - name: draw_shirt_command
     item_count: 25
     colors: *cloth_colors
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/shirts/<ITEM>.gif
     subscribed_layers:
       - shirt_layer
+  # Draw jacket
   - name: draw_jacket_command
     item_count: 19
     colors: *cloth_colors
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/jackets/<ITEM>.gif
     subscribed_layers:
       - jackets_layer
+  # Draw scarf
   - name: draw_scarf_command
     item_count: 2
     colors: *cloth_colors
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/scarfs/<ITEM>.gif
     subscribed_layers:
       - scarf_layer
+  # Draw hat
   - name: draw_hat_command
     item_count: 11
     colors: *cloth_colors
@@ -277,28 +296,33 @@ commands:
             # Change hair style to bald
           - layer: hair_layer
             item: 22
+  # Draw glasses
   - name: draw_glasses_command
     item_count: 34
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/glasses/<ITEM>.gif
     movement_limit: 2
     subscribed_layers:
       - glasses_layer
+  # Draw filled_background
   - name: draw_filled_background_command
     item_count: 24
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_colors/<ITEM>.gif
     subscribed_layers:
       - filled_background_layer
+  # Draw patterns
   - name: draw_patterns_command
     item_count: 32
     colors: *cloth_colors
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_patterns/<ITEM>.gif
     subscribed_layers:
       - pattern_layer
+  # Draw themes
   - name: draw_themes_command
     item_count: 18
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_themes/<ITEM>.gif
     subscribed_layers:
       - theme_layer
+  # Draw weather_effect
   - name: draw_weather_effect_command
     item_count: 1
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/weather_effects/<ITEM>.gif

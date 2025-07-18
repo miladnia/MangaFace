@@ -15,7 +15,7 @@ class Manifest {
 
     static async getData() {
         if (!this.#manifestData) {
-            const response = await fetch('/data/mangaface/manifest.json');
+            const response = await fetch('/data/mangaface/manifest.json?v=' + Date.now());
 
             if (!response.ok) {
                 throw new Error(`[manifest] HTTP status: ${response.status}`);

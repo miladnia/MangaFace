@@ -13,11 +13,11 @@ import { Navigator, NavigatorOption, Command, Layer, Position, Color, Script, Ta
 export class NavigatorMapper {
     static toDomain(record) {
         return new Navigator({
-            coverUrl: record['cover_url'],
-            options: record['options'].map(
+            coverUrl: record['cover_url'] || '',
+            options: (record['options'] || []).map(
                 r => new NavigatorOption({
-                    title: r['title'],
-                    commandName: r['command_name']
+                    title: r['title'] || '',
+                    commandName: r['command_name'] || '',
                 })
             ),
         });
@@ -28,10 +28,12 @@ export class NavigatorMapper {
 export class CommandMapper {
     static toDomain(record) {
         return new Command({
-            name: record['name'],
-            itemCount: record['item_count'],
-            itemPreviewUrl: record['item_preview_url'],
-            subscribedLayers: record['subscribed_layers'],
+            name: record['name'] || '',
+            itemCount: record['item_count'] || 0,
+            itemPreviewUrl: record['item_preview_url'] || '',
+            subscribedLayers: record['subscribed_layers'] || [],
+            colorDependency: record['color_dependency'] || '',
+            defaultColor: record['default_color'] || '',
             colors: (record['colors'] || []).map(
                 r => new Color({
                     color: r['color'],
@@ -46,12 +48,12 @@ export class CommandMapper {
 export class LayerMapper {
     static toDomain(record, priority) {
         return new Layer({
-            name: record['name'],
-            priority: priority,
-            assetUrl: record['asset_url'],
+            name: record['name'] || '',
+            priority: priority || 0,
+            assetUrl: record['asset_url'] || '',
             position: new Position({
-                top: record['position']['top'],
-                left: record['position']['left'],
+                top: record['position']['top'] || 0,
+                left: record['position']['left'] || 0,
             }),
         });
     }
@@ -61,8 +63,8 @@ export class LayerMapper {
 export class ScriptMapper {
     static toDomain(record) {
         return new Script({
-            name: record['name'],
-            description: record['description'],
+            name: record['name'] || '',
+            description: record['description'] || '',
             tasks: (record['tasks'] || []).map(
                 job => new Task({
                     commandName: job['command_name'],
