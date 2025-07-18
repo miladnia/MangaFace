@@ -1,11 +1,12 @@
 {
   "name": "MangaFace",
-  "version": "1.1.0",
+  "version": "0.2",
   "description": "Create your own custom avatar.",
   "private": true,
   "scripts": {
-    "test": "http-server ./ -p 8001 -o /web-client/tests/ui/test.html",
-    "build": "webpack"
+    "build": "webpack",
+    "dev": "http-server -o",
+    "test": "http-server ./ -p 8081 -o /web-client/tests/ui/test.html"
   },
   "keywords": [
     "avatar",
@@ -19,7 +20,8 @@
     "node": ">=6.11.5"
   },
   "devDependencies": {
+    "http-server": "^14.1.1",
     "webpack": "^5.100.2",
-    "webpack-cli": "^3.3.2"
+    "webpack-cli": "^6.0.1"
   }
 }
