@@ -99,6 +99,7 @@ export class Rule {
     }
 }
 
+
 export class Script {
     constructor({ name, description, tasks }) {
         this.name = name;
@@ -106,6 +107,7 @@ export class Script {
         this.tasks = tasks;
     }
 }
+
 
 export class Task {
     constructor({ commandName, itemIndex, color }) {
@@ -116,14 +118,13 @@ export class Task {
 }
 
 
-export class TaskPool {
-    #tasks = [];
-
-    addTask(task) {
-        this.#tasks[task.commandName] = task;
-    }
-
-    getLatestTaskOfCommand(commandName) {
-        return this.#tasks[commandName] || null;
+export class LayerAsset {
+    constructor({ layerName, itemIndex, color, position, priority, assetUrl }) {
+        this.layerName = layerName;
+        this.itemIndex = itemIndex;
+        this.color = color;
+        this.position = position;
+        this.priority = priority;
+        this.url = assetUrl;
     }
 }

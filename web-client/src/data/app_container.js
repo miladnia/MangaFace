@@ -8,7 +8,7 @@
  */
 
 import { NavigatorDao, CommandDao, LayerDao, ScriptDao } from "./dao.js";
-import { NavigatorRepository, CommandRepository, LayerRepository, ScriptRepository } from "./repositories.js";
+import { NavigatorRepository, CommandRepository, LayerRepository, ScriptRepository } from "../domain/repositories.js";
 
 
 export default class AppContainer {

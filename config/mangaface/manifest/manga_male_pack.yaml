@@ -115,35 +115,36 @@ scripts:
   - name: initializer_script
     description: Initializes a default face.
     tasks:
+      # Draw body_shape
       - command_name: draw_body_shape_command
         item_index: 1
         color: plain
-
-      - command_name: draw_head_shape_commandd
+      # Draw head_shape
+      - command_name: draw_head_shape_command
         item_index: 1
         color: plain
-
+      # Draw ears
       - command_name: draw_ears_command
         item_index: 1
-
+      # Draw eyebrows
       - command_name: draw_eyebrows_command
         item_index: 1
         color: black
-
+      # Draw eyes
       - command_name: draw_eyes_command
         item_index: 1
         color: black
-
+      # Draw nose
       - command_name: draw_nose_command
         item_index: 1
-
+      # Draw mouth
       - command_name: draw_mouth_command
         item_index: 1
-
+      # Draw shirt
       - command_name: draw_shirt_command
         item_index: 1
         color: white
-
+      # Draw filled_background
       - command_name: draw_filled_background_command
         item_index: 1
 
@@ -176,10 +177,9 @@ commands:
   # Draw eyebrows
   - name: draw_eyebrows_command
     item_count: 27
+    colors: *hair_colors
     item_preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyebrows/<ITEM>.gif
     movement_limit: 2
-    color_dependency: draw_hair_command
-    default_color: black
     subscribed_layers:
       - left_eyebrow_layer
       - right_eyebrow_layer

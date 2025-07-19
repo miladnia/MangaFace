@@ -8,8 +8,8 @@
  */
 
 import AppContainer from "./data/app_container.js";
-import ViewModel from "./ui/view_model.js";
-import DesignerScreen from "./view.js";
+import ViewModel from "./view/ViewModel.js";
+import DesignerScreen from "./view/DesignerScreen.js";
 
 
 export default class App {

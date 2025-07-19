@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Navigator, NavigatorOption, Command, Layer, Position, Color, Script, Task } from './models.js';
+import { Navigator, NavigatorOption, Command, Layer, Position, Color, Script, Task } from '../domain/models.js';
 
 
 export class NavigatorMapper {
