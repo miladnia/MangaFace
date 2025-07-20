@@ -7,7 +7,7 @@ export default class CanvasPreview {
 
     constructor(canvas) {
         this.#canvas = canvas;
-        canvas.registerObserver(this);
+        canvas.registerAssetObserver(this);
     }
 
     async render(viewContainer) {

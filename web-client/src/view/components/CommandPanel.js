@@ -1,5 +1,6 @@
 import ItemGrid from './ItemGrid.js';
 import ColorGrid from './ColorGrid.js';
+import { Task } from '../../domain/models.js';
 
 
 export default class CommandPanel {
@@ -17,26 +18,31 @@ export default class CommandPanel {
     }
 
     onNewTask(handleChange) {
-        if (!this.#itemGrid.handleItemSelect) {
-            return;
-        }
-        this.#itemGrid.onItemSelect((commandName) => {
+        // On item select
+        this.#itemGrid.onItemSelect((commandName, itemIndex) => {
             handleChange(
-                this.#createTask(commandName));
-        });
-        this.#colorGrid.onColorSelect((commandName) => {
-            handleChange(
-                this.#createTask(commandName));
+                new Task({
+                    commandName: commandName,
+                    itemIndex: itemIndex,
+                    color: this.#colorGrid.getSelectedColor(),
+                })
+            );
         });
 
-    }
-
-    #createTask(commandName) {
-        return new Task({
-            commandName: commandName,
-            itemIndex: this.#itemGrid.getSelectedItemIndex(),
-            color: this.#colorGrid.getSelectedColor(),
-        })
+        // On color select
+        this.#colorGrid.onColorSelect((commandName, color) => {
+            // Don't run any task, if no item is selected
+            if (!this.#itemGrid.hasSelectedItem()) {
+                return;
+            }
+            handleChange(
+                new Task({
+                    commandName: commandName,
+                    itemIndex: this.#itemGrid.getSelectedItemIndex(),
+                    color: color,
+                })
+            );
+        });
     }
 
     showCommandControllers(commandName) {

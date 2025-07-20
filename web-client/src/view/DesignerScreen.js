@@ -25,7 +25,7 @@ export default class DesignerScreen {
             canvas,
             this._model.navigatorRepository,
             this._model.commandRepository);
-        commandPanel.onNewTask((task) => {
+        commandPanel.onNewTask(task => {
             canvas.runTask(task);
         });
         await commandPanel.render(

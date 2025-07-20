@@ -9,7 +9,7 @@ export default class ColorGrid {
     constructor(canvas, navigatorRepository, commandRepository) {
         this.#navigatorRepository = navigatorRepository;
         this.#commandRepository = commandRepository;
-        canvas.registerObserver(this);
+        canvas.registerScriptObserver(this);
     }
 
     async render(viewContainer) {
@@ -39,7 +39,7 @@ export default class ColorGrid {
         viewContainer.appendView(this);
     }
 
-    update(layerAssets, task) {
+    update(task) {
         if (this.#grid.hasPage(task.commandName)) {
             this.#grid.setPagePlaceholderSelected(task.commandName, task.color);
         }

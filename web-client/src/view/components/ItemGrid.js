@@ -9,7 +9,7 @@ export default class ItemGrid {
     constructor(canvas, navigatorRepository, commandRepository) {
         this.#navigatorRepository = navigatorRepository;
         this.#commandRepository = commandRepository;
-        canvas.registerObserver(this);
+        canvas.registerScriptObserver(this);
     }
 
     async render(viewContainer) {
@@ -32,7 +32,7 @@ export default class ItemGrid {
         viewContainer.appendView(this);
     }
 
-    update(layerAssets, task) {
+    update(task) {
         if (this.#grid.hasPage(task.commandName)) {
             this.#grid.setPagePlaceholderSelected(task.commandName, task.itemIndex);
         }
@@ -43,7 +43,7 @@ export default class ItemGrid {
             onPlaceholderSelected: (placeholderKey, pageKey) => {
                 const itemIndex = placeholderKey;
                 const commandName = pageKey;
-                handleItemSelect(itemIndex, commandName);
+                handleItemSelect(commandName, itemIndex);
             }
         });
     }
@@ -62,9 +62,5 @@ export default class ItemGrid {
 
     getElement() {
         return this.#grid.getView().getElement();
-    }
-
-    update() {
-        //
     }
 }

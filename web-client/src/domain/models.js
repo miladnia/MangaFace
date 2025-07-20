@@ -119,12 +119,24 @@ export class Task {
 
 
 export class LayerAsset {
-    constructor({ layerName, itemIndex, color, position, priority, assetUrl }) {
-        this.layerName = layerName;
+    #layer = null;
+
+    constructor({ layer, itemIndex, color, position }) {
+        this.#layer = layer;
         this.itemIndex = itemIndex;
         this.color = color;
         this.position = position;
-        this.priority = priority;
-        this.url = assetUrl;
+    }
+
+    get layerName() {
+        return this.#layer.name;
+    }
+
+    get url() {
+        return this.#layer.getAssetUrl(this.itemIndex, this.color);
+    }
+
+    get priority() {
+        return this.#layer.priority;
     }
 }

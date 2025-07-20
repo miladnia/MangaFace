@@ -16,7 +16,8 @@ export default class Canvas {
     #colorDependencyMapper = new CommandMapper();
     #commandRepository = null;
     #layerRepository = null;
-    #observers = [];
+    #assetObservers = [];
+    #scriptObserver = [];
 
     constructor(commandRepository, layerRepository) {
         this.#commandRepository = commandRepository;
@@ -24,8 +25,9 @@ export default class Canvas {
     }
 
     async runScript(script) {        
-        script.tasks.forEach(task => {
-            this.runTask(task);
+        script.tasks.forEach(async task => {
+            await this.runTask(task);
+            this.#notifyScriptObserver(task);
         });
     }
 
@@ -73,27 +75,36 @@ export default class Canvas {
                 return;
             }
 
-            const assetUrl = layer.getAssetUrl(task.itemIndex, task.color);
             layerAssets.push(
                 new LayerAsset({
-                    layerName: layer.name,
+                    layer: layer,
+                    itemIndex: task.itemIndex,
+                    color: task.color,
                     position: layer.position,
-                    priority: layer.priority,
-                    assetUrl: assetUrl,
                 })
             );  
         }
 
-        this.#notifyObservers(layerAssets, task);
+        this.#notifyAssetObservers(layerAssets);
     }
 
-    registerObserver(observer) {
-        this.#observers.push(observer);
+    registerAssetObserver(observer) {
+        this.#assetObservers.push(observer);
     }
 
-    #notifyObservers(layerAssets, task) {
-        this.#observers.forEach(observer => {
-            observer.update(layerAssets, task);
+    #notifyAssetObservers(layerAssets) {
+        this.#assetObservers.forEach(observer => {
+            observer.update(layerAssets);
+        });
+    }
+
+    registerScriptObserver(observer) {
+        this.#scriptObserver.push(observer);
+    }
+
+    #notifyScriptObserver(task) {
+        this.#scriptObserver.forEach(observer => {
+            observer.update(task);
         });
     }
 }
