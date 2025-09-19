@@ -1,41 +1,33 @@
-/**
- * This file is part of MangaFace.
- *
- * (c) Milad Abdollahnia <miladniaa@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-import { LayerAsset } from "./models.js";
-import { TaskPool, CommandMapper } from "./utils.js";
-
+import { LayerAsset } from './models.js';
+import { TaskPool, CommandMapper } from './utils.js';
+import type { CommandRepository, LayerRepository } from './repositories.ts';
+import type { Script, Task } from './models.ts';
+import type { AssetObserver, ScriptObserver } from '../view/observers.ts';
 
 export default class Canvas {
     #taskPool = new TaskPool();
     #colorDependencyMapper = new CommandMapper();
-    #commandRepository = null;
-    #layerRepository = null;
-    #assetObservers = [];
-    #scriptObserver = [];
+    #assetObservers: AssetObserver[] = [];
+    #scriptObserver: ScriptObserver[] = [];
 
-    constructor(commandRepository, layerRepository) {
-        this.#commandRepository = commandRepository;
-        this.#layerRepository = layerRepository;
+    constructor(
+        private commandRepository: CommandRepository,
+        private layerRepository: LayerRepository
+    ) {
     }
 
-    async runScript(script) {        
+    async runScript(script: Script) {
         script.tasks.forEach(async task => {
             await this.runTask(task);
             this.#notifyScriptObserver(task);
         });
     }
 
-    async runTask(task) {
+    async runTask(task: Task) {
         console.log("task", task);
         this.#taskPool.addTask(task);
 
-        const command = await this.#commandRepository.findByName(task.commandName);
+        const command = await this.commandRepository.findByName(task.commandName);
         if (!command) {
             console.warn(`InvalidTask: command '${task.commandName}' not found!`);
             return;
@@ -69,7 +61,7 @@ export default class Canvas {
         const layerAssets = [];
 
         for (const layerName of command.subscribedLayers) {
-            const layer = await this.#layerRepository.findByName(layerName);
+            const layer = await this.layerRepository.findByName(layerName);
             if (!layer) {
                 console.warn(`InvalidTask: layer '${layerName}' not found!`, task);
                 return;
@@ -88,21 +80,21 @@ export default class Canvas {
         this.#notifyAssetObservers(layerAssets);
     }
 
-    registerAssetObserver(observer) {
+    registerAssetObserver(observer: AssetObserver) {
         this.#assetObservers.push(observer);
     }
 
-    #notifyAssetObservers(layerAssets) {
+    #notifyAssetObservers(layerAssets: LayerAsset[]) {
         this.#assetObservers.forEach(observer => {
             observer.update(layerAssets);
         });
     }
 
-    registerScriptObserver(observer) {
+    registerScriptObserver(observer: ScriptObserver) {
         this.#scriptObserver.push(observer);
     }
 
-    #notifyScriptObserver(task) {
+    #notifyScriptObserver(task: Task) {
         this.#scriptObserver.forEach(observer => {
             observer.update(task);
         });

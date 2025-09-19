@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+// @ts-nocheck
+
 export class UIComponent {
     _view = null;
     _style = null;

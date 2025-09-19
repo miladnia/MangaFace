@@ -1,14 +1,6 @@
-/**
- * This file is part of MangaFace.
- *
- * (c) Milad Abdollahnia <miladniaa@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// @ts-nocheck
 
 import { NavigatorMapper, CommandMapper, LayerMapper, ScriptMapper } from './mappers.js';
-
 
 class Manifest {
     static #manifestData = null;

@@ -7,8 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { UIComponent, View } from "../ui.js";
+// @ts-nocheck
 
+import { UIComponent, View } from "../ui.ts";
 
 export default class GridCom extends UIComponent {
     static #instanceCount = 0;

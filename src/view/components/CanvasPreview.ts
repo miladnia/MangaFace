@@ -1,7 +1,9 @@
+// @ts-nocheck
+
 import PinboardCom from '../../ui/components/pinboard_com.js';
+import type { AssetObserver } from '../observers.js';
 
-
-export default class CanvasPreview {
+export default class CanvasPreview implements AssetObserver {
     #pinboard = new PinboardCom();
     #canvas = null;
 

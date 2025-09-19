@@ -1,11 +1,4 @@
-/**
- * This file is part of MangaFace.
- *
- * (c) Milad Abdollahnia <miladniaa@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// @ts-nocheck
 
 export class Navigator {
     constructor({ coverUrl, options }) {
@@ -99,24 +92,17 @@ export class Rule {
     }
 }
 
-
-export class Script {
-    constructor({ name, description, tasks }) {
-        this.name = name;
-        this.description = description;
-        this.tasks = tasks;
-    }
+export type Script = {
+    name: string;
+    description: string;
+    tasks: Task[];
 }
 
-
-export class Task {
-    constructor({ commandName, itemIndex, color }) {
-        this.commandName = commandName;
-        this.itemIndex = itemIndex;
-        this.color = color;
-    }
+export type Task = {
+    commandName: string;
+    itemIndex: number;
+    color: string;
 }
-
 
 export class LayerAsset {
     #layer = null;

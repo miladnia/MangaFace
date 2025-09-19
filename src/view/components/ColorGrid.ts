@@ -1,8 +1,10 @@
+// @ts-nocheck
+
 import GridCom from '../../ui/components/grid_com.js';
+import type { ScriptObserver } from '../observers.js';
 
-
-export default class ItemGrid {
-    #grid = new GridCom(6, 6);
+export default class ColorGrid implements ScriptObserver {
+    #grid = new GridCom(5, 2);
     #navigatorRepository = null;
     #commandRepository = null;
 
@@ -17,16 +19,23 @@ export default class ItemGrid {
 
         for (const navigator of navigators) {
             for (const navigatorOption of navigator.options) {
-                const gridPage = this.#grid.newPage(navigatorOption.commandName);
+                const page = this.#grid.newPage(navigatorOption.commandName);
                 const command = await this.#commandRepository.findByName(navigatorOption.commandName);
 
-                for (let i = 1; i <= command.itemCount; i++) {
-                    gridPage.addImagePlaceholder(command.getItemPreviewUrl(i), i);
+                command.colors.forEach(color => {
+                    page.addColorPlaceholder(color.previewColorCode, color.color);
+                });
+
+                if (command.colors.length) {
+                    // The first color is selected by default
+                    page.setPlaceholderSelected(
+                        command.colors[0].color
+                    );
                 }
 
-                this.#grid.addPage(gridPage);
+                this.#grid.addPage(page);
             }
-        }
+        };
 
         this.#grid.render();
         viewContainer.appendView(this);
@@ -34,29 +43,25 @@ export default class ItemGrid {
 
     update(task) {
         if (this.#grid.hasPage(task.commandName)) {
-            this.#grid.setPagePlaceholderSelected(task.commandName, task.itemIndex);
+            this.#grid.setPagePlaceholderSelected(task.commandName, task.color);
         }
     }
 
-    onItemSelect(handleItemSelect) {
+    onColorSelect(handleColorSelect) {
         this.#grid.setListener({
             onPlaceholderSelected: (placeholderKey, pageKey) => {
-                const itemIndex = placeholderKey;
+                const color = placeholderKey;
                 const commandName = pageKey;
-                handleItemSelect(commandName, itemIndex);
+                handleColorSelect(commandName, color);
             }
         });
     }
 
-    hasSelectedItem() {
-        return !!this.#grid.getSelectedPlaceholderKey();
-    }
-
-    getSelectedItemIndex() {
+    getSelectedColor() {
         return this.#grid.getSelectedPlaceholderKey();
     }
 
-    showCommandItems(commandName) {
+    showCommandColors(commandName) {
         this.#grid.switchToPage(commandName);
     }
 

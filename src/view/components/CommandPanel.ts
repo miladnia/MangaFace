@@ -1,7 +1,8 @@
+// @ts-nocheck
+
 import ItemGrid from './ItemGrid.js';
 import ColorGrid from './ColorGrid.js';
-import { Task } from '../../domain/models.js';
-
+import type { Task } from '../../domain/models.js';
 
 export default class CommandPanel {
     #itemGrid = null;
@@ -17,16 +18,14 @@ export default class CommandPanel {
         await this.#colorGrid.render(colorGridViewContainer);
     }
 
-    onNewTask(handleChange) {
+    onNewTask(handleChange: (task: Task) => void) {
         // On item select
         this.#itemGrid.onItemSelect((commandName, itemIndex) => {
-            handleChange(
-                new Task({
-                    commandName: commandName,
-                    itemIndex: itemIndex,
-                    color: this.#colorGrid.getSelectedColor(),
-                })
-            );
+            handleChange({
+                commandName: commandName,
+                itemIndex: itemIndex,
+                color: this.#colorGrid.getSelectedColor(),
+            });
         });
 
         // On color select
@@ -35,13 +34,11 @@ export default class CommandPanel {
             if (!this.#itemGrid.hasSelectedItem()) {
                 return;
             }
-            handleChange(
-                new Task({
-                    commandName: commandName,
-                    itemIndex: this.#itemGrid.getSelectedItemIndex(),
-                    color: color,
-                })
-            );
+            handleChange({
+                commandName: commandName,
+                itemIndex: this.#itemGrid.getSelectedItemIndex(),
+                color: color,
+            });
         });
     }
 

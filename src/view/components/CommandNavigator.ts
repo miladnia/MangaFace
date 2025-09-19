@@ -1,5 +1,6 @@
-import TabCom from '../../ui/components/tab_com.js';
+// @ts-nocheck
 
+import TabCom from '../../ui/components/tab_com.js';
 
 export default class CommandNavigator {
     #tabs = new TabCom();
@@ -44,7 +45,7 @@ export default class CommandNavigator {
         tabsViewContainer.appendView(this);
     }
 
-    onCommandSelect(handleCommandSelect) {
+    onCommandSelect(handleCommandSelect: (commandName: string) => void) {
         this.#handleCommandSelect = handleCommandSelect;
     }
 

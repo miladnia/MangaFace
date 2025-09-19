@@ -1,9 +1,16 @@
 import { View } from "../ui/ui.js";
 
-
 export class DesignerScreenTemplate {
+    #container: View;
+    sectionsFrame: View;
+    designersFrame: View;
+    shapesFrame: View;
+    controlsFrame: View;
+    previewFrame: View;
+    colorsFrame: View;
+
     constructor() {
-        this._container = new View("div", "mf-designer-screen-tpl");
+        this.#container = new View("div", "mf-designer-screen-tpl");
         this.sectionsFrame = this._createFrame("cat");
         this.designersFrame = this._createFrame("res");
         this.shapesFrame = this._createFrame("shapes");
@@ -12,18 +19,18 @@ export class DesignerScreenTemplate {
         this.colorsFrame = this._createFrame("colors", this.controlsFrame);
     }
 
-    _createFrame(classPrefix, parent) {
+    _createFrame(classPrefix: string, parent?: View) {
         var frame = new View("div", classPrefix + "-frame");
 
         if ("undefined" != typeof parent)
             parent.appendView(frame);
         else
-            this._container.appendView(frame);
+            this.#container.appendView(frame);
 
         return frame;
     }
 
     getView() {
-        return this._container;
+        return this.#container;
     }
 }

@@ -1,14 +1,7 @@
-/**
- * This file is part of MangaFace.
- *
- * (c) Milad Abdollahnia <miladniaa@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// @ts-nocheck
 
-import { Navigator, NavigatorOption, Command, Layer, Position, Color, Script, Task } from '../domain/models.js';
-
+import { Navigator, NavigatorOption, Command, Layer, Position, Color } from '../domain/models.js';
+import type { Script, Task } from '../domain/models.js';
 
 export class NavigatorMapper {
     static toDomain(record) {
@@ -23,7 +16,6 @@ export class NavigatorMapper {
         });
     }
 }
-
 
 export class CommandMapper {
     static toDomain(record) {
@@ -44,7 +36,6 @@ export class CommandMapper {
     }
 }
 
-
 export class LayerMapper {
     static toDomain(record, priority) {
         return new Layer({
@@ -59,19 +50,20 @@ export class LayerMapper {
     }
 }
 
-
 export class ScriptMapper {
-    static toDomain(record) {
-        return new Script({
+    static toDomain(record): Script {
+        return {
             name: record['name'] || '',
             description: record['description'] || '',
             tasks: (record['tasks'] || []).map(
-                job => new Task({
-                    commandName: job['command_name'],
-                    itemIndex: job['item_index'],
-                    color: job['color'] || '',
-                })
+                job => (
+                    {
+                        commandName: job['command_name'],
+                        itemIndex: job['item_index'],
+                        color: job['color'] || '',
+                    } satisfies Task
+                )
             ),
-        });
+        };
     }
 }
