@@ -1,4 +1,4 @@
-import App from "./src/app.js";
+import App from "./app.js";
 
 window.onload = function () {
     const containerElement = document.getElementById("MF_APP_CONTAINER");
