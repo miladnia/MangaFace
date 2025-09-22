@@ -1,68 +1,65 @@
 // @ts-nocheck
 
-import GridCom from '../../ui/components/grid_com.js';
-import type { ScriptObserver } from '../observers.js';
+import type Canvas from "../../domain/Canvas.js";
+import type { Manifest } from "../../domain/models.js";
+import GridCom from "../../ui/components/grid_com.js";
+import type { ScriptObserver } from "../observers.js";
 
 export default class ItemGrid implements ScriptObserver {
-    #grid = new GridCom(6, 6);
-    #navigatorRepository = null;
-    #commandRepository = null;
+  #grid: GridCom;
 
-    constructor(canvas, navigatorRepository, commandRepository) {
-        this.#navigatorRepository = navigatorRepository;
-        this.#commandRepository = commandRepository;
-        canvas.registerScriptObserver(this);
-    }
+  constructor(canvas: Canvas, private manifest: Manifest) {
+    this.#grid = new GridCom(6, 6);
+    canvas.registerScriptObserver(this);
+  }
 
-    async render(viewContainer) {
-        const navigators = await this.#navigatorRepository.findAll();
+  async render(viewContainer) {
+    for (const navigator of this.manifest.navigators) {
+      for (const navOption of navigator.options) {
+        const cmd = navOption.command;
+        const gridPage = this.#grid.newPage(navOption.command.name);
 
-        for (const navigator of navigators) {
-            for (const navigatorOption of navigator.options) {
-                const gridPage = this.#grid.newPage(navigatorOption.commandName);
-                const command = await this.#commandRepository.findByName(navigatorOption.commandName);
-
-                for (let i = 1; i <= command.itemCount; i++) {
-                    gridPage.addImagePlaceholder(command.getItemPreviewUrl(i), i);
-                }
-
-                this.#grid.addPage(gridPage);
-            }
+        for (let i = 1; i <= cmd.itemCount; i++) {
+          gridPage.addImagePlaceholder(cmd.getItemPreviewUrl(i), i);
         }
 
-        this.#grid.render();
-        viewContainer.appendView(this);
+        this.#grid.addPage(gridPage);
+      }
     }
 
-    update(task) {
-        if (this.#grid.hasPage(task.commandName)) {
-            this.#grid.setPagePlaceholderSelected(task.commandName, task.itemIndex);
-        }
-    }
+    this.#grid.render();
+    viewContainer.appendView(this);
+  }
 
-    onItemSelect(handleItemSelect) {
-        this.#grid.setListener({
-            onPlaceholderSelected: (placeholderKey, pageKey) => {
-                const itemIndex = placeholderKey;
-                const commandName = pageKey;
-                handleItemSelect(commandName, itemIndex);
-            }
-        });
+  update(task) {
+    if (this.#grid.hasPage(task.commandName)) {
+      this.#grid.setPagePlaceholderSelected(task.commandName, task.itemIndex);
     }
+  }
 
-    hasSelectedItem() {
-        return !!this.#grid.getSelectedPlaceholderKey();
-    }
+  onItemSelect(handleItemSelect) {
+    this.#grid.setListener({
+      onPlaceholderSelected: (placeholderKey, pageKey) => {
+        const itemIndex = placeholderKey;
+        const commandName = pageKey;
+        handleItemSelect(commandName, itemIndex);
+      },
+    });
+  }
 
-    getSelectedItemIndex() {
-        return this.#grid.getSelectedPlaceholderKey();
-    }
+  hasSelectedItem() {
+    return !!this.#grid.getSelectedPlaceholderKey();
+  }
 
-    showCommandItems(commandName) {
-        this.#grid.switchToPage(commandName);
-    }
+  getSelectedItemIndex() {
+    return this.#grid.getSelectedPlaceholderKey();
+  }
 
-    getElement() {
-        return this.#grid.getView().getElement();
-    }
+  showCommandItems(commandName) {
+    this.#grid.switchToPage(commandName);
+  }
+
+  getElement() {
+    return this.#grid.getView().getElement();
+  }
 }

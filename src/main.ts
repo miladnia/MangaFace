@@ -1,6 +1,6 @@
-import App from "./App.ts";
+import App from "./App";
 
 window.onload = function () {
-    const containerElement = document.getElementById("MF_APP_CONTAINER");
-    containerElement && new App().run(containerElement);
+    const containerElement = document.getElementById("root");
+    containerElement && App.render(containerElement);
 };

@@ -9,7 +9,7 @@
 
 // @ts-nocheck
 
-import { UIComponent, View } from "../ui.ts";
+import { UIComponent, View } from "../ui";
 
 export default class GridCom extends UIComponent {
     static #instanceCount = 0;

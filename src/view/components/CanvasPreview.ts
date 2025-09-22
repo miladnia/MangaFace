@@ -1,22 +1,22 @@
-// @ts-nocheck
-
+import type Canvas from '../../domain/Canvas.js';
+import type { LayerAsset } from '../../domain/models.js';
 import PinboardCom from '../../ui/components/pinboard_com.js';
+import type { View } from '../../ui/ui.js';
 import type { AssetObserver } from '../observers.js';
 
 export default class CanvasPreview implements AssetObserver {
-    #pinboard = new PinboardCom();
-    #canvas = null;
+    #pinboard: PinboardCom;
 
-    constructor(canvas) {
-        this.#canvas = canvas;
+    constructor(canvas: Canvas) {
+        this.#pinboard = new PinboardCom();
         canvas.registerAssetObserver(this);
     }
 
-    async render(viewContainer) {
+    async render(viewContainer: View) {
         viewContainer.appendView(this);
     }
 
-    update(layerAssets) {
+    update(layerAssets: LayerAsset[]) {
         layerAssets.forEach(layerAsset => {
             const pin = this.#pinboard.getItem(layerAsset.layerName);
 

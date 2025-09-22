@@ -1,8 +1,7 @@
 import { LayerAsset } from './models.js';
 import { TaskPool, CommandMapper } from './utils.js';
-import type { CommandRepository, LayerRepository } from './repositories.ts';
-import type { Script, Task } from './models.ts';
-import type { AssetObserver, ScriptObserver } from '../view/observers.ts';
+import type { Manifest, Script, Task } from './models';
+import type { AssetObserver, ScriptObserver } from '../view/observers';
 
 export default class Canvas {
     #taskPool = new TaskPool();
@@ -11,8 +10,7 @@ export default class Canvas {
     #scriptObserver: ScriptObserver[] = [];
 
     constructor(
-        private commandRepository: CommandRepository,
-        private layerRepository: LayerRepository
+        private manifest: Manifest,
     ) {
     }
 
@@ -27,9 +25,9 @@ export default class Canvas {
         console.log("task", task);
         this.#taskPool.addTask(task);
 
-        const command = await this.commandRepository.findByName(task.commandName);
+        const command = this.manifest.commands[task.commandName];
         if (!command) {
-            console.warn(`InvalidTask: command '${task.commandName}' not found!`);
+            console.warn(`Invalid command '${task.commandName}' in task:`, task);
             return;
         }
 
@@ -60,20 +58,14 @@ export default class Canvas {
 
         const layerAssets = [];
 
-        for (const layerName of command.subscribedLayers) {
-            const layer = await this.layerRepository.findByName(layerName);
-            if (!layer) {
-                console.warn(`InvalidTask: layer '${layerName}' not found!`, task);
-                return;
-            }
-
+        for (const layer of command.subscribedLayers) {
             layerAssets.push(
-                new LayerAsset({
-                    layer: layer,
-                    itemIndex: task.itemIndex,
-                    color: task.color,
-                    position: layer.position,
-                })
+                new LayerAsset(
+                    layer,
+                    task.itemIndex,
+                    task.color,
+                    layer.position,
+                )
             );  
         }
 

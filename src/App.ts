@@ -1,27 +1,17 @@
-import AppContainer from "./data/AppContainer.ts";
-import ViewModel from "./view/ViewModel.ts";
-import DesignerScreen from "./view/DesignerScreen.ts";
+import AppContainer from "./data/AppContainer";
+import DesignerScreen from "./view/DesignerScreen";
 
-export default class App {
-    container: AppContainer;
+const App = {
+  render: async (containerElement: HTMLElement) => {
+    const defaultPackName = "manga_male_pack";
+    const designerScreen = new DesignerScreen({
+      manifest: await AppContainer.manifestRepository.getByPackName(defaultPackName),
+    });
+    designerScreen.render().then((view) => {
+      const viewElement = view.getElement();
+      containerElement.appendChild(viewElement);
+    });
+  },
+};
 
-    constructor() {
-        const DEFAULT_PACK_NAME = "manga_male_pack";
-        this.container = new AppContainer(DEFAULT_PACK_NAME);
-    }
-
-    run(containerElement: HTMLElement) {
-        const designerScreen = new DesignerScreen(
-            new ViewModel(
-                this.container.navigatorRepository,
-                this.container.commandRepository,
-                this.container.layerRepository,
-                this.container.scriptRepository,
-            )
-        );
-        designerScreen.render().then((view) => {
-            const viewElement = view.getElement();
-            containerElement.appendChild(viewElement);
-        });
-    };
-}
+export default App;

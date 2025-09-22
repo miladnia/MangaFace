@@ -10,7 +10,7 @@
 // @ts-nocheck
 
 export class UIComponent {
-    _view = null;
+    _view: View;
     _style = null;
 
     constructor(tagName, className) {

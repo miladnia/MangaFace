@@ -1,4 +1,4 @@
-import type { Task, LayerAsset } from '../domain/models.ts';
+import type { Task, LayerAsset } from '../domain/models';
 
 export interface ScriptObserver {
     update(task: Task): void;

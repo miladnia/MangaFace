@@ -3,6 +3,6 @@ assets_dir: assets/mangaface
 
 api:
   public_dir: public
-  manifest_dir: data/mangaface
+  manifest_dir: api/manifest
   assets_dir: assets/mangaface
   pretty_manifest: true

@@ -28,13 +28,13 @@ $manifestFiles = array_filter(
     fn($name) => !is_dir($name) && str_ends_with($name, '.yaml')
 );
 
-$apiManifest = [];
+$parsedManifest = [];
 
 foreach ($manifestFiles as $f) {
     $filename = $manifestDir . '/' . $f;
     $manifest = file_get_contents($filename);
     // Replace tags with values.
-    $baseUrl = $_ENV['ASSETS_BASE_URL'] . '/' . $config['assets_dir'] ?? '';
+    $baseUrl = $_ENV['STATIC_BASE_URL'] . '/' . $config['assets_dir'] ?? '';
     $manifest = str_replace('<BASE_URL>', $baseUrl, $manifest);
 
     try {
@@ -46,8 +46,7 @@ foreach ($manifestFiles as $f) {
         exit(1);
     }
 
-    $packName = $parsedManifest['metadata']['pack_name'];
-    $apiManifest[$packName] = $parsedManifest;
+    $packName = $parsedManifest['pack_name'];
 }
 
 $apiManifestDir = APP_DIR . '/' .
@@ -59,11 +58,11 @@ is_dir($apiManifestDir) or mkdir($apiManifestDir, 0777, true);
 $prettyManifest = $_ENV['API_PRETTY_MANIFEST'] ?? $config['api']['pretty_manifest'] ?? true;
 
 $jsonData = json_encode(
-    $apiManifest,
+    $parsedManifest,
     true === $prettyManifest || 'true' === $prettyManifest ? JSON_PRETTY_PRINT : 0
 );
 
-$apiManifestFile = $apiManifestDir . '/manifest.json';
+$apiManifestFile = "{$apiManifestDir}/{$packName}.json";
 file_put_contents($apiManifestFile, $jsonData) !== false
     or exit('✘ [ERROR] Could not write to the file: ' . $apiManifestDir . PHP_EOL);
 

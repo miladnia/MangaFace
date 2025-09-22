@@ -1,6 +1,5 @@
-metadata:
-  pack_name: manga_male_pack
-  initializer_script: initializer_script
+pack_name: manga_male_pack
+initializer_script: initializer_script
 
 
 _anchors:

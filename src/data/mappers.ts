@@ -1,69 +1,117 @@
-// @ts-nocheck
+import type { ManifestDTO } from "./dtos";
+import { Command, Layer } from "../domain/models";
+import type {
+  Color,
+  Manifest,
+  Navigator,
+  NavigatorOption,
+  Position,
+  Script,
+  Task,
+} from "../domain/models";
 
-import { Navigator, NavigatorOption, Command, Layer, Position, Color } from '../domain/models.js';
-import type { Script, Task } from '../domain/models.js';
+let scriptsMap: Record<string, Script>;
+let commandsMap: Record<string, Command>;
+let layersMap: Record<string, Layer>;
 
-export class NavigatorMapper {
-    static toDomain(record) {
-        return new Navigator({
-            coverUrl: record['cover_url'] || '',
-            options: (record['options'] || []).map(
-                r => new NavigatorOption({
-                    title: r['title'] || '',
-                    commandName: r['command_name'] || '',
-                })
-            ),
-        });
-    }
+export const ManifestMapper = {
+  dtoToDomainModel: (dto: ManifestDTO): Manifest => {
+    scriptsMap = mapScripts(dto);
+    layersMap = mapLayers(dto);
+    commandsMap = mapCommands(dto);
+
+    return {
+      packName: dto.pack_name,
+      initializerScript: findScript(dto.initializer_script),
+      navigators: mapNavigators(dto),
+      commands: commandsMap,
+    } as const;
+  },
+};
+
+function findScript(name: unknown) {
+  return findRecord(name, scriptsMap);
 }
 
-export class CommandMapper {
-    static toDomain(record) {
-        return new Command({
-            name: record['name'] || '',
-            itemCount: record['item_count'] || 0,
-            itemPreviewUrl: record['item_preview_url'] || '',
-            subscribedLayers: record['subscribed_layers'] || [],
-            colorDependency: record['color_dependency'] || '',
-            defaultColor: record['default_color'] || '',
-            colors: (record['colors'] || []).map(
-                r => new Color({
-                    color: r['color'],
-                    previewColorCode: r['preview_color_code']
-                })
-            ),
-        });
-    }
+function findCommand(name: unknown) {
+  return findRecord(name, commandsMap);
 }
 
-export class LayerMapper {
-    static toDomain(record, priority) {
-        return new Layer({
-            name: record['name'] || '',
-            priority: priority || 0,
-            assetUrl: record['asset_url'] || '',
-            position: new Position({
-                top: record['position']['top'] || 0,
-                left: record['position']['left'] || 0,
-            }),
-        });
-    }
+function findLayer(name: unknown) {
+  return findRecord(name, layersMap);
 }
 
-export class ScriptMapper {
-    static toDomain(record): Script {
-        return {
-            name: record['name'] || '',
-            description: record['description'] || '',
-            tasks: (record['tasks'] || []).map(
-                job => (
-                    {
-                        commandName: job['command_name'],
-                        itemIndex: job['item_index'],
-                        color: job['color'] || '',
-                    } satisfies Task
-                )
-            ),
-        };
-    }
+function findRecord<T>(name: unknown, map: Record<string, T>): T {
+  if ("string" !== typeof name) {
+    throw new Error(
+      `invalid record name '${name}' for a map with keys: ${Object.keys(map)}`
+    );
+  }
+
+  const record = map[name];
+
+  if (!record) {
+    throw new Error(`no record with the name ${name}`);
+  }
+
+  return record;
+}
+
+function mapNavigators(dto: ManifestDTO): Navigator[] {
+  return dto.navigators.map((nav) => ({
+    coverUrl: nav.cover_url,
+    options: nav.options.map(
+      (opt): NavigatorOption => ({
+        title: opt.title,
+        command: findCommand(opt.command_name),
+      })
+    ),
+  }));
+}
+
+function mapScripts(dto: ManifestDTO): Record<string, Script> {
+  return dto.scripts.reduce((acc, scr) => {
+    acc[scr.name] = {
+      name: scr.name,
+      description: scr.description,
+      tasks: scr.tasks.map(
+        (tsk): Task => ({
+          commandName: tsk.command_name,
+          itemIndex: tsk.item_index,
+          color: tsk.color,
+        })
+      ),
+    };
+    return acc;
+  }, {} as Record<string, Script>);
+}
+
+function mapCommands(dto: ManifestDTO): Record<string, Command> {
+  return dto.commands.reduce((acc, cmd) => {
+    acc[cmd.name] = new Command(
+      cmd.name,
+      cmd.item_count,
+      cmd.item_preview_url,
+      cmd.subscribed_layers.map((lyr) => findLayer(lyr)),
+      cmd.color_dependency,
+      cmd.default_color,
+      (cmd.colors ?? []).map(
+        (col): Color => ({
+          color: col.color,
+          previewColorCode: col.preview_color_code,
+        })
+      )
+    );
+    return acc;
+  }, {} as Record<string, Command>);
+}
+
+function mapLayers(dto: ManifestDTO): Record<string, Layer> {
+  return dto.layers.reduce((acc, lyr, index) => {
+    acc[lyr.name] = new Layer(lyr.name, index, lyr.asset_url, {
+      top: lyr.position.top,
+      left: lyr.position.left,
+    } as Position);
+    return acc;
+  }, {} as Record<string, Layer>);
 }

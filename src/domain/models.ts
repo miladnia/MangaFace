@@ -1,128 +1,113 @@
-// @ts-nocheck
+export type Manifest = {
+  packName: string;
+  initializerScript: Script;
+  navigators: Navigator[];
+  commands: Record<string, Command>;
+};
 
-export class Navigator {
-    constructor({ coverUrl, options }) {
-        this.coverUrl = coverUrl;
-        this.options = options;
-    }
-}
+export type Navigator = {
+  coverUrl: string;
+  options: NavigatorOption[];
+};
 
-
-export class NavigatorOption {
-    constructor({ title, commandName }) {
-        this.title = title;
-        this.commandName = commandName;
-    }
-}
-
-
-export class Command {
-    constructor({
-            name,
-            itemCount,
-            itemPreviewUrl,
-            subscribedLayers,
-            colorDependency,
-            defaultColor,
-            colors = []
-        }) {
-        this.name = name;
-        this.itemCount = itemCount;
-        this._itemPreviewUrl = itemPreviewUrl;
-        this.subscribedLayers = subscribedLayers;
-        this.colorDependency = colorDependency;
-        this.defaultColor = defaultColor;
-        this.colors = colors;
-    }
-
-    getItemPreviewUrl(item) {
-        return this._itemPreviewUrl.replace('<ITEM>', item);
-    }
-
-    isColorRequired() {
-        return (this.colors.length > 0 || this.colorDependency);
-    }
-
-    hasColorDependency() {
-        return !!this.colorDependency;
-    }
-}
-
-
-export class Layer {
-    constructor({ name, priority, position, assetUrl }) {
-        this.name = name;
-        this.priority = priority;
-        this.position = position;
-        this._assetUrl = assetUrl;
-    }
-
-    getAssetUrl(itemNumber, colorValue) {
-        return this._assetUrl.replace('<ITEM>', itemNumber)
-            .replace('<COLOR>', colorValue);
-    }
-}
-
-
-export class Position {
-    constructor({ top, left }) {
-        this.top = top;
-        this.left = left;
-    }
-}
-
-
-export class Color {
-    constructor({ color, previewColorCode }) {
-        this.color = color;
-        this.previewColorCode = previewColorCode;
-    }
-}
-
-
-export class Rule {
-    constructor({ itemsToMatch, forcedLayers, conditions }) {
-        this.itemsToMatch = itemsToMatch;
-        this.forcedLayers = forcedLayers;
-        this.conditions = conditions;
-    }
-
-    matchItem({ item }) {
-        return this.itemsToMatch.includes(item);
-    }
-}
+export type NavigatorOption = {
+  title: string;
+  command: Command;
+};
 
 export type Script = {
-    name: string;
-    description: string;
-    tasks: Task[];
-}
+  name: string;
+  description: string;
+  tasks: Task[];
+};
 
 export type Task = {
-    commandName: string;
-    itemIndex: number;
-    color: string;
+  commandName: string;
+  itemIndex: number;
+  color: string;
+};
+
+export type Position = {
+  top: number;
+  left: number;
+};
+
+export type Color = {
+  color: string;
+  previewColorCode: string;
+};
+
+export class Command {
+  constructor(
+    public name: string,
+    public itemCount: number,
+    public itemPreviewUrl: string,
+    public subscribedLayers: Layer[],
+    public colorDependency: string,
+    public defaultColor: string,
+    public colors: Color[],
+  ) {
+  }
+
+  getItemPreviewUrl(itemIndex: number) {
+    return this.itemPreviewUrl.replace("<ITEM>", itemIndex.toString());
+  }
+
+  isColorRequired() {
+    return this.colors.length > 0 || this.colorDependency;
+  }
+
+  hasColorDependency() {
+    return !!this.colorDependency;
+  }
+}
+
+export class Layer {
+  constructor(
+    public name: string,
+    public priority: number,
+    public assetUrl: string,
+    public position: Position,
+  ) {
+  }
+
+  getAssetUrl(itemIndex: number, color: string) {
+    return this.assetUrl
+      .replace("<ITEM>", itemIndex.toString())
+      .replace("<COLOR>", color);
+  }
 }
 
 export class LayerAsset {
-    #layer = null;
+  constructor(
+    public layer: Layer,
+    public itemIndex: number,
+    public color: string,
+    public position: Position,
+  ) {
+  }
 
-    constructor({ layer, itemIndex, color, position }) {
-        this.#layer = layer;
-        this.itemIndex = itemIndex;
-        this.color = color;
-        this.position = position;
-    }
+  get layerName() {
+    return this.layer.name;
+  }
 
-    get layerName() {
-        return this.#layer.name;
-    }
+  get url() {
+    return this.layer.getAssetUrl(this.itemIndex, this.color);
+  }
 
-    get url() {
-        return this.#layer.getAssetUrl(this.itemIndex, this.color);
-    }
-
-    get priority() {
-        return this.#layer.priority;
-    }
+  get priority() {
+    return this.layer.priority;
+  }
 }
+
+// export class Rule {
+//   constructor({ itemsToMatch, forcedLayers, conditions }) {
+//     this.itemsToMatch = itemsToMatch;
+//     this.forcedLayers = forcedLayers;
+//     this.conditions = conditions;
+//   }
+
+//   matchItem({ item }) {
+//     return this.itemsToMatch.includes(item);
+//   }
+// }

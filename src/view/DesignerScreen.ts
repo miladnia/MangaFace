@@ -1,54 +1,40 @@
-import { DesignerScreenTemplate } from './DesignerScreenTemplate.ts';
-import CommandNavigator from './components/CommandNavigator.ts';
-import CommandPanel from './components/CommandPanel.ts';
-import CanvasPreview from './components/CanvasPreview.ts';
-import Canvas from '../domain/Canvas.ts';
-import type ViewModel from '../view/ViewModel.ts'
+import { DesignerScreenTemplate } from "./DesignerScreenTemplate";
+import CommandNavigator from "./components/CommandNavigator";
+import CommandPanel from "./components/CommandPanel";
+import CanvasPreview from "./components/CanvasPreview";
+import Canvas from "../domain/Canvas";
+import type { DesignerViewModel } from "./view_models";
 
 export default class DesignerScreen {
-    #tpl: DesignerScreenTemplate;
-    #model: ViewModel;
+  #tpl: DesignerScreenTemplate;
 
-    constructor(viewModel: ViewModel) {
-        this.#model = viewModel;
-        this.#tpl = new DesignerScreenTemplate();
-    }
+  constructor(private viewModel: DesignerViewModel) {
+    this.#tpl = new DesignerScreenTemplate();
+  }
 
-    async render() {
-        const canvas = new Canvas(
-            this.#model.commandRepository,
-            this.#model.layerRepository);
+  async render() {
+    const canvas = new Canvas(this.viewModel.manifest);
 
-        const canvasPreview = new CanvasPreview(canvas);
-        await canvasPreview.render(this.#tpl.previewFrame);
+    const canvasPreview = new CanvasPreview(canvas);
+    await canvasPreview.render(this.#tpl.previewFrame);
 
-        const commandPanel = new CommandPanel(
-            canvas,
-            this.#model.navigatorRepository,
-            this.#model.commandRepository);
-        commandPanel.onNewTask(task => {
-            canvas.runTask(task);
-        });
-        await commandPanel.render(
-            this.#tpl.shapesFrame,
-            this.#tpl.colorsFrame);
+    const commandPanel = new CommandPanel(canvas, this.viewModel.manifest);
+    commandPanel.onNewTask((task) => {
+      canvas.runTask(task);
+    });
+    await commandPanel.render(this.#tpl.shapesFrame, this.#tpl.colorsFrame);
 
-        const commandNavigator = new CommandNavigator(
-            this.#model.navigatorRepository);
-        commandNavigator.onCommandSelect(commandName => {
-            commandPanel.showCommandControllers(commandName);
-        });
-        await commandNavigator.render(
-            this.#tpl.sectionsFrame,
-            this.#tpl.designersFrame);
+    const commandNavigator = new CommandNavigator(this.viewModel.manifest);
+    commandNavigator.onCommandSelect((commandName) => {
+      commandPanel.showCommandControllers(commandName);
+    });
+    await commandNavigator.render(
+      this.#tpl.sectionsFrame,
+      this.#tpl.designersFrame
+    );
 
-        // TODO get the name of the initializer script as a metadata
-        const script = await this.#model.scriptRepository.findByName('initializer_script');
-        if (!script) {
-            throw new Error('No initializer script found!');
-        }
-        canvas.runScript(script);
+    canvas.runScript(this.viewModel.manifest.initializerScript);
 
-        return this.#tpl.getView();
-    }
+    return this.#tpl.getView();
+  }
 }

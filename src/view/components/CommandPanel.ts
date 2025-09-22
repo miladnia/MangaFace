@@ -2,15 +2,16 @@
 
 import ItemGrid from './ItemGrid.js';
 import ColorGrid from './ColorGrid.js';
-import type { Task } from '../../domain/models.js';
+import type { Manifest, Task } from '../../domain/models.js';
+import type Canvas from '../../domain/Canvas.js';
 
 export default class CommandPanel {
-    #itemGrid = null;
-    #colorGrid = null;
+    #itemGrid: ItemGrid;
+    #colorGrid: ColorGrid;
 
-    constructor(canvas, navigatorRepository, commandRepository) {
-        this.#itemGrid = new ItemGrid(canvas, navigatorRepository, commandRepository);
-        this.#colorGrid = new ColorGrid(canvas, navigatorRepository, commandRepository);
+    constructor(canvas: Canvas, manifest: Manifest) {
+        this.#itemGrid = new ItemGrid(canvas, manifest);
+        this.#colorGrid = new ColorGrid(canvas, manifest);
     }
 
     async render(itemGridViewContainer, colorGridViewContainer) {
