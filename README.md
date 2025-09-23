@@ -22,7 +22,7 @@ npm i && npm run setup
 npm run up
 ```
 
-> ![TIP]
+> [!TIP]
 > Use `npm run server` to run the server without the building step.
 
 ### Run for Development

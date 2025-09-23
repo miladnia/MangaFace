@@ -68,15 +68,15 @@ for (const file of manifestFiles) {
   }
 
   // --- Step 4: Prepare output directory ---
-  const apiManifestDir = path.join(APP_DIR, config?.static_manifest_dir ?? "");
+  const staticManifestDir = path.join(APP_DIR, config?.static_manifest_dir ?? "");
 
-  if (!fs.existsSync(apiManifestDir)) {
-    fs.mkdirSync(apiManifestDir, { recursive: true });
+  if (!fs.existsSync(staticManifestDir)) {
+    fs.mkdirSync(staticManifestDir, { recursive: true });
   }
 
   // --- Step 5: Serialize JSON ---
   const prettyManifest =
-    process.env.API_PRETTY_MANIFEST ?? config?.static_pretty_manifest ?? true;
+    process.env.STATIC_PRETTY_MANIFEST ?? config?.static_pretty_manifest ?? true;
 
   const jsonData = JSON.stringify(
     parsedManifest,
@@ -85,16 +85,16 @@ for (const file of manifestFiles) {
   );
 
   // --- Step 6: Write output file ---
-  const apiManifestFile = path.join(
-    apiManifestDir,
+  const staticManifestFile = path.join(
+    staticManifestDir,
     `${path.parse(file).name}.json`
   );
   try {
-    fs.writeFileSync(apiManifestFile, jsonData);
+    fs.writeFileSync(staticManifestFile, jsonData);
   } catch {
-    console.error("✘ [ERROR] Could not write to the file:", apiManifestFile);
+    console.error("✘ [ERROR] Could not write to the file:", staticManifestFile);
     process.exit(1);
   }
 
-  console.log("File created:", apiManifestFile);
+  console.log("Manifest created:", staticManifestFile);
 }

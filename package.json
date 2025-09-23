@@ -8,11 +8,12 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "http-server public/",
     "test": "jest",
+    "server": "http-server public/",
+    "up": "npm run build && npm run server",
+    "setup": "npm run man && npm run sym",
     "man": "node ./scripts/build_static_manifest.js",
-    "setup": "npm run man",
-    "up": "npm run build && npm run server"
+    "sym": "node ./scripts/create_symlinks.js"
   },
   "dependencies": {
     "react": "^19.1.1",
