@@ -7,24 +7,26 @@ import type { DesignerViewModel } from "./view_models";
 
 export default class DesignerScreen {
   #tpl: DesignerScreenTemplate;
+  #model: DesignerViewModel;
 
-  constructor(private viewModel: DesignerViewModel) {
+  constructor(viewModel: DesignerViewModel) {
+    this.#model = viewModel;
     this.#tpl = new DesignerScreenTemplate();
   }
 
   async render() {
-    const canvas = new Canvas(this.viewModel.manifest);
+    const canvas = new Canvas(this.#model.manifest);
 
     const canvasPreview = new CanvasPreview(canvas);
     await canvasPreview.render(this.#tpl.previewFrame);
 
-    const commandPanel = new CommandPanel(canvas, this.viewModel.manifest);
+    const commandPanel = new CommandPanel(canvas, this.#model.manifest);
     commandPanel.onNewTask((task) => {
       canvas.runTask(task);
     });
     await commandPanel.render(this.#tpl.shapesFrame, this.#tpl.colorsFrame);
 
-    const commandNavigator = new CommandNavigator(this.viewModel.manifest);
+    const commandNavigator = new CommandNavigator(this.#model.manifest);
     commandNavigator.onCommandSelect((commandName) => {
       commandPanel.showCommandControllers(commandName);
     });
@@ -33,7 +35,7 @@ export default class DesignerScreen {
       this.#tpl.designersFrame
     );
 
-    canvas.runScript(this.viewModel.manifest.initializerScript);
+    canvas.runScript(this.#model.manifest.initializerScript);
 
     return this.#tpl.getView();
   }

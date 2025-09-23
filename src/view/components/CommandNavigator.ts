@@ -7,11 +7,14 @@ export default class CommandNavigator {
   #tabs = new TabCom();
   #navigatorRepository = null;
   #handleCommandSelect = null;
+  #manifest: Manifest;
 
-  constructor(private manifest: Manifest) {}
+  constructor(manifest: Manifest) {
+    this.#manifest = manifest;
+  }
 
   async render(tabsViewContainer, innerTabsViewContainer) {
-    for (const navigator of this.manifest.navigators) {
+    for (const navigator of this.#manifest.navigators) {
       // Create a new tab component for inner tabs.
       const innerTabs = new TabCom()
         .setListener({

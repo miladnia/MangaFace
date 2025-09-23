@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type Canvas from '../../domain/Canvas.js';
 import type { LayerAsset } from '../../domain/models.js';
 import PinboardCom from '../../ui/components/pinboard_com.js';

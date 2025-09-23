@@ -7,13 +7,15 @@ import type { ScriptObserver } from '../observers.js';
 
 export default class ColorGrid implements ScriptObserver {
     #grid = new GridCom(5, 2);
+    #manifest: Manifest;
 
-    constructor(canvas: Canvas, private manifest: Manifest) {
+    constructor(canvas: Canvas, manifest: Manifest) {
         canvas.registerScriptObserver(this);
+        this.#manifest = manifest;
     }
 
     async render(viewContainer) {
-        for (const navigator of this.manifest.navigators) {
+        for (const navigator of this.#manifest.navigators) {
             for (const navOption of navigator.options) {
                 const cmd = navOption.command;
                 const page = this.#grid.newPage(navOption.command.name);

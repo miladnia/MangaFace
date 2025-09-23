@@ -7,14 +7,16 @@ import type { ScriptObserver } from "../observers.js";
 
 export default class ItemGrid implements ScriptObserver {
   #grid: GridCom;
+  #manifest: Manifest;
 
-  constructor(canvas: Canvas, private manifest: Manifest) {
+  constructor(canvas: Canvas, manifest: Manifest) {
     this.#grid = new GridCom(6, 6);
+    this.#manifest = manifest;
     canvas.registerScriptObserver(this);
   }
 
   async render(viewContainer) {
-    for (const navigator of this.manifest.navigators) {
+    for (const navigator of this.#manifest.navigators) {
       for (const navOption of navigator.options) {
         const cmd = navOption.command;
         const gridPage = this.#grid.newPage(navOption.command.name);

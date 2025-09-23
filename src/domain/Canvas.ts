@@ -8,10 +8,10 @@ export default class Canvas {
     #colorDependencyMapper = new CommandMapper();
     #assetObservers: AssetObserver[] = [];
     #scriptObserver: ScriptObserver[] = [];
+    #manifest: Manifest;
 
-    constructor(
-        private manifest: Manifest,
-    ) {
+    constructor(manifest: Manifest) {
+        this.#manifest = manifest;
     }
 
     async runScript(script: Script) {
@@ -25,7 +25,7 @@ export default class Canvas {
         console.log("task", task);
         this.#taskPool.addTask(task);
 
-        const command = this.manifest.commands[task.commandName];
+        const command = this.#manifest.commands[task.commandName];
         if (!command) {
             console.warn(`Invalid command '${task.commandName}' in task:`, task);
             return;

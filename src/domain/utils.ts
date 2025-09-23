@@ -1,27 +1,29 @@
-export class TaskPool {
-    #tasks = {};
+import type { Task } from "./models";
 
-    addTask(task) {
+export class TaskPool {
+    #tasks: Record<string, Task> = {};
+
+    addTask(task: Task) {
         this.#tasks[task.commandName] = task;
     }
 
-    getLatestTaskOfCommand(commandName) {
+    getLatestTaskOfCommand(commandName: string) {
         return this.#tasks[commandName] || null;
     }
 }
 
 
 export class CommandMapper {
-    #mappings = new Map();
+    #mappings: Map<string, Set<string>> = new Map();
 
-    mapCommand(primaryCommand, relatedCommand) {
-        if (!this.#mappings.has(primaryCommand)) {
+    mapCommand(primaryCommand: string, relatedCommand: string) {
+        if (! this.#mappings.has(primaryCommand)) {
             this.#mappings.set(primaryCommand, new Set());
         }
-        this.#mappings.get(primaryCommand).add(relatedCommand);
+        this.#mappings.get(primaryCommand)?.add(relatedCommand);
     }
 
-    getMappedCommands(primaryCommand) {
+    getMappedCommands(primaryCommand: string) {
         return Array.from(this.#mappings.get(primaryCommand) || []);
     }
 }

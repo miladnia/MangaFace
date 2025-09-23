@@ -38,15 +38,30 @@ export type Color = {
 };
 
 export class Command {
+  name: string;
+  itemCount: number;
+  itemPreviewUrl: string;
+  subscribedLayers: Layer[];
+  colorDependency: string;
+  defaultColor: string;
+  colors: Color[];
+
   constructor(
-    public name: string,
-    public itemCount: number,
-    public itemPreviewUrl: string,
-    public subscribedLayers: Layer[],
-    public colorDependency: string,
-    public defaultColor: string,
-    public colors: Color[],
+    name: string,
+    itemCount: number,
+    itemPreviewUrl: string,
+    subscribedLayers: Layer[],
+    colorDependency: string,
+    defaultColor: string,
+    colors: Color[]
   ) {
+    this.name = name;
+    this.itemCount = itemCount;
+    this.itemPreviewUrl = itemPreviewUrl;
+    this.subscribedLayers = subscribedLayers;
+    this.colorDependency = colorDependency;
+    this.defaultColor = defaultColor;
+    this.colors = colors;
   }
 
   getItemPreviewUrl(itemIndex: number) {
@@ -63,12 +78,21 @@ export class Command {
 }
 
 export class Layer {
+  name: string;
+  priority: number;
+  assetUrl: string;
+  position: Position;
+
   constructor(
-    public name: string,
-    public priority: number,
-    public assetUrl: string,
-    public position: Position,
+    name: string,
+    priority: number,
+    assetUrl: string,
+    position: Position
   ) {
+    this.name = name;
+    this.priority = priority;
+    this.assetUrl = assetUrl;
+    this.position = position;
   }
 
   getAssetUrl(itemIndex: number, color: string) {
@@ -79,12 +103,21 @@ export class Layer {
 }
 
 export class LayerAsset {
+  layer: Layer;
+  itemIndex: number;
+  color: string;
+  position: Position;
+
   constructor(
-    public layer: Layer,
-    public itemIndex: number,
-    public color: string,
-    public position: Position,
+    layer: Layer,
+    itemIndex: number,
+    color: string,
+    position: Position
   ) {
+    this.layer = layer;
+    this.itemIndex = itemIndex;
+    this.color = color;
+    this.position = position;
   }
 
   get layerName() {
