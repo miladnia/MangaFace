@@ -1,40 +1,48 @@
 # MangaFace
-Create your own custom avatar with **MangaFace**. This project is inspired by [FaceYourManga](https://www.faceyourmanga.com/).
+
+> Create your own custom avatar.
 
 ![MangaFace](docs/preview.jpg "Demo Preview")
 
+_Inspired by FaceYourManga_
+
 ## Getting Started
 
-### Requirements
+### Check Requirements
 
+- Node.js >= 20.19
 - PHP >= 8.1
-- Node.js >= 6.11.5
 - [Composer](https://getcomposer.org/download/)
 
-### Installation
+### Install
 
-First, please go to project root directory and run the installer:
-
-```shell
-composer run installer
+```sh
+npm i
 ```
 
-*By running the installer all of the required packages for PHP and Node.js will be installed and build processes will be done.*
-
-Now run a http server and enter the URL `127.0.0.1:8000` in your web browser to use the app:
-
-```shell
-composer run server
+```sh
+composer update
 ```
 
-## Commands
+```sh
+composer build
+```
 
-Command | Description
-------- | -----------
-`composer run installer` | Install packages and build.
-`composer run server` | Run a http server.
-`composer run build` | Generate configs for client.
-`npm run build` | Bundle scripts using [webpack](https://webpack.js.org/).
+### Build and Run
+
+```sh
+npm run build
+```
+
+```sh
+npm run server
+```
+
+### Run for Development
+
+```sh
+npm run dev
+```
 
 ## License
 The MangaFace is open-source project licensed under the [MIT license](https://opensource.org/licenses/MIT). For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
