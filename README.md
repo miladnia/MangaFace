@@ -11,34 +11,25 @@ _Inspired by FaceYourManga_
 ### Check Requirements
 
 - Node.js >= 20.19
-- PHP >= 8.1
-- [Composer](https://getcomposer.org/download/)
-
-### Install
-
-```sh
-npm i
-```
-
-```sh
-composer update
-```
-
-```sh
-composer build
-```
 
 ### Build and Run
 
 ```sh
-npm run build
+npm i && npm run setup
 ```
 
 ```sh
-npm run server
+npm run up
 ```
 
+> ![TIP]
+> Use `npm run server` to run the server without the building step.
+
 ### Run for Development
+
+```sh
+npm i && npm run setup
+```
 
 ```sh
 npm run dev

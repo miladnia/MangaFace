@@ -1,8 +1,0 @@
-manifest_dir: config/mangaface/manifest
-assets_dir: assets/mangaface
-
-api:
-  public_dir: public
-  manifest_dir: api/manifest
-  assets_dir: assets/mangaface
-  pretty_manifest: true

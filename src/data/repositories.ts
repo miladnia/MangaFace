@@ -5,7 +5,7 @@ import type { ManifestRepository } from '../domain/repositories';
 
 export const manifestRepository: ManifestRepository = {
   async getByPackName(packName: string) {
-    const manifestUrl = `/api/manifest/${packName}.json`;
+    const manifestUrl = `/manifest/${packName}.json`;
     const manifestDTO = await JsonFetch.getData<ManifestDTO>(manifestUrl);
 
     if (!manifestDTO) {
