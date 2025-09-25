@@ -1,9 +1,9 @@
-import type { Task, LayerAsset } from '../domain/models';
+import type { Action, LayerAsset } from '../domain/models';
 
 export interface ScriptObserver {
-    update(task: Task): void;
+    update(action: Action): void;
 }
 
 export interface AssetObserver {
-    update(layerAssets: LayerAsset[]): void;
+    update(layerAsset: LayerAsset): void;
 }

@@ -3,7 +3,7 @@
 import { UIComponent, View } from "../ui.js";
 
 
-export default class PinboardCom extends UIComponent {
+export default class PinBoardCom extends UIComponent {
     _items = {};
 
     constructor() {

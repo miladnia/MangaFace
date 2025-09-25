@@ -1,94 +1,85 @@
 import { LayerAsset } from './models.js';
-import { TaskPool, CommandMapper } from './utils.js';
-import type { Manifest, Script, Task } from './models';
+import type { Manifest, Script, Action, Layer, Command } from './models';
 import type { AssetObserver, ScriptObserver } from '../view/observers';
 
 export default class Canvas {
-    #taskPool = new TaskPool();
-    #colorDependencyMapper = new CommandMapper();
-    #assetObservers: AssetObserver[] = [];
-    #scriptObserver: ScriptObserver[] = [];
-    #manifest: Manifest;
+  #assetObservers: AssetObserver[] = [];
+  #scriptObserver: ScriptObserver[] = [];
+  #manifest: Manifest;
+  #addedAssets: Record<string, LayerAsset> = {};
 
-    constructor(manifest: Manifest) {
-        this.#manifest = manifest;
+  constructor(manifest: Manifest) {
+    this.#manifest = manifest;
+  }
+
+  async runScript(script: Script) {
+    script.actions.forEach(async (action) => {
+      await this.applyAction(action);
+      this.#notifyScriptObservers(action);
+    });
+  }
+
+  async applyAction(action: Action) {
+    console.log('Action', action);
+
+    const command = this.#manifest.commands[action.commandName];
+    if (!command) {
+      console.warn(`The action has invalid command name '${action.commandName}'.`);
+      return;
     }
 
-    async runScript(script: Script) {
-        script.tasks.forEach(async task => {
-            await this.runTask(task);
-            this.#notifyScriptObserver(task);
-        });
+    for (const layer of command.layers) {
+      const assetColorName = this.resolveAssetColorName(action, layer, command);
+      const newAsset = new LayerAsset(layer, action.assetIndex, assetColorName);
+      this.#addedAssets[layer.name] = newAsset;
+      this.#notifyAssetObservers(newAsset);
+      this.handleDependentAssets(layer, assetColorName);
+    }
+  }
+
+  resolveAssetColorName(action: Action, layer: Layer, command: Command): string {
+    if (layer.colorSource) {
+      const sourceLayer = layer.colorSource;
+      return this.#addedAssets[sourceLayer.name]?.colorName ??
+      sourceLayer.defaultColorName;
     }
 
-    async runTask(task: Task) {
-        console.log("task", task);
-        this.#taskPool.addTask(task);
-
-        const command = this.#manifest.commands[task.commandName];
-        if (!command) {
-            console.warn(`Invalid command '${task.commandName}' in task:`, task);
-            return;
-        }
-
-        // Handle color dependency
-        if (command.hasColorDependency()) {
-            const latestTaskOfDependencyCommand = this.#taskPool.getLatestTaskOfCommand(
-                command.colorDependency);
-            // Override the color if the command has a color dependency
-            task.color = latestTaskOfDependencyCommand?.color || command.defaultColor;
-            this.#colorDependencyMapper.mapCommand(command.colorDependency, command.name);
-        }
-
-        // Handle listeners of color dependency
-        this.#colorDependencyMapper.getMappedCommands(command.name)
-            .forEach(dependentCommandName => {
-                const latestTaskOfDependentCommand = this.#taskPool.getLatestTaskOfCommand(dependentCommandName);
-                if (latestTaskOfDependentCommand.color === task.color) {
-                    return;
-                }
-                latestTaskOfDependentCommand.color = task.color;
-                this.runTask(latestTaskOfDependentCommand);
-        });
-
-        if (!task.color && command.isColorRequired()) {
-            console.warn('InvalidTask: color is required!', task);
-            return;
-        }
-
-        const layerAssets = [];
-
-        for (const layer of command.subscribedLayers) {
-            layerAssets.push(
-                new LayerAsset(
-                    layer,
-                    task.itemIndex,
-                    task.color,
-                    layer.position,
-                )
-            );  
-        }
-
-        this.#notifyAssetObservers(layerAssets);
+    if (!action.colorName && command.isColorRequired()) {
+      throw new Error(`The action for command '${action.commandName}' must have a color name.`);
     }
 
-    registerAssetObserver(observer: AssetObserver) {
-        this.#assetObservers.push(observer);
-    }
+    return action.colorName;
+  }
 
-    #notifyAssetObservers(layerAssets: LayerAsset[]) {
-        this.#assetObservers.forEach(observer => {
-            observer.update(layerAssets);
-        });
-    }
+  handleDependentAssets(layer: Layer, assetColorName: string) {
+    // If there are layers referenced this layer as color source
+    // also update the assets of those layers
+    layer.referencedBy.forEach((referencingLayer) => {
+      const existingAsset = this.#addedAssets[referencingLayer.name];
+      if (existingAsset) {
+        existingAsset.colorName = assetColorName;
+        this.#notifyAssetObservers(existingAsset);
+      }
+    });
+  }
 
-    registerScriptObserver(observer: ScriptObserver) {
-        this.#scriptObserver.push(observer);
-    }
+  registerAssetObserver(observer: AssetObserver) {
+    this.#assetObservers.push(observer);
+  }
 
-    #notifyScriptObserver(task: Task) {
-        this.#scriptObserver.forEach(observer => {
-            observer.update(task);
-        });
-    }
+  #notifyAssetObservers(asset: LayerAsset) {
+    this.#assetObservers.forEach((observer) => {
+      observer.update(asset);
+    });
+  }
+
+  registerScriptObserver(observer: ScriptObserver) {
+    this.#scriptObserver.push(observer);
+  }
+
+  #notifyScriptObservers(action: Action) {
+    this.#scriptObserver.forEach((observer) => {
+      observer.update(action);
+    });
+  }
 }

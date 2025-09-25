@@ -1,9 +1,8 @@
-// @ts-nocheck
-
 import ItemGrid from './ItemGrid.js';
 import ColorGrid from './ColorGrid.js';
-import type { Manifest, Task } from '../../domain/models.js';
+import type { Manifest, Action } from '../../domain/models.js';
 import type Canvas from '../../domain/Canvas.js';
+import type { View } from '../../ui/ui.js';
 
 export default class CommandPanel {
     #itemGrid: ItemGrid;
@@ -14,36 +13,36 @@ export default class CommandPanel {
         this.#colorGrid = new ColorGrid(canvas, manifest);
     }
 
-    async render(itemGridViewContainer, colorGridViewContainer) {
+    async render(itemGridViewContainer: View, colorGridViewContainer: View) {
         await this.#itemGrid.render(itemGridViewContainer);
         await this.#colorGrid.render(colorGridViewContainer);
     }
 
-    onNewTask(handleChange: (task: Task) => void) {
+    onNewAction(handleChange: (action: Action) => void) {
         // On item select
-        this.#itemGrid.onItemSelect((commandName, itemIndex) => {
+        this.#itemGrid.onItemSelect((commandName: string, assetIndex: string) => {
             handleChange({
                 commandName: commandName,
-                itemIndex: itemIndex,
-                color: this.#colorGrid.getSelectedColor(),
+                assetIndex: parseInt(assetIndex),
+                colorName: this.#colorGrid.getSelectedColor(),
             });
         });
 
         // On color select
-        this.#colorGrid.onColorSelect((commandName, color) => {
-            // Don't run any task, if no item is selected
+        this.#colorGrid.onColorSelect((commandName, colorName) => {
+            // Don't run any Action, if no item is selected
             if (!this.#itemGrid.hasSelectedItem()) {
                 return;
             }
             handleChange({
                 commandName: commandName,
-                itemIndex: this.#itemGrid.getSelectedItemIndex(),
-                color: color,
+                assetIndex: this.#itemGrid.getSelectedAssetIndex(),
+                colorName: colorName,
             });
         });
     }
 
-    showCommandControllers(commandName) {
+    showCommandControllers(commandName: string) {
         this.#itemGrid.showCommandItems(commandName);
         this.#colorGrid.showCommandColors(commandName);
     }

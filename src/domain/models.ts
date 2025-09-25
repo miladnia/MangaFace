@@ -1,135 +1,186 @@
 export type Manifest = {
-  packName: string;
-  initializerScript: Script;
-  navigators: Navigator[];
-  commands: Record<string, Command>;
+  readonly packName: string;
+  readonly initializerScript: Script;
+  readonly navigators: Navigator[];
+  readonly commands: Record<string, Command>;
 };
 
 export type Navigator = {
-  coverUrl: string;
-  options: NavigatorOption[];
+  readonly coverUrl: string;
+  readonly options: NavigatorOption[];
 };
 
 export type NavigatorOption = {
-  title: string;
-  command: Command;
+  readonly title: string;
+  readonly command: Command;
 };
 
 export type Script = {
-  name: string;
-  description: string;
-  tasks: Task[];
+  readonly name: string;
+  readonly description: string;
+  readonly actions: Action[];
 };
 
-export type Task = {
-  commandName: string;
-  itemIndex: number;
-  color: string;
+export type Action = {
+  readonly commandName: string;
+  readonly assetIndex: number;
+  readonly colorName: string;
 };
 
 export type Position = {
-  top: number;
-  left: number;
+  readonly top: number;
+  readonly left: number;
 };
 
 export type Color = {
-  color: string;
-  previewColorCode: string;
+  readonly colorName: string;
+  readonly colorCode: string;
+};
+
+export type ColorPalette = {
+  readonly name: string;
+  readonly colors: Color[];
 };
 
 export class Command {
-  name: string;
-  itemCount: number;
-  itemPreviewUrl: string;
-  subscribedLayers: Layer[];
-  colorDependency: string;
-  defaultColor: string;
-  colors: Color[];
+  readonly name: string;
+  readonly previewUrl: string;
+  readonly layers: Layer[];
+  readonly assetsCount: number;
+  readonly colors: Color[];
 
-  constructor(
-    name: string,
-    itemCount: number,
-    itemPreviewUrl: string,
-    subscribedLayers: Layer[],
-    colorDependency: string,
-    defaultColor: string,
-    colors: Color[]
-  ) {
+  constructor(name: string, previewUrl: string, layers: Layer[]) {
+    if (Command.#areLayersEmpty(layers)) {
+      throw new Error(
+        `Command '${name}' must have at least one subscribed layer.`
+      );
+    }
+
+    const refColorPalette = Command.#getFirstColorPalette(layers);
+
+    if (
+      refColorPalette &&
+      !Command.#doLayersShareSameColorPalette(layers, refColorPalette)
+    ) {
+      throw new Error(
+        `Command '${name}' must have layers that share the same color palette.`
+      );
+    }
+
+    if (!Command.#doLayersHaveSameAmountOfAssets(layers)) {
+      throw new Error(`Command '${name}' must have layers with the same amount of assets.`);
+    }
+
     this.name = name;
-    this.itemCount = itemCount;
-    this.itemPreviewUrl = itemPreviewUrl;
-    this.subscribedLayers = subscribedLayers;
-    this.colorDependency = colorDependency;
-    this.defaultColor = defaultColor;
-    this.colors = colors;
+    this.previewUrl = previewUrl;
+    this.layers = layers;
+    this.assetsCount = layers[0].maxAssetIndex;
+    this.colors = refColorPalette?.colors ?? [];
   }
 
-  getItemPreviewUrl(itemIndex: number) {
-    return this.itemPreviewUrl.replace("<ITEM>", itemIndex.toString());
+  static #areLayersEmpty(layers: Layer[]) {
+    return !Array.isArray(layers) || !layers.length;
+  }
+
+  static #getFirstColorPalette(layers: Layer[]) {
+    return layers.find((lyr) => !!lyr.colorPalette)?.colorPalette;
+  }
+
+  static #doLayersShareSameColorPalette(
+    layers: Layer[],
+    refColorPalette: ColorPalette
+  ) {
+    // NOTICE: Some layers may not have a color palette, but color source.
+    return layers.every(
+      (lyr) => !lyr.colorPalette || lyr.colorPalette === refColorPalette
+    );
+  }
+
+  static #doLayersHaveSameAmountOfAssets(layers: Layer[]) {
+    return layers.every((lyr) => lyr.maxAssetIndex === layers[0].maxAssetIndex);
+  }
+
+  getPreviewUrl(assetIndex: number) {
+    return this.previewUrl.replace('{asset_index}', assetIndex.toString());
   }
 
   isColorRequired() {
-    return this.colors.length > 0 || this.colorDependency;
-  }
-
-  hasColorDependency() {
-    return !!this.colorDependency;
+    return this.colors.length > 0;
   }
 }
 
 export class Layer {
-  name: string;
-  priority: number;
-  assetUrl: string;
-  position: Position;
+  readonly name: string;
+  readonly priority: number;
+  readonly position: Position;
+  readonly maxAssetIndex: number;
+  readonly assetUrl: string;
+  readonly colorPalette?: ColorPalette;
+  readonly colorSource?: Layer;
+  referencedBy: Layer[] = [];
 
   constructor(
     name: string,
     priority: number,
+    position: Position,
+    maxAssetIndex: number,
     assetUrl: string,
-    position: Position
+    colorPalette?: ColorPalette,
+    colorSource?: Layer,
   ) {
+    if (maxAssetIndex <= 0) {
+      throw new Error(`Layer '${name}' must have at least one asset.`);
+    }
+
     this.name = name;
-    this.priority = priority;
-    this.assetUrl = assetUrl;
     this.position = position;
+    this.priority = priority;
+    this.maxAssetIndex = maxAssetIndex;
+    this.assetUrl = assetUrl;
+    this.colorPalette = colorPalette;
+    this.colorSource = colorSource;
   }
 
-  getAssetUrl(itemIndex: number, color: string) {
+  getAssetUrl(assetIndex: number, color: string) {
     return this.assetUrl
-      .replace("<ITEM>", itemIndex.toString())
-      .replace("<COLOR>", color);
+      .replace('{asset_index}', assetIndex.toString())
+      .replace('{color_name}', color);
+  }
+
+  get defaultColorName() {
+    return this.colorPalette?.colors[0].colorName;
   }
 }
 
 export class LayerAsset {
-  layer: Layer;
-  itemIndex: number;
-  color: string;
-  position: Position;
+  #layer: Layer;
+  #assetIndex: number;
+  colorName: string;
 
   constructor(
     layer: Layer,
-    itemIndex: number,
-    color: string,
-    position: Position
+    assetIndex: number,
+    colorName: string,
   ) {
-    this.layer = layer;
-    this.itemIndex = itemIndex;
-    this.color = color;
-    this.position = position;
+    this.#layer = layer;
+    this.#assetIndex = assetIndex;
+    this.colorName = colorName;
   }
 
   get layerName() {
-    return this.layer.name;
+    return this.#layer.name;
   }
 
   get url() {
-    return this.layer.getAssetUrl(this.itemIndex, this.color);
+    return this.#layer.getAssetUrl(this.#assetIndex, this.colorName);
   }
 
-  get priority() {
-    return this.layer.priority;
+  get priority(): number {
+    return this.#layer.priority;
+  }
+
+  get position(): Position {
+    return this.#layer.position;
   }
 }
 

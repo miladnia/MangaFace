@@ -16,13 +16,12 @@ export default class DesignerScreen {
 
   async render() {
     const canvas = new Canvas(this.#model.manifest);
-
     const canvasPreview = new CanvasPreview(canvas);
     await canvasPreview.render(this.#tpl.previewFrame);
 
     const commandPanel = new CommandPanel(canvas, this.#model.manifest);
-    commandPanel.onNewTask((task) => {
-      canvas.runTask(task);
+    commandPanel.onNewAction((action) => {
+      canvas.applyAction(action);
     });
     await commandPanel.render(this.#tpl.shapesFrame, this.#tpl.colorsFrame);
 

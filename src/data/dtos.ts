@@ -1,6 +1,13 @@
 export type ManifestDTO = {
   pack_name: string;
   initializer_script: string;
+  color_palettes: Record<string, {
+    name: string;
+    colors: Array<{
+      color_name: string;
+      color_code: string;
+    }>;
+  }>;
   navigators: Array<{
     cover_url: string;
     options: Array<{
@@ -8,34 +15,33 @@ export type ManifestDTO = {
       command_name: string;
     }>;
   }>;
-  scripts: Array<{
-    name: string;
-    description: string;
-    tasks: Array<{
-      command_name: string;
-      item_index: number;
-      color: string;
-    }>;
+  scripts: Record<string, ScriptDTO>;
+  commands: Record<string, CommandDTO>;
+  layers: Record<string, LayerDTO>;
+  layers_priority: string[];
+};
+
+export type ScriptDTO = {
+  description: string;
+  actions: Array<{
+    command_name: string;
+    asset_index: number;
+    color_name: string;
   }>;
-  commands: Array<{
-    name: string;
-    item_count: number;
-    item_preview_url: string;
-    subscribed_layers: string[];
-    color_dependency: string;
-    default_color: string;
-    colors: Array<{
-      color: string;
-      preview_color_code: string;
-    }>;
-  }>;
-  layers: Array<{
-    name: string;
-    priority: number;
-    asset_url: string;
-    position: {
-      top: number;
-      left: number;
-    };
-  }>;
+};
+
+export type CommandDTO = {
+  preview_url: string;
+  subscribed_layers: string[];
+};
+
+export type LayerDTO = {
+  max_asset_index: number;
+  color_palette_name?: string;
+  color_source?: string;
+  asset_url: string;
+  position: {
+    top: number;
+    left: number;
+  };
 };

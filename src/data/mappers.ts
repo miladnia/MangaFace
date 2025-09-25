@@ -1,117 +1,134 @@
-import type { ManifestDTO } from "./dtos";
-import { Command, Layer } from "../domain/models";
+import type { ManifestDTO } from './dtos';
+import { Command, Layer } from '../domain/models';
 import type {
+  Action,
   Color,
+  ColorPalette,
   Manifest,
   Navigator,
   NavigatorOption,
   Position,
   Script,
-  Task,
-} from "../domain/models";
+} from '../domain/models';
 
-let scriptsMap: Record<string, Script>;
-let commandsMap: Record<string, Command>;
-let layersMap: Record<string, Layer>;
+const modelsCache = {} as Record<string, any>;
 
 export const ManifestMapper = {
   dtoToDomainModel: (dto: ManifestDTO): Manifest => {
-    scriptsMap = mapScripts(dto);
-    layersMap = mapLayers(dto);
-    commandsMap = mapCommands(dto);
-
     return {
       packName: dto.pack_name,
-      initializerScript: findScript(dto.initializer_script),
-      navigators: mapNavigators(dto),
-      commands: commandsMap,
+      initializerScript: mapScript(dto, dto.initializer_script),
+      navigators: mapAllNavigators(dto),
+      commands: mapAllCommands(dto),
     } as const;
   },
 };
 
-function findScript(name: unknown) {
-  return findRecord(name, scriptsMap);
-}
-
-function findCommand(name: unknown) {
-  return findRecord(name, commandsMap);
-}
-
-function findLayer(name: unknown) {
-  return findRecord(name, layersMap);
-}
-
-function findRecord<T>(name: unknown, map: Record<string, T>): T {
-  if ("string" !== typeof name) {
-    throw new Error(
-      `invalid record name '${name}' for a map with keys: ${Object.keys(map)}`
-    );
-  }
-
-  const record = map[name];
-
-  if (!record) {
-    throw new Error(`no record with the name ${name}`);
-  }
-
-  return record;
-}
-
-function mapNavigators(dto: ManifestDTO): Navigator[] {
+function mapAllNavigators(dto: ManifestDTO): Navigator[] {
   return dto.navigators.map((nav) => ({
     coverUrl: nav.cover_url,
     options: nav.options.map(
       (opt): NavigatorOption => ({
         title: opt.title,
-        command: findCommand(opt.command_name),
+        command: mapCommand(dto, opt.command_name),
       })
     ),
   }));
 }
 
-function mapScripts(dto: ManifestDTO): Record<string, Script> {
-  return dto.scripts.reduce((acc, scr) => {
-    acc[scr.name] = {
-      name: scr.name,
-      description: scr.description,
-      tasks: scr.tasks.map(
-        (tsk): Task => ({
-          commandName: tsk.command_name,
-          itemIndex: tsk.item_index,
-          color: tsk.color,
-        })
-      ),
-    };
-    return acc;
-  }, {} as Record<string, Script>);
+function mapAllCommands(dto: ManifestDTO): Record<string, Command> {
+  const commands = {} as Record<string, Command>;
+  for (const name in dto.commands) {
+    commands[name] = mapCommand(dto, name);
+  }
+  return commands;
 }
 
-function mapCommands(dto: ManifestDTO): Record<string, Command> {
-  return dto.commands.reduce((acc, cmd) => {
-    acc[cmd.name] = new Command(
-      cmd.name,
-      cmd.item_count,
-      cmd.item_preview_url,
-      cmd.subscribed_layers.map((lyr) => findLayer(lyr)),
-      cmd.color_dependency,
-      cmd.default_color,
-      (cmd.colors ?? []).map(
-        (col): Color => ({
-          color: col.color,
-          previewColorCode: col.preview_color_code,
-        })
+function mapScript(manifestDTO: ManifestDTO, name: string): Script {
+  return mapDtoToDomain(name, manifestDTO.scripts, (dto) => ({
+    name: name,
+    description: dto.description,
+    actions: dto.actions.map(
+      (act): Action => ({
+        commandName: act.command_name,
+        assetIndex: act.asset_index,
+        colorName: act.color_name,
+      })
+    ),
+  }));
+}
+
+function mapCommand(manifestDTO: ManifestDTO, name: string): Command {
+  return mapDtoToDomain(
+    name,
+    manifestDTO.commands,
+    (dto) =>
+      new Command(
+        name,
+        dto.preview_url,
+        dto.subscribed_layers.map((lyr) => mapLayer(manifestDTO, lyr))
       )
-    );
-    return acc;
-  }, {} as Record<string, Command>);
+  );
 }
 
-function mapLayers(dto: ManifestDTO): Record<string, Layer> {
-  return dto.layers.reduce((acc, lyr, index) => {
-    acc[lyr.name] = new Layer(lyr.name, index, lyr.asset_url, {
-      top: lyr.position.top,
-      left: lyr.position.left,
-    } as Position);
-    return acc;
-  }, {} as Record<string, Layer>);
+function mapLayer(manifestDTO: ManifestDTO, name: string, colorSource?: Layer): Layer {
+  return mapDtoToDomain(name, manifestDTO.layers, (dto) => {
+    const priority = manifestDTO.layers_priority.indexOf(name);
+    const position: Position = {
+      top: dto.position.top,
+      left: dto.position.left,
+    };
+    const colorPalette = dto.color_palette_name
+      ? mapColorPalette(manifestDTO, dto.color_palette_name)
+      : undefined;
+
+    if (!colorSource) {
+      colorSource = dto.color_source
+        ? mapLayer(manifestDTO, dto.color_source)
+        : undefined;
+    }
+
+    const newLayer = new Layer(
+      name,
+      priority,
+      position,
+      dto.max_asset_index,
+      dto.asset_url,
+      colorPalette,
+      colorSource
+    );
+
+    if (!colorSource) {
+      // Handle who referenced this layer as color source
+      newLayer.referencedBy = Object.entries(manifestDTO.layers)
+        .filter(([lyrName, lyr]) => lyrName !== name && lyr.color_source === name)
+        .map(([lyrName]) => mapLayer(manifestDTO, lyrName, newLayer));
+    }
+
+    return newLayer;
+  });
+}
+
+function mapColorPalette(manifestDTO: ManifestDTO, name: string): ColorPalette {
+  return mapDtoToDomain(name, manifestDTO.color_palettes, (dto) => ({
+    name: name,
+    colors: (dto.colors ?? []).map(
+      (col): Color => ({
+        colorName: col.color_name,
+        colorCode: col.color_code,
+      })
+    ),
+  }));
+}
+
+function mapDtoToDomain<DTO, Domain>(
+  name: string,
+  dtoRecord: Record<string, DTO>,
+  mapper: (dto: DTO) => Domain
+): Domain {
+  if (!dtoRecord[name]) {
+    throw new Error(`The name '${name}' not found in manifest`);
+  }
+  modelsCache[name] ??= mapper(dtoRecord[name]);
+  return modelsCache[name];
 }

@@ -1,8 +1,7 @@
-// @ts-nocheck
-
 import type Canvas from "../../domain/Canvas.js";
-import type { Manifest } from "../../domain/models.js";
+import type { Action, Manifest } from "../../domain/models.js";
 import GridCom from "../../ui/components/grid_com.js";
+import type { View } from "../../ui/ui.js";
 import type { ScriptObserver } from "../observers.js";
 
 export default class ItemGrid implements ScriptObserver {
@@ -15,14 +14,14 @@ export default class ItemGrid implements ScriptObserver {
     canvas.registerScriptObserver(this);
   }
 
-  async render(viewContainer) {
+  async render(viewContainer: View) {
     for (const navigator of this.#manifest.navigators) {
       for (const navOption of navigator.options) {
         const cmd = navOption.command;
         const gridPage = this.#grid.newPage(navOption.command.name);
 
-        for (let i = 1; i <= cmd.itemCount; i++) {
-          gridPage.addImagePlaceholder(cmd.getItemPreviewUrl(i), i);
+        for (let i = 1; i <= cmd.assetsCount; i++) {
+          gridPage.addImagePlaceholder(cmd.getPreviewUrl(i), i);
         }
 
         this.#grid.addPage(gridPage);
@@ -33,18 +32,18 @@ export default class ItemGrid implements ScriptObserver {
     viewContainer.appendView(this);
   }
 
-  update(task) {
-    if (this.#grid.hasPage(task.commandName)) {
-      this.#grid.setPagePlaceholderSelected(task.commandName, task.itemIndex);
+  update(action: Action) {
+    if (this.#grid.hasPage(action.commandName)) {
+      this.#grid.setPagePlaceholderSelected(action.commandName, action.assetIndex);
     }
   }
 
-  onItemSelect(handleItemSelect) {
+  onItemSelect(handleItemSelect: (commandName: string, assetIndex: string) => void) {
     this.#grid.setListener({
-      onPlaceholderSelected: (placeholderKey, pageKey) => {
-        const itemIndex = placeholderKey;
+      onPlaceholderSelected: (placeholderKey: string, pageKey: string) => {
+        const assetIndex = placeholderKey;
         const commandName = pageKey;
-        handleItemSelect(commandName, itemIndex);
+        handleItemSelect(commandName, assetIndex);
       },
     });
   }
@@ -53,11 +52,11 @@ export default class ItemGrid implements ScriptObserver {
     return !!this.#grid.getSelectedPlaceholderKey();
   }
 
-  getSelectedItemIndex() {
+  getSelectedAssetIndex() {
     return this.#grid.getSelectedPlaceholderKey();
   }
 
-  showCommandItems(commandName) {
+  showCommandItems(commandName: string) {
     this.#grid.switchToPage(commandName);
   }
 
