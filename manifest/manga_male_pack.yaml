@@ -100,7 +100,7 @@ navigators:
   # Backgrounds
   - cover_url: <BASE_URL>/manga_male_pack/interface/backgrounds_section.png
     options:
-      - title: Filled Background
+      - title: Colors
         command_name: draw_filled_background
       - title: Patterns
         command_name: draw_patterns
@@ -109,7 +109,7 @@ navigators:
   # Effects
   - cover_url: <BASE_URL>/manga_male_pack/interface/effects_section.png
     options:
-      - title: Weather Effect
+      - title: Weather
         command_name: draw_weather_effect
 
 
@@ -148,7 +148,7 @@ scripts:
         color_name: white
       # Draw filled_background
       - command_name: draw_filled_background
-        asset_index: 1
+        asset_index: 3
 
 
 commands:

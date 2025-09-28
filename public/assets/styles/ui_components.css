@@ -22,7 +22,6 @@
 }
 
 .tab-layout .tab[data-selected] {
-    box-shadow: 0 0 0 0.1em #000;
     z-index: 2;
 }
 

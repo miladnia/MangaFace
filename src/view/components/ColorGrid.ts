@@ -5,7 +5,7 @@ import type { View } from '../../ui/ui.js';
 import type { ScriptObserver } from '../observers.js';
 
 export default class ColorGrid implements ScriptObserver {
-    #grid = new GridCom(5, 2);
+    #grid = new GridCom(1, 10);
     #manifest: Manifest;
 
     constructor(canvas: Canvas, manifest: Manifest) {

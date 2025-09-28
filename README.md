@@ -1,8 +1,8 @@
 # MangaFace
 
-> Create your own custom avatar.
+>  **MangaFace** is a _highly customizable_ avatar generator written in TypeScript.
 
-![MangaFace](docs/preview.jpg "Demo Preview")
+[![Create your own custom avatar.](docs/preview_v0.2.png "MangaFace avatar generator")](https://miladnia.ir/MangaFace/)
 
 _Inspired by FaceYourManga_
 

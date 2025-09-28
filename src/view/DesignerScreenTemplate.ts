@@ -1,6 +1,7 @@
 import { View } from "../ui/ui.js";
 
 export class DesignerScreenTemplate {
+    #template: View;
     #container: View;
     sectionsFrame: View;
     designersFrame: View;
@@ -10,19 +11,22 @@ export class DesignerScreenTemplate {
     colorsFrame: View;
 
     constructor() {
-        this.#container = new View("div", "mf-designer-screen-tpl");
-        this.sectionsFrame = this._createFrame("cat");
+        this.#template = new View("div", "mf-designer-screen-tpl");
+        this.#container = new View("div", "designer-container");
+        this.#template.appendView(this.#container);
+        this.controlsFrame = this._createFrame("preview");
+        this.previewFrame = this._createFrame("canvas", this.controlsFrame);
+        const commandPanel = this._createFrame("command-panel");
+        this.colorsFrame = this._createFrame("colors", commandPanel);
+        this.shapesFrame = this._createFrame("shapes", commandPanel);
         this.designersFrame = this._createFrame("res");
-        this.shapesFrame = this._createFrame("shapes");
-        this.controlsFrame = this._createFrame("controls");
-        this.previewFrame = this._createFrame("preview", this.controlsFrame);
-        this.colorsFrame = this._createFrame("colors", this.controlsFrame);
+        this.sectionsFrame = this._createFrame("cat");
     }
 
     _createFrame(classPrefix: string, parent?: View) {
         var frame = new View("div", classPrefix + "-frame");
 
-        if ("undefined" != typeof parent)
+        if (parent)
             parent.appendView(frame);
         else
             this.#container.appendView(frame);
@@ -31,6 +35,6 @@ export class DesignerScreenTemplate {
     }
 
     getView() {
-        return this.#container;
+        return this.#template;
     }
 }
