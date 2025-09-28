@@ -1,0 +1,44 @@
+@import "../default/designer_screen.css";
+
+.mf-designer-screen-tpl {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.designer-container::before {
+  content: '';
+  display: block;
+  background-color: var(--bg-color);
+  position: absolute;
+  top: 0;
+  left: 21%;
+  width: 65%;
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: 5px 15px 15px rgba(0, 0, 0, 1);
+  z-index: 1;
+}
+
+.designer-container::after {
+  content: '';
+  display: block;
+  background-color: var(--bg-color);
+  position: absolute;
+  top: 3%;
+  right: 2%;
+  width: 50%;
+  height: 94%;
+  border-radius: 12px;
+}
+
+.mf-designer-screen-tpl .preview-frame::before {
+  content: '';
+  background: var(--bg-color);
+  border-radius: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

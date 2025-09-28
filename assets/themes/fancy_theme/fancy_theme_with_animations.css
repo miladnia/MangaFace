@@ -1,0 +1,36 @@
+@import "./fancy_theme.css";
+
+.mf-designer-screen-tpl .cat-frame .tab {
+  transition: background-color 0.2s, opacity 0.2s, width 0.2s, padding-top 0.2s;
+}
+
+.mf-designer-screen-tpl .cat-frame .tab:hover {
+  width: 75%;
+  padding-top: 75%;
+}
+
+.mf-designer-screen-tpl .res-frame .tab {
+  transition: font-size 0.1s;
+}
+
+.mf-designer-screen-tpl .res-frame .tab:hover {
+  font-size: 1.5em;
+}
+
+.mf-designer-screen-tpl .shapes-frame .cell {
+  background-size: 100% 100%;
+  transition: background-size 0.1s, opacity 0.1s;
+}
+
+.mf-designer-screen-tpl .shapes-frame .cell:hover {
+  background-size: 150% 150%;
+}
+
+.mf-designer-screen-tpl .colors-frame .cell {
+  transition: width 0.2s, padding-top 0.2s;
+}
+
+.mf-designer-screen-tpl .colors-frame .cell:hover {
+  width: 90%;
+  padding-top: 90%;
+}
