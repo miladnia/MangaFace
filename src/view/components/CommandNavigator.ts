@@ -1,10 +1,10 @@
 // @ts-nocheck
 
-import type { Manifest } from "../../domain/models.js";
-import TabCom from "../../ui/components/tab_com.js";
+import type { Manifest } from "../../domain/models";
+import Tabs from "../../ui/components/Tabs";
 
 export default class CommandNavigator {
-  #tabs = new TabCom();
+  #tabs = new Tabs();
   #navigatorRepository = null;
   #handleCommandSelect = null;
   #manifest: Manifest;
@@ -16,7 +16,7 @@ export default class CommandNavigator {
   async render(tabsViewContainer, innerTabsViewContainer) {
     for (const navigator of this.#manifest.navigators) {
       // Create a new tab component for inner tabs.
-      const innerTabs = new TabCom()
+      const innerTabs = new Tabs()
         .setListener({
           onTabSelected: (tab) => {
             const commandName = tab.getTag();

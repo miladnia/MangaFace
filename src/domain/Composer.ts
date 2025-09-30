@@ -1,12 +1,15 @@
-import { LayerAsset } from './models.js';
+import { Asset } from './models';
 import type { Manifest, Script, Action, Layer, Command } from './models';
 import type { AssetObserver, ScriptObserver } from '../view/observers';
 
-export default class Canvas {
+/**
+ * Handles Actions (validation, dependency, rules), produces Assets
+ */
+export default class Composer {
   #assetObservers: AssetObserver[] = [];
   #scriptObserver: ScriptObserver[] = [];
   #manifest: Manifest;
-  #addedAssets: Record<string, LayerAsset> = {};
+  #addedAssets: Record<string, Asset> = {};
 
   constructor(manifest: Manifest) {
     this.#manifest = manifest;
@@ -30,7 +33,7 @@ export default class Canvas {
 
     for (const layer of command.layers) {
       const assetColorName = this.resolveAssetColorName(action, layer, command);
-      const newAsset = new LayerAsset(layer, action.assetIndex, assetColorName);
+      const newAsset = new Asset(layer, action.assetIndex, assetColorName);
       this.#addedAssets[layer.name] = newAsset;
       this.#notifyAssetObservers(newAsset);
       this.handleDependentAssets(layer, assetColorName);
@@ -67,7 +70,7 @@ export default class Canvas {
     this.#assetObservers.push(observer);
   }
 
-  #notifyAssetObservers(asset: LayerAsset) {
+  #notifyAssetObservers(asset: Asset) {
     this.#assetObservers.forEach((observer) => {
       observer.update(asset);
     });

@@ -1,16 +1,16 @@
-import ItemGrid from './ItemGrid.js';
-import ColorGrid from './ColorGrid.js';
-import type { Manifest, Action } from '../../domain/models.js';
-import type Canvas from '../../domain/Canvas.js';
-import type { View } from '../../ui/ui.js';
+import ItemGrid from './ItemGrid';
+import ColorGrid from './ColorGrid';
+import type { Manifest, Action } from '../../domain/models';
+import type Composer from '../../domain/Composer';
+import type { View } from '../../ui/ui';
 
 export default class CommandPanel {
     #itemGrid: ItemGrid;
     #colorGrid: ColorGrid;
 
-    constructor(canvas: Canvas, manifest: Manifest) {
-        this.#itemGrid = new ItemGrid(canvas, manifest);
-        this.#colorGrid = new ColorGrid(canvas, manifest);
+    constructor(composer: Composer, manifest: Manifest) {
+        this.#itemGrid = new ItemGrid(composer, manifest);
+        this.#colorGrid = new ColorGrid(composer, manifest);
     }
 
     async render(itemGridViewContainer: View, colorGridViewContainer: View) {

@@ -1,17 +1,17 @@
-import type Canvas from "../../domain/Canvas.js";
-import type { Action, Manifest } from "../../domain/models.js";
-import GridCom from "../../ui/components/grid_com.js";
-import type { View } from "../../ui/ui.js";
-import type { ScriptObserver } from "../observers.js";
+import type Composer from "../../domain/Composer";
+import type { Action, Manifest } from "../../domain/models";
+import Grid from "../../ui/components/Grid";
+import type { View } from "../../ui/ui";
+import type { ScriptObserver } from "../observers";
 
 export default class ItemGrid implements ScriptObserver {
-  #grid: GridCom;
+  #grid: Grid;
   #manifest: Manifest;
 
-  constructor(canvas: Canvas, manifest: Manifest) {
-    this.#grid = new GridCom(6, 6);
+  constructor(composer: Composer, manifest: Manifest) {
+    this.#grid = new Grid(6, 6);
     this.#manifest = manifest;
-    canvas.registerScriptObserver(this);
+    composer.registerScriptObserver(this);
   }
 
   async render(viewContainer: View) {

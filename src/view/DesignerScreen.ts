@@ -1,8 +1,8 @@
 import { DesignerScreenTemplate } from "./DesignerScreenTemplate";
 import CommandNavigator from "./components/CommandNavigator";
 import CommandPanel from "./components/CommandPanel";
-import CanvasPreview from "./components/CanvasPreview";
-import Canvas from "../domain/Canvas";
+import Renderer from "./components/Renderer";
+import Composer from "../domain/Composer";
 import type { DesignerViewModel } from "./view_models";
 
 export default class DesignerScreen {
@@ -15,13 +15,13 @@ export default class DesignerScreen {
   }
 
   async render() {
-    const canvas = new Canvas(this.#model.manifest);
-    const canvasPreview = new CanvasPreview(canvas);
-    await canvasPreview.render(this.#tpl.previewFrame);
+    const composer = new Composer(this.#model.manifest);
+    const renderer = new Renderer(composer);
+    await renderer.render(this.#tpl.previewFrame);
 
-    const commandPanel = new CommandPanel(canvas, this.#model.manifest);
+    const commandPanel = new CommandPanel(composer, this.#model.manifest);
     commandPanel.onNewAction((action) => {
-      canvas.applyAction(action);
+      composer.applyAction(action);
     });
     await commandPanel.render(this.#tpl.shapesFrame, this.#tpl.colorsFrame);
 
@@ -34,7 +34,7 @@ export default class DesignerScreen {
       this.#tpl.designersFrame
     );
 
-    canvas.runScript(this.#model.manifest.initializerScript);
+    composer.runScript(this.#model.manifest.initializerScript);
 
     return this.#tpl.getView();
   }

@@ -1,4 +1,4 @@
-import { View } from "../ui/ui.js";
+import { View } from "../ui/ui";
 
 export class DesignerScreenTemplate {
     #template: View;

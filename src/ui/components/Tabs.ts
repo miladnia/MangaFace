@@ -1,9 +1,9 @@
 // @ts-nocheck
 
-import { UIComponent, View } from "../ui.js";
+import { UIComponent, View } from "../ui";
 
 
-export default class TabCom extends UIComponent {
+export default class Tabs extends UIComponent {
     _tabs = [];
     _selectedTab = null;
     _enabled = true;

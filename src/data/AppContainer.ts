@@ -1,4 +1,4 @@
-import { manifestRepository } from "./repositories.js";
+import { manifestRepository } from "./repositories";
 
 const AppContainer = {
   manifestRepository: manifestRepository,

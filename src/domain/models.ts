@@ -152,7 +152,7 @@ export class Layer {
   }
 }
 
-export class LayerAsset {
+export class Asset {
   #layer: Layer;
   #assetIndex: number;
   colorName: string;

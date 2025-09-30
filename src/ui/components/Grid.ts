@@ -2,7 +2,7 @@
 
 import { UIComponent, View } from "../ui";
 
-export default class GridCom extends UIComponent {
+export default class Grid extends UIComponent {
     static #instanceCount = 0;
     _viewId = 0;
     _cells = [];
@@ -22,7 +22,7 @@ export default class GridCom extends UIComponent {
 
     constructor(columns, rows) {
         super("ul", "grid-layout");
-        this._viewId = GridCom.#instanceCount++;
+        this._viewId = Grid.#instanceCount++;
         this._columns = columns > 0 ? columns : 1;
         this._rows = rows > 0 ? rows : 1;
         this._cellCount = this._rows * this._columns;

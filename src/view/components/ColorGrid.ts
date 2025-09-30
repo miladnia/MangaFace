@@ -1,15 +1,15 @@
-import type Canvas from '../../domain/Canvas.js';
-import type { Action, Manifest } from '../../domain/models.js';
-import GridCom from '../../ui/components/grid_com.js';
-import type { View } from '../../ui/ui.js';
-import type { ScriptObserver } from '../observers.js';
+import type Composer from '../../domain/Composer';
+import type { Action, Manifest } from '../../domain/models';
+import Grid from '../../ui/components/Grid';
+import type { View } from '../../ui/ui';
+import type { ScriptObserver } from '../observers';
 
 export default class ColorGrid implements ScriptObserver {
-    #grid = new GridCom(1, 10);
+    #grid = new Grid(1, 10);
     #manifest: Manifest;
 
-    constructor(canvas: Canvas, manifest: Manifest) {
-        canvas.registerScriptObserver(this);
+    constructor(composer: Composer, manifest: Manifest) {
+        composer.registerScriptObserver(this);
         this.#manifest = manifest;
     }
 
