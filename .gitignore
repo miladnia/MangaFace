@@ -1,9 +1,6 @@
 # MangaFace
-vendor
-composer.lock
 public/*
 !public/assets
-!public/image.php
 web/*
 !web/index.html
 
