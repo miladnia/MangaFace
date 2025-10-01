@@ -3,6 +3,7 @@ public/*
 !public/assets
 web/*
 !web/index.html
+.env.production
 
 # Logs
 logs

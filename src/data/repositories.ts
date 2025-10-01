@@ -5,11 +5,11 @@ import type { ManifestRepository } from '../domain/repositories';
 
 export const manifestRepository: ManifestRepository = {
   async getByPackName(packName: string) {
-    const manifestUrl = `/manifest/${packName}.json`;
+    const manifestUrl = `${__STATIC_BASE_URL__}/manifest/${packName}.json`;
     const manifestDTO = await JsonFetch.getData<ManifestDTO>(manifestUrl);
 
     if (!manifestDTO) {
-      throw new Error(`No manifest for the pack "${packName}".`);
+      throw new Error(`Invalid pack name '${packName}'.`);
     }
 
     return ManifestMapper.dtoToDomainModel(manifestDTO);

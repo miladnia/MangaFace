@@ -5,15 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run clean && NODE_ENV=production npm run setup && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
-    "server": "http-server public/",
-    "up": "npm run build && npm run server",
+    "clean": "rm -rf public/dist/ public/index.html",
     "setup": "npm run man && npm run sym",
-    "man": "node ./scripts/build_static_manifest.js",
-    "sym": "node ./scripts/create_symlinks.js"
+    "man": "node scripts/build_static_manifest.js",
+    "sym": "node scripts/create_symlinks.js",
+    "local": "http-server public/"
   },
   "dependencies": {
     "react": "^19.1.1",

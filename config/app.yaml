@@ -2,5 +2,5 @@ manifest_dir: manifest
 assets_dir: assets/mangaface
 
 static_manifest_dir: public/manifest
-static_pretty_manifest: true
 static_manifest_assets_path: /assets/mangaface
+pretty_json: true

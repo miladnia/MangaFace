@@ -10,20 +10,20 @@ _Inspired by FaceYourManga_
 
 ### Check Requirements
 
-- Node.js >= 20.19
+- Node.js `>=20.19`
 
 ### Build and Run
 
 ```sh
-npm i && npm run setup
+npm i && npm run build
 ```
 
 ```sh
-npm run up
+npm run local
 ```
 
 > [!TIP]
-> Use `npm run server` to run the server without the building step.
+> You can rename the file `.env.production.example` to `.env.production` and set `STATIC_BASE_URL` to the URL your server is running on.
 
 ### Run for Development
 
