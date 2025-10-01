@@ -11,7 +11,7 @@ import type {
   Script,
 } from '../domain/models';
 
-const modelsCache = {} as Record<string, any>;
+const modelsCache = {} as Record<string, unknown>;
 
 export const ManifestMapper = {
   dtoToDomainModel: (dto: ManifestDTO): Manifest => {
@@ -130,5 +130,5 @@ function mapDtoToDomain<DTO, Domain>(
     throw new Error(`The name '${name}' not found in manifest`);
   }
   modelsCache[name] ??= mapper(dtoRecord[name]);
-  return modelsCache[name];
+  return modelsCache[name] as Domain;
 }

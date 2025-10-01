@@ -24,7 +24,7 @@ export class DesignerScreenTemplate {
     }
 
     _createFrame(classPrefix: string, parent?: View) {
-        var frame = new View("div", classPrefix + "-frame");
+        const frame = new View("div", classPrefix + "-frame");
 
         if (parent)
             parent.appendView(frame);

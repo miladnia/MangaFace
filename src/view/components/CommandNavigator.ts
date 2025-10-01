@@ -5,7 +5,6 @@ import Tabs from "../../ui/components/Tabs";
 
 export default class CommandNavigator {
   #tabs = new Tabs();
-  #navigatorRepository = null;
   #handleCommandSelect = null;
   #manifest: Manifest;
 

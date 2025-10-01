@@ -1,12 +1,12 @@
 class JsonFetch {
-  static #cache: { [url: string]: any } = {};
+  static #cache: { [url: string]: unknown } = {};
 
   static async getData<T>(url: string): Promise<T> {
     if (!this.#cache[url]) {
       this.#cache[url] = this.#fetchUrl(url);
     }
 
-    return this.#cache[url];
+    return this.#cache[url] as T;
   }
 
   static async #fetchUrl(url: string) {

@@ -1,6 +1,9 @@
-import App from "./App";
+import App from './App';
 
-window.onload = function () {
-    const containerElement = document.getElementById("root");
-    containerElement && App.render(containerElement);
-};
+document.addEventListener("DOMContentLoaded", () => {
+  const root = document.getElementById('root');
+  if (!root) {
+    throw new Error("The element 'root' not found in document.");
+  }
+  App.render(root);
+});
