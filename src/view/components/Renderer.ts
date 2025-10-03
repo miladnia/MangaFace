@@ -1,8 +1,8 @@
-import type Composer from '../../domain/Composer';
-import type { Asset } from '../../domain/models';
 import PinBoard from '../../ui/components/PinBoard';
 import ImageCanvas from '../../ui/components/LayeredImage';
-import type { View } from '../../ui/ui';
+import type Composer from '../../domain/Composer';
+import type { Asset } from '../../domain/models';
+import type { Container } from '../../ui/ui';
 import type { AssetObserver } from '../observers';
 
 /**
@@ -37,13 +37,13 @@ export default class Renderer implements AssetObserver {
       this.#board
         .newItem()
         .setImageUrl(asset.url)
-        .setPosition(asset.position.top + 'px', asset.position.left + 'px')
+        .setPosition(asset.position.top, asset.position.left)
         .setPriority(asset.priority)
     );
   }
 
-  async render(viewContainer: View) {
-    viewContainer.appendView(this);
+  async render(container: Container) {
+    container.appendView(this);
   }
 
   getElement() {
@@ -58,22 +58,22 @@ export default class Renderer implements AssetObserver {
       link.download = this.#generateFilename('avatar', 'png');
       link.href = url;
       link.click();
-    }
+    };
     container.appendChild(dlBtn);
     return container;
   }
 
   #generateFilename(prefix: string, extension: string) {
     const now = new Date();
-  
+
     const yyyy = now.getFullYear();
-    const mm = String(now.getMonth() + 1).padStart(2, "0"); // months are 0-indexed
-    const dd = String(now.getDate()).padStart(2, "0");
-  
-    const hh = String(now.getHours()).padStart(2, "0");
-    const min = String(now.getMinutes()).padStart(2, "0");
-    const ss = String(now.getSeconds()).padStart(2, "0");
-  
+    const mm = String(now.getMonth() + 1).padStart(2, '0'); // months are 0-indexed
+    const dd = String(now.getDate()).padStart(2, '0');
+
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+
     return `${prefix}_${yyyy}${mm}${dd}_${hh}${min}${ss}.${extension}`;
   }
 }

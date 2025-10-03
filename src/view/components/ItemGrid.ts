@@ -1,10 +1,10 @@
-import type Composer from "../../domain/Composer";
-import type { Action, Manifest } from "../../domain/models";
-import Grid from "../../ui/components/Grid";
-import type { View } from "../../ui/ui";
-import type { ScriptObserver } from "../observers";
+import type Composer from '../../domain/Composer';
+import type { Action, Manifest } from '../../domain/models';
+import Grid from '../../ui/components/Grid';
+import type { BaseView, Container } from '../../ui/ui';
+import type { ScriptObserver } from '../observers';
 
-export default class ItemGrid implements ScriptObserver {
+export default class ItemGrid implements BaseView<'ul'>, ScriptObserver {
   #grid: Grid;
   #manifest: Manifest;
 
@@ -14,14 +14,14 @@ export default class ItemGrid implements ScriptObserver {
     composer.registerScriptObserver(this);
   }
 
-  async render(viewContainer: View) {
+  async render(container: Container) {
     for (const navigator of this.#manifest.navigators) {
       for (const navOption of navigator.options) {
         const cmd = navOption.command;
         const gridPage = this.#grid.newPage(navOption.command.name);
 
         for (let i = 1; i <= cmd.assetsCount; i++) {
-          gridPage.addImagePlaceholder(cmd.getPreviewUrl(i), i);
+          gridPage.addImagePlaceholder(cmd.getPreviewUrl(i), i.toString());
         }
 
         this.#grid.addPage(gridPage);
@@ -29,16 +29,21 @@ export default class ItemGrid implements ScriptObserver {
     }
 
     this.#grid.render();
-    viewContainer.appendView(this);
+    container.appendView(this);
   }
 
   update(action: Action) {
     if (this.#grid.hasPage(action.commandName)) {
-      this.#grid.setPagePlaceholderSelected(action.commandName, action.assetIndex);
+      this.#grid.setPagePlaceholderSelected(
+        action.commandName,
+        action.assetIndex.toString()
+      );
     }
   }
 
-  onItemSelect(handleItemSelect: (commandName: string, assetIndex: string) => void) {
+  onItemSelect(
+    handleItemSelect: (commandName: string, assetIndex: string) => void
+  ) {
     this.#grid.setListener({
       onPlaceholderSelected: (placeholderKey: string, pageKey: string) => {
         const assetIndex = placeholderKey;
@@ -52,8 +57,8 @@ export default class ItemGrid implements ScriptObserver {
     return !!this.#grid.getSelectedPlaceholderKey();
   }
 
-  getSelectedAssetIndex() {
-    return this.#grid.getSelectedPlaceholderKey();
+  getSelectedAssetIndex(): number {
+    return parseInt(this.#grid.getSelectedPlaceholderKey());
   }
 
   showCommandItems(commandName: string) {

@@ -1,114 +1,131 @@
-// @ts-nocheck
+type HtmlTag = keyof HTMLElementTagNameMap;
 
-export class UIComponent {
-    _view: View;
-    _style = null;
+export class UIComponent<T extends HtmlTag> {
+  _view: View<T>;
+  _style: Style | null = null;
 
-    constructor(tagName, className) {
-        this._view = new View(tagName, className);
-    }
+  constructor(tagName: T, className: string) {
+    this._view = new ViewElement(tagName, className);
+  }
 
-    getView() {
-        return this._view;
-    }
+  getView(): View<T> {
+    return this._view;
+  }
 
-    getElement() {
-        return null !== this._view ? this._view.getElement() : null;
-    }
+  getElement(): HTMLElement {
+    return this._view.getElement();
+  }
 
-    _getStyle() {
-        if (null === this._style)
-            this._style = new Style();
-
-        return this._style;
-    }
+  _getStyle() {
+    this._style ??= new Style();
+    return this._style;
+  }
 }
-
 
 export class Style {
-    _element = null;
+  #element: HTMLStyleElement | null = null;
 
-    _init() {
-        // Just add a `<style>` element to the document,
-        // `CSSStyleSheet()` constructor
-        // and `Document.adoptedStyleSheets`
-        // are not compatible with older browsers.
-        this._element = document.createElement("style");
-        document.head.appendChild(this._element);
+  #createStyleElement(): HTMLStyleElement {
+    // Just add a `<style>` element to the document,
+    // `CSSStyleSheet()` constructor
+    // and `Document.adoptedStyleSheets`
+    // are not compatible with older browsers.
+    const element = document.createElement('style');
+    document.head.appendChild(element);
+    return element;
+  }
+
+  addRule(selector: string, properties: Record<string, string>) {
+    this.#element ??= this.#createStyleElement();
+
+    let propStr = '';
+
+    for (const prop in properties) {
+      propStr += `${prop}: ${properties[prop]};`;
     }
 
-    _addRule(selector, properties) {
-        if (null === this._element)
-            this._init();
-
-        var propStr = "";
-
-        for (var prop in properties)
-            propStr += prop + ": " + properties[prop] + ";";
-
-        var rule = selector + "{" + propStr + "}";
-        this._element.sheet.insertRule(rule, this._element.sheet.cssRules.length);
-    }
+    const rule = `${selector} { ${propStr} }`;
+    this.#element.sheet?.insertRule(rule, this.#element.sheet.cssRules.length);
+  }
 }
 
+export interface BaseView<T extends HtmlTag> {
+  getElement(): HTMLElementTagNameMap[T];
+}
 
-export class View {
-    constructor(tagName, className) {
-        this._element = document.createElement(tagName);
-        this._element.classList.add(className);
-        this._className = className;
-    }
+export interface ContainerView<T extends HtmlTag> extends BaseView<T> {
+  append(element: HTMLElement): void;
+  appendView(view: BaseView<HtmlTag>): void;
+}
 
-    getElement() {
-        return this._element;
-    }
+export type Container = ContainerView<'div'>;
 
-    setText(text) {
-        this._element.textContent = text;
-        return this;
-    }
+export interface View<T extends HtmlTag> extends ContainerView<T> {
+  setText(text: string): void;
+  addText(text: string): void;
+  hide(): void;
+  show(): void;
+  setVisible(visible: boolean): void;
+  setSelected(selected: boolean): void;
+  getStyleSelector(): void;
+}
 
-    addText(text) {
-        var newText = document.createTextNode(text);
-        this._element.appendChild(newText);
-        return this;
-    }
+export class ViewElement<T extends HtmlTag> implements View<T> {
+  _element: HTMLElementTagNameMap[T];
+  _className: string;
 
-    hide() {
-        return this.setVisible(false);
-    }
+  constructor(tagName: T, className: string) {
+    this._element = document.createElement(tagName);
+    this._element.classList.add(className);
+    this._className = className;
+  }
 
-    show() {
-        return this.setVisible(true);
-    }
+  getElement(): HTMLElementTagNameMap[T] {
+    return this._element;
+  }
 
-    setVisible(visible) {
-        if (visible)
-            this._element.style.removeProperty("display");
-        else
-            this._element.style.setProperty("display", "none");
+  setText(text: string) {
+    this._element.textContent = text;
+    return this;
+  }
 
-        return this;
-    }
+  addText(text: string) {
+    const newText = document.createTextNode(text);
+    this._element.appendChild(newText);
+    return this;
+  }
 
-    setSelected(selected) {
-        if (selected)
-            this._element.setAttribute("data-selected", "");
-        else
-            this._element.removeAttribute("data-selected");
+  hide() {
+    return this.setVisible(false);
+  }
 
-        return this;
-    }
+  show() {
+    return this.setVisible(true);
+  }
 
-    getStyleSelector() {
-        return '.' + this._className;
-    }
+  setVisible(visible: boolean) {
+    if (visible) this._element.style.removeProperty('display');
+    else this._element.style.setProperty('display', 'none');
 
-    append(element) {
-        this._element.appendChild(element);
-    }
+    return this;
+  }
 
-    appendView(view) {
-        this.append( view.getElement() );
-    }
+  setSelected(selected: boolean) {
+    if (selected) this._element.setAttribute('data-selected', '');
+    else this._element.removeAttribute('data-selected');
+
+    return this;
+  }
+
+  getStyleSelector() {
+    return '.' + this._className;
+  }
+
+  append(element: HTMLElement) {
+    this._element.appendChild(element);
+  }
+
+  appendView(view: View<HtmlTag>) {
+    this.append(view.getElement());
+  }
 }

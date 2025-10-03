@@ -1,172 +1,186 @@
-// @ts-nocheck
+import { UIComponent, ViewElement } from '../ui';
+import type { View } from '../ui';
 
-import { UIComponent, View } from "../ui";
+type Listener = {
+  // Called when a tab enters the selected state.
+  onTabSelected: (tab: Tab) => void;
+  // Called when a tab exits the selected state.
+  onTabDeselected: (tab: Tab) => void;
+};
 
+export class Tabs extends UIComponent<'ul'> {
+  #tabs: Tab[] = [];
+  #selectedTab: Tab | null = null;
+  #enabled = true;
+  #listener: Listener;
 
-export default class Tabs extends UIComponent {
-    _tabs = [];
-    _selectedTab = null;
-    _enabled = true;
-    _listener = {
-        // Called when a tab enters the selected state.
-        onTabSelected: (tab) => {},
-        // Called when a tab exits the selected state.
-        onTabDeselected: (tab) => {},
+  constructor() {
+    super('ul', 'tab-layout');
+    this.#listener = {
+      onTabSelected: () => {},
+      onTabDeselected: () => {},
     };
+  }
 
-    constructor() {
-        super("ul", "tab-layout");
+  newTab() {
+    return new Tab(this);
+  }
+
+  addTab(tab: Tab) {
+    const len = this.#tabs.push(tab);
+    tab._position = len - 1;
+    this._view.appendView(tab.getView());
+
+    if (0 === tab._position) {
+      this._selectTab(tab);
     }
 
-    newTab() {
-        return new Tab(this);
+    return this;
+  }
+
+  getTabAt(index: number): Tab | null {
+    return index < 0 || index >= this.#tabs.length ? null : this.#tabs[index];
+  }
+
+  getSelectedTabPosition() {
+    return null !== this.#selectedTab ? this.#selectedTab.getPosition() : -1;
+  }
+
+  setListener(listener: Partial<Listener>) {
+    if (listener.onTabSelected)
+      this.#listener.onTabSelected = listener.onTabSelected;
+
+    if (listener.onTabDeselected)
+      this.#listener.onTabDeselected = listener.onTabDeselected;
+
+    return this;
+  }
+
+  disable() {
+    if (this.#enabled) {
+      this.#enabled = false;
+      this._view.hide();
     }
 
-    addTab(tab) {
-        var len = this._tabs.push(tab);
-        tab._position = len - 1;
-        this._view.appendView( tab.getView() );
+    return this;
+  }
 
-        if (0 === tab._position) {
-            this._selectTab(tab);
-        }
-
-        return this;
+  enable() {
+    if (!this.#enabled) {
+      this.#enabled = true;
+      this._view.show();
+      if (!this._refresh()) {
+        this._init();
+      }
     }
 
-    getTabAt(index) {
-        return (index < 0 || index >= this._tabs.length) ? null : this._tabs[index];
+    return this;
+  }
+
+  _refresh() {
+    if (this.#enabled && null !== this.#selectedTab) {
+      this.#listener.onTabSelected(this.#selectedTab);
+      return true;
     }
 
-    getSelectedTabPosition() {
-        return null !== this._selectedTab ?
-            this._selectedTab.getPosition() : -1;
+    return false;
+  }
+
+  _init() {
+    const firstTab = this.getTabAt(0);
+    if (firstTab) {
+      return this._selectTab(firstTab);
+    }
+  }
+
+  _selectTab(tab: Tab) {
+    if (!this.#enabled) return false;
+
+    if (null === tab || tab.isSelected()) return false;
+
+    if (null !== this.#selectedTab) {
+      this.#selectedTab.getView().setSelected(false);
+      this.#listener.onTabDeselected(this.#selectedTab);
+
+      if (null !== this.#selectedTab._innerTabs)
+        this.#selectedTab._innerTabs.disable();
     }
 
-    setListener(listener) {
-        if (listener.hasOwnProperty("onTabSelected"))
-            this._listener.onTabSelected = listener.onTabSelected;
+    this.#selectedTab = tab;
+    tab.getView().setSelected(true);
+    this.#listener.onTabSelected(tab);
 
-        if (listener.hasOwnProperty("onTabDeselected"))
-            this._listener.onTabDeselected = listener.onTabDeselected;
-        
-        return this;
-    }
+    if (null !== tab._innerTabs) tab._innerTabs.enable();
 
-    disable() {
-        if (this._enabled) {
-            this._enabled = false;
-            this._view.hide();
-        }
-        
-        return this;
-    }
-
-    enable() {
-        if (! this._enabled ) {
-            this._enabled = true;
-            this._view.show();
-            this._refresh() || this._init();
-        }
-
-        return this;
-    }
-
-    _refresh() {
-        if (this._enabled && null !== this._selectedTab) {
-            this._listener.onTabSelected(this._selectedTab);
-            return true;
-        }
-
-        return false;
-    }
-
-    _init() {
-        return this._selectTab( this.getTabAt(0) );
-    }
-
-    _selectTab(tab) {
-        if (! this._enabled )
-            return false;
-        
-        if (null === tab || tab.isSelected() )
-            return false;
-
-        if (null !== this._selectedTab) {
-            this._selectedTab.getView().setSelected(false);
-            this._listener.onTabDeselected(this._selectedTab);
-
-            if (null !== this._selectedTab._innerTabs)
-                this._selectedTab._innerTabs.disable();
-        }
-
-        this._selectedTab = tab;
-        tab.getView().setSelected(true);
-        this._listener.onTabSelected(tab);
-
-        if (null !== tab._innerTabs)
-            tab._innerTabs.enable();
-
-        return true;
-    }
+    return true;
+  }
 }
 
+export class Tab {
+  _view: View<'li'>;
+  _parent: Tabs;
+  _text: string;
+  _INVALID_POSITION: number;
+  _position: number;
+  _innerTabs: Tabs | null;
+  _tag: unknown;
 
-class Tab {
-    constructor(parent) {
-        this._view = new View("li", "tab");
-        this._parent = parent;
-        this._text = null;
-        this._INVALID_POSITION = -1;
-        this._position = this._INVALID_POSITION;
-        this._innerTabs = null;
-        this._tag = null;
+  constructor(parent: Tabs) {
+    this._view = new ViewElement('li', 'tab');
+    this._parent = parent;
+    this._text = '';
+    this._INVALID_POSITION = -1;
+    this._position = this._INVALID_POSITION;
+    this._innerTabs = null;
+    this._tag = null;
 
-        this._view.getElement().addEventListener(
-            "click", () => this.select()
-        );
-    }
+    this._view.getElement().addEventListener('click', () => this.select());
+  }
 
-    setText(text) {
-        this._text = text;
-        this._view.setText(text);
-        return this;
-    }
+  setText(text: string) {
+    this._text = text;
+    this._view.setText(text);
+    return this;
+  }
 
-    setImage(imageUrl) {
-        this._view.getElement().style.setProperty('background-image', 'url("' + imageUrl + '")');
-        this._view.getElement().style.setProperty('background-size', '50%');
-        return this;
-    }
+  setImage(imageUrl: string) {
+    this._view
+      .getElement()
+      .style.setProperty('background-image', 'url("' + imageUrl + '")');
+    this._view.getElement().style.setProperty('background-size', '50%');
+    return this;
+  }
 
-    setInnerTabs(innerTabs) {
-        this._innerTabs = innerTabs;
-        return this;
-    }
+  setInnerTabs(innerTabs: Tabs) {
+    this._innerTabs = innerTabs;
+    return this;
+  }
 
-    setTag(tag) {
-        this._tag = tag;
-        return this;
-    }
+  setTag(tag: unknown) {
+    this._tag = tag;
+    return this;
+  }
 
-    getTag() {
-        return this._tag;
-    }
+  getTag() {
+    return this._tag;
+  }
 
-    getPosition() {
-        return this._position;
-    }
+  getPosition() {
+    return this._position;
+  }
 
-    isSelected() {
-        return this._INVALID_POSITION !== this._position &&
-            this._parent.getSelectedTabPosition() === this._position;
-    }
+  isSelected() {
+    return (
+      this._INVALID_POSITION !== this._position &&
+      this._parent.getSelectedTabPosition() === this._position
+    );
+  }
 
-    select() {
-        this._parent._selectTab(this);
-    }
+  select() {
+    this._parent._selectTab(this);
+  }
 
-    getView() {
-        return this._view;
-    }
+  getView() {
+    return this._view;
+  }
 }

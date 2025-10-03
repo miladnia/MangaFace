@@ -1,24 +1,26 @@
-// @ts-nocheck
-
-import type { Manifest } from "../../domain/models";
-import Tabs from "../../ui/components/Tabs";
+import type { Manifest } from '../../domain/models';
+import { Tabs, Tab } from '../../ui/components/Tabs';
+import type { Container } from '../../ui/ui';
 
 export default class CommandNavigator {
   #tabs = new Tabs();
-  #handleCommandSelect = null;
+  #handleCommandSelect: ((commandName: string) => void) | null = null;
   #manifest: Manifest;
 
   constructor(manifest: Manifest) {
     this.#manifest = manifest;
   }
 
-  async render(tabsViewContainer, innerTabsViewContainer) {
+  async render(tabsContainer: Container, innerTabsContainer: Container) {
     for (const navigator of this.#manifest.navigators) {
-      // Create a new tab component for inner tabs.
+      // Create a new 'Tabs' component for 'inner tabs'.
       const innerTabs = new Tabs()
         .setListener({
-          onTabSelected: (tab) => {
-            const commandName = tab.getTag();
+          onTabSelected: (tab: Tab) => {
+            if (!this.#handleCommandSelect) {
+              return;
+            }
+            const commandName = tab.getTag() as string;
             this.#handleCommandSelect(commandName);
           },
         })
@@ -38,10 +40,10 @@ export default class CommandNavigator {
         this.#tabs.newTab().setImage(navigator.coverUrl).setInnerTabs(innerTabs)
       );
 
-      innerTabsViewContainer.append(innerTabs.getElement());
+      innerTabsContainer.append(innerTabs.getElement());
     }
 
-    tabsViewContainer.appendView(this);
+    tabsContainer.append(this.getElement());
   }
 
   onCommandSelect(handleCommandSelect: (commandName: string) => void) {

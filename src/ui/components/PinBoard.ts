@@ -1,9 +1,7 @@
-// @ts-nocheck
+import { UIComponent, ViewElement, type View } from '../ui';
 
-import { UIComponent, View } from '../ui';
-
-export default class PinBoard extends UIComponent {
-  _items = {};
+export default class PinBoard extends UIComponent<'div'> {
+  _items: Record<string, Item> = {};
 
   constructor() {
     super('div', 'pinboard-layout');
@@ -13,13 +11,13 @@ export default class PinBoard extends UIComponent {
     return new Item();
   }
 
-  pinItem(itemKey, item) {
+  pinItem(itemKey: string, item: Item) {
     this._items[itemKey] = item;
     this._view.appendView(item.getView());
   }
 
-  getItem(itemKey) {
-    return this._items.hasOwnProperty(itemKey) ? this._items[itemKey] : null;
+  getItem(itemKey: string): Item | null {
+    return this._items[itemKey] ?? null;
   }
 
   get images(): HTMLImageElement[] {
@@ -32,23 +30,25 @@ export default class PinBoard extends UIComponent {
 }
 
 class Item {
+  _view: View<'img'>;
+
   constructor() {
-    this._view = new View('img', 'item');
+    this._view = new ViewElement('img', 'item');
   }
 
-  setImageUrl(imageUrl) {
+  setImageUrl(imageUrl: string) {
     this._view.getElement().setAttribute('src', imageUrl);
     return this;
   }
 
-  setPosition(top, left) {
-    this._view.getElement().style.top = top;
-    this._view.getElement().style.left = left;
+  setPosition(top: number, left: number) {
+    this._view.getElement().style.top = `${top}px`;
+    this._view.getElement().style.left = `${left}px`;
     return this;
   }
 
-  setPriority(priority) {
-    this._view.getElement().style.zIndex = priority;
+  setPriority(priority: number) {
+    this._view.getElement().style.zIndex = priority.toString();
     return this;
   }
 
