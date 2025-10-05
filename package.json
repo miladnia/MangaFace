@@ -13,7 +13,8 @@
     "setup": "npm run man && npm run sym",
     "man": "node scripts/build_static_manifest.js",
     "sym": "node scripts/create_symlinks.js",
-    "local": "http-server public/"
+    "local": "http-server public/",
+    "watch": "bash ./scripts/watch.sh -d ./manifest/ -c npm run man"
   },
   "dependencies": {
     "react": "^19.1.1",
