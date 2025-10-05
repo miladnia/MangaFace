@@ -37,7 +37,7 @@
 .grid-layout .cell {
   display: inline-block;
   position: relative;
-  background: #e0e0e0 center no-repeat;
+  background: center no-repeat;
   background-size: cover;
   z-index: 1;
 }

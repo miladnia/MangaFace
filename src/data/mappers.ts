@@ -1,14 +1,15 @@
-import type { ManifestDTO } from './dtos';
-import { Command, Layer } from '../domain/models';
-import type {
-  Action,
-  Color,
-  ColorPalette,
-  Manifest,
-  Navigator,
-  NavigatorOption,
-  Position,
-  Script,
+import type { ManifestDTO, RuleDTO } from './dtos';
+import { Command, Layer, type RuleOperator } from '../domain/models';
+import {
+  Rule,
+  type Action,
+  type Color,
+  type ColorPalette,
+  type Manifest,
+  type Navigator,
+  type NavigatorOption,
+  type Position,
+  type Script,
 } from '../domain/models';
 
 const modelsCache = {} as Record<string, unknown>;
@@ -44,9 +45,9 @@ function mapAllCommands(dto: ManifestDTO): Record<string, Command> {
   return commands;
 }
 
-function mapScript(manifestDTO: ManifestDTO, name: string): Script {
-  return mapDtoToDomain(name, manifestDTO.scripts, (dto) => ({
-    name: name,
+function mapScript(manifestDTO: ManifestDTO, scriptName: string): Script {
+  return mapDtoToDomain(scriptName, manifestDTO.scripts, (dto) => ({
+    name: scriptName,
     description: dto.description,
     actions: dto.actions.map(
       (act): Action => ({
@@ -58,22 +59,23 @@ function mapScript(manifestDTO: ManifestDTO, name: string): Script {
   }));
 }
 
-function mapCommand(manifestDTO: ManifestDTO, name: string): Command {
+function mapCommand(manifestDTO: ManifestDTO, commandName: string): Command {
   return mapDtoToDomain(
-    name,
+    commandName,
     manifestDTO.commands,
     (dto) =>
       new Command(
-        name,
+        commandName,
         dto.preview_url,
-        dto.subscribed_layers.map((lyr) => mapLayer(manifestDTO, lyr))
+        dto.subscribed_layers.map((lyr) => mapLayer(manifestDTO, lyr)),
+        (dto.rules ?? []).map(mapRule),
       )
   );
 }
 
-function mapLayer(manifestDTO: ManifestDTO, name: string, colorSource?: Layer): Layer {
-  return mapDtoToDomain(name, manifestDTO.layers, (dto) => {
-    const priority = manifestDTO.layers_priority.indexOf(name);
+function mapLayer(manifestDTO: ManifestDTO, layerName: string, colorSource?: Layer): Layer {
+  return mapDtoToDomain(layerName, manifestDTO.layers, (dto) => {
+    const priority = manifestDTO.layers_priority.indexOf(layerName);
     const position: Position = {
       top: dto.position.top,
       left: dto.position.left,
@@ -89,7 +91,7 @@ function mapLayer(manifestDTO: ManifestDTO, name: string, colorSource?: Layer): 
     }
 
     const newLayer = new Layer(
-      name,
+      layerName,
       priority,
       position,
       dto.max_asset_index,
@@ -101,7 +103,7 @@ function mapLayer(manifestDTO: ManifestDTO, name: string, colorSource?: Layer): 
     if (!colorSource) {
       // Handle who referenced this layer as color source
       newLayer.referencedBy = Object.entries(manifestDTO.layers)
-        .filter(([lyrName, lyr]) => lyrName !== name && lyr.color_source === name)
+        .filter(([lyrName, lyr]) => lyrName !== layerName && lyr.color_source === layerName)
         .map(([lyrName]) => mapLayer(manifestDTO, lyrName, newLayer));
     }
 
@@ -109,9 +111,9 @@ function mapLayer(manifestDTO: ManifestDTO, name: string, colorSource?: Layer): 
   });
 }
 
-function mapColorPalette(manifestDTO: ManifestDTO, name: string): ColorPalette {
-  return mapDtoToDomain(name, manifestDTO.color_palettes, (dto) => ({
-    name: name,
+function mapColorPalette(manifestDTO: ManifestDTO, colorPaletteName: string): ColorPalette {
+  return mapDtoToDomain(colorPaletteName, manifestDTO.color_palettes, (dto) => ({
+    name: colorPaletteName,
     colors: (dto.colors ?? []).map(
       (col): Color => ({
         colorName: col.color_name,
@@ -119,6 +121,28 @@ function mapColorPalette(manifestDTO: ManifestDTO, name: string): ColorPalette {
       })
     ),
   }));
+}
+
+function mapRule(ruleDTO: RuleDTO): Rule {
+  let indexesToMatch = [];
+  let operator: RuleOperator = 'in';
+  if (Array.isArray(ruleDTO.on_asset_index.in)) {
+    indexesToMatch = ruleDTO.on_asset_index.in;
+    operator = 'in';
+  } else if (Array.isArray(ruleDTO.on_asset_index.not_in)) {
+    indexesToMatch = ruleDTO.on_asset_index.not_in;
+    operator = 'not_in';
+  } else {
+    throw new Error('Rule must have either "in" or "not_in".');
+  }
+  return new Rule(
+    indexesToMatch,
+    operator,
+    ruleDTO.transform.map((transformerDTO) => ({
+      layerName: transformerDTO.layer_name,
+      assetIndex: transformerDTO.asset_index,
+    })),
+  );
 }
 
 function mapDtoToDomain<DTO, Domain>(

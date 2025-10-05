@@ -12,11 +12,13 @@ const NODE_ENV = process.env.NODE_ENV;
 
 // Load .env variables
 dotenv.config({ path: path.join(APP_DIR, '.env') });
-const prodEnvPath = path.join(APP_DIR, '.env.production');
-if ('production' === NODE_ENV && fs.existsSync(prodEnvPath)) {
-  dotenv.config({ path:prodEnvPath, override: true });
-} else {
-  console.warn('The file \'.env.production\' does NOT exist.');
+if ('production' === NODE_ENV) {
+  const prodEnvPath = path.join(APP_DIR, '.env.production');
+  if (fs.existsSync(prodEnvPath)) {
+    dotenv.config({ path:prodEnvPath, override: true });
+  } else {
+    console.warn('The file \'.env.production\' does NOT exist.');
+  }
 }
 
 // --- Step 1: Load config file ---
@@ -25,12 +27,7 @@ try {
   const configContent = fs.readFileSync(CONFIG_FILE, 'utf8');
   config = YAML.parse(configContent);
 } catch (err) {
-  console.error(
-    '✘ [ERROR] Could not parse the config file:\n',
-    CONFIG_FILE,
-    '\n',
-    err.message
-  );
+  console.error('✘ [ERROR] Could not parse the config file.', CONFIG_FILE);
   process.exit(1);
 }
 

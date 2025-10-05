@@ -179,7 +179,6 @@
 .mf-designer-screen-tpl .colors-frame .cell {
   border-radius: 15%;
   overflow: hidden;
-  background-color: var(--mf-btn-bg);
   opacity: 0.9;
 }
 .mf-designer-screen-tpl .shapes-frame .cell:hover,

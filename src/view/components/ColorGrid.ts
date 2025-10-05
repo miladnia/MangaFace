@@ -2,14 +2,14 @@ import type Composer from '../../domain/Composer';
 import type { Action, Manifest } from '../../domain/models';
 import Grid from '../../ui/components/Grid';
 import type { Container } from '../../ui/ui';
-import type { ScriptObserver } from '../observers';
+import type { ActionObserver } from '../observers';
 
-export default class ColorGrid implements ScriptObserver {
+export default class ColorGrid implements ActionObserver {
   #grid = new Grid(1, 10);
   #manifest: Manifest;
 
   constructor(composer: Composer, manifest: Manifest) {
-    composer.registerScriptObserver(this);
+    composer.registerActionObserver(this);
     this.#manifest = manifest;
   }
 

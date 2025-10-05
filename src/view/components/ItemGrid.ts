@@ -2,16 +2,16 @@ import type Composer from '../../domain/Composer';
 import type { Action, Manifest } from '../../domain/models';
 import Grid from '../../ui/components/Grid';
 import type { BaseView, Container } from '../../ui/ui';
-import type { ScriptObserver } from '../observers';
+import type { ActionObserver } from '../observers';
 
-export default class ItemGrid implements BaseView<'ul'>, ScriptObserver {
+export default class ItemGrid implements BaseView<'ul'>, ActionObserver {
   #grid: Grid;
   #manifest: Manifest;
 
   constructor(composer: Composer, manifest: Manifest) {
     this.#grid = new Grid(6, 6);
     this.#manifest = manifest;
-    composer.registerScriptObserver(this);
+    composer.registerActionObserver(this);
   }
 
   async render(container: Container) {

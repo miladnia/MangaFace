@@ -48,8 +48,14 @@ export class Command {
   readonly layers: Layer[];
   readonly assetsCount: number;
   readonly colors: Color[];
+  readonly rules: Rule[];
 
-  constructor(name: string, previewUrl: string, layers: Layer[]) {
+  constructor(
+    name: string,
+    previewUrl: string,
+    layers: Layer[],
+    rules: Rule[]
+  ) {
     if (Command.#areLayersEmpty(layers)) {
       throw new Error(
         `Command '${name}' must have at least one subscribed layer.`
@@ -68,7 +74,9 @@ export class Command {
     }
 
     if (!Command.#doLayersHaveSameAmountOfAssets(layers)) {
-      throw new Error(`Command '${name}' must have layers with the same amount of assets.`);
+      throw new Error(
+        `Command '${name}' must have layers with the same amount of assets.`
+      );
     }
 
     this.name = name;
@@ -76,6 +84,7 @@ export class Command {
     this.layers = layers;
     this.assetsCount = layers[0].maxAssetIndex;
     this.colors = refColorPalette?.colors ?? [];
+    this.rules = rules;
   }
 
   static #areLayersEmpty(layers: Layer[]) {
@@ -107,6 +116,14 @@ export class Command {
   isColorRequired() {
     return this.colors.length > 0;
   }
+
+  onMatchRule(assetIndex: number, handleRule: (rule: Rule) => void) {
+    this.rules.forEach((rule: Rule) => {
+      if (rule.matchAssetIndex(assetIndex)) {
+        handleRule(rule);
+      }
+    });
+  }
 }
 
 export class Layer {
@@ -126,7 +143,7 @@ export class Layer {
     maxAssetIndex: number,
     assetUrl: string,
     colorPalette?: ColorPalette,
-    colorSource?: Layer,
+    colorSource?: Layer
   ) {
     if (maxAssetIndex <= 0) {
       throw new Error(`Layer '${name}' must have at least one asset.`);
@@ -142,6 +159,10 @@ export class Layer {
   }
 
   getAssetUrl(assetIndex: number, color: string) {
+    if (0 === assetIndex) {
+      return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABBJREFUeNpi/P//PwNAgAEACQEC/2m8kPAAAAAASUVORK5CYII=';
+    }
+
     return this.assetUrl
       .replace('{asset_index}', assetIndex.toString())
       .replace('{color_name}', color);
@@ -152,27 +173,33 @@ export class Layer {
   }
 }
 
-export class Asset {
+export interface Asset {
+  colorName: string;
+  readonly layerName: string;
+  readonly url: string;
+  readonly priority: number;
+  readonly position: Position;
+  freeze(assetIndex: number): Asset;
+  unfreeze(): Asset;
+}
+
+export class AssetModel implements Asset {
   #layer: Layer;
   #assetIndex: number;
   colorName: string;
 
-  constructor(
-    layer: Layer,
-    assetIndex: number,
-    colorName: string,
-  ) {
+  constructor(layer: Layer, assetIndex: number, colorName: string) {
     this.#layer = layer;
     this.#assetIndex = assetIndex;
     this.colorName = colorName;
   }
 
-  get layerName() {
-    return this.#layer.name;
+  get url(): string {
+    return this.#layer.getAssetUrl(this.#assetIndex, this.colorName);
   }
 
-  get url() {
-    return this.#layer.getAssetUrl(this.#assetIndex, this.colorName);
+  get layerName(): string {
+    return this.#layer.name;
   }
 
   get priority(): number {
@@ -182,16 +209,84 @@ export class Asset {
   get position(): Position {
     return this.#layer.position;
   }
+
+  freeze(assetIndex: number): Asset {
+    return new FrozenAsset(this, this.#layer, assetIndex);
+  }
+
+  unfreeze(): Asset {
+    return this;
+  }
 }
 
-// export class Rule {
-//   constructor({ itemsToMatch, forcedLayers, conditions }) {
-//     this.itemsToMatch = itemsToMatch;
-//     this.forcedLayers = forcedLayers;
-//     this.conditions = conditions;
-//   }
+export class FrozenAsset implements Asset {
+  #target: Asset;
+  #layer: Layer;
+  #assetIndex: number;
 
-//   matchItem({ item }) {
-//     return this.itemsToMatch.includes(item);
-//   }
-// }
+  constructor(target: Asset, layer: Layer, assetIndex: number) {
+    this.#target = target;
+    this.#layer = layer;
+    this.#assetIndex = assetIndex;
+  }
+
+  get colorName(): string {
+    return this.#target.colorName;
+  }
+
+  set colorName(colorName: string) {
+    this.#target.colorName = colorName;
+  }
+
+  get url(): string {
+    return this.#layer.getAssetUrl(this.#assetIndex, this.#target.colorName);
+  }
+
+  get layerName(): string {
+    return this.#target.layerName;
+  }
+
+  get priority(): number {
+    return this.#target.priority;
+  }
+
+  get position(): Position {
+    return this.#target.position;
+  }
+
+  freeze(): Asset {
+    return this;
+  }
+
+  unfreeze(): Asset {
+    return this.#target;
+  }
+}
+
+export class Rule {
+  #indexesToMatch: number[];
+  #operator: RuleOperator;
+  readonly transformers: Transformer[];
+
+  constructor(
+    indexesToMatch: number[],
+    operator: RuleOperator,
+    transformers: Transformer[]
+  ) {
+    this.#indexesToMatch = indexesToMatch;
+    this.#operator = operator;
+    this.transformers = transformers;
+  }
+
+  matchAssetIndex(index: number) {
+    const includes = this.#indexesToMatch.includes(index);
+    return 'in' === this.#operator ? includes : !includes;
+  }
+}
+
+export type RuleOperator = 'in' | 'not_in';
+
+export type Transformer = {
+  layerName: string;
+  assetIndex: number;
+};

@@ -217,14 +217,14 @@ commands:
       - hair_back_layer
     rules:
         # Handle ear-covering hair styles
-      - match_asset_index: [33, 37, 38, 39, 41, 43, 44, 60, 62]
-        freeze_layers:
-            # Make the ears hidden
-          - layer: left_ear_layer
+      - on_asset_index:
+          in: [33, 37, 38, 39, 41, 43, 44, 60, 62]
+        transform:
+            # Make the ears invisible
+          - layer_name: left_ear_layer
             asset_index: 0
-          - layer: right_ear_layer
+          - layer_name: right_ear_layer
             asset_index: 0
-      - match_asset_index:
   # Draw shirt
   draw_shirt:
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/shirts/{asset_index}.gif
@@ -247,28 +247,34 @@ commands:
     subscribed_layers:
       - hat_layer
     rules:
-        # Rule 1: Handle swim caps / head covers
-      - match_asset_index: [4, 6]
-        freeze_layers:
-            # Hide the left ear
-          - layer: left_ear_layer
-            asset_index: 0
-            # Hide the right ear
-          - layer: right_ear_layer
-            asset_index: 0
-            # Hide the hair
-          - layer: hair_layer
-            asset_index: 0
-        # Rule 2: Handle all the hats covering the hair
-      - match_asset_index: [1, 3, 5, 7, 8, 9, 10, 11]
-        when:
-            # When the hair style is long
-          - layer: hair_layer
-            match_asset_index: [4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 20, 24, 25, 29, 31, 44, 56, 57, 60]
-        freeze_layers:
-            # Change hair style to bald
-          - layer: hair_layer
+      # Rule 1: Transform hair to a short hair when wearing hats
+      - on_asset_index:
+          not_in: [2, 4, 6]
+        transform:
+          - layer_name: hair_front_layer
             asset_index: 22
+      # Rule 2: Handle swim caps/head covers
+      - on_asset_index:
+          in: [4, 6]
+        transform:
+            # Make the ears invisible
+          - layer_name: left_ear_layer
+            asset_index: 0
+          - layer_name: right_ear_layer
+            asset_index: 0
+            # Make the hair style bald
+          - layer_name: hair_front_layer
+            asset_index: 0
+      # Rule 2: Handle the hats covering the hair
+      # - match_asset_index: [1, 3, 5, 7, 8, 9, 10, 11]
+      #   when:
+      #       # When the hair style is long
+      #     - layer_name: hair_front_layer
+      #       match_asset_index: [4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 20, 24, 25, 29, 31, 44, 56, 57, 60]
+      #   transform:
+      #       # Change hair style to bald
+      #     - layer_name: hair_front_layer
+      #       asset_index: 22
   # Draw glasses
   draw_glasses:
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/glasses/{asset_index}.gif

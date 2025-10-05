@@ -33,6 +33,7 @@ export type ScriptDTO = {
 export type CommandDTO = {
   preview_url: string;
   subscribed_layers: string[];
+  rules: RuleDTO[];
 };
 
 export type LayerDTO = {
@@ -44,4 +45,15 @@ export type LayerDTO = {
     top: number;
     left: number;
   };
+};
+
+export type RuleDTO = {
+  on_asset_index: {
+    in: number[];
+    not_in: number[];
+  };
+  transform: Array<{
+    layer_name: string;
+    asset_index: number;
+  }>;
 };

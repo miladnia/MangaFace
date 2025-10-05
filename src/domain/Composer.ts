@@ -1,15 +1,25 @@
-import { Asset } from './models';
-import type { Manifest, Script, Action, Layer, Command } from './models';
-import type { AssetObserver, ScriptObserver } from '../view/observers';
+import { AssetModel } from './models';
+import type {
+  Manifest,
+  Script,
+  Action,
+  Layer,
+  Asset,
+  Rule,
+  Transformer,
+  Command,
+} from './models';
+import type { AssetObserver, ActionObserver } from '../view/observers';
 
 /**
- * Handles Actions (validation, dependency, rules), produces Assets
+ * Generates Assets based on Actions
  */
 export default class Composer {
+  #appliedActions: Record<string, Action> = {};
   #assetObservers: AssetObserver[] = [];
-  #scriptObserver: ScriptObserver[] = [];
+  #actionObserver: ActionObserver[] = [];
   #manifest: Manifest;
-  #addedAssets: Record<string, Asset> = {};
+  #appliedAssets: Record<string, Asset> = {};
 
   constructor(manifest: Manifest) {
     this.#manifest = manifest;
@@ -18,56 +28,107 @@ export default class Composer {
   async runScript(script: Script) {
     script.actions.forEach(async (action) => {
       await this.applyAction(action);
-      this.#notifyScriptObservers(action);
+      this.#notifyActionObservers(action);
     });
   }
 
   async applyAction(action: Action) {
     console.log('Action', action);
-
-    const command = this.#manifest.commands[action.commandName];
-    if (!command) {
-      console.warn(`The action has invalid command name '${action.commandName}'.`);
-      return;
-    }
-
-    for (const layer of command.layers) {
-      const assetColorName = this.resolveAssetColorName(action, layer, command);
-      const newAsset = new Asset(layer, action.assetIndex, assetColorName);
-      this.#addedAssets[layer.name] = newAsset;
-      this.#notifyAssetObservers(newAsset);
-      this.handleDependentAssets(layer, assetColorName);
-    }
-  }
-
-  resolveAssetColorName(action: Action, layer: Layer, command: Command): string {
-    if (layer.colorSource) {
-      const sourceLayer = layer.colorSource;
-      return this.#addedAssets[sourceLayer.name]?.colorName ??
-      sourceLayer.defaultColorName;
-    }
+    const command = this.#getCommand(action.commandName);
 
     if (!action.colorName && command.isColorRequired()) {
-      throw new Error(`The action for command '${action.commandName}' must have a color name.`);
+      throw new Error(`The command '${command.name}' requires color.`);
     }
 
-    return action.colorName;
+    command.layers.forEach((layer) => {
+      this.#createAsset(layer, action.assetIndex, action.colorName);
+    });
+
+    this.#handleCommandRules(command, action.assetIndex);
+    this.#appliedActions[command.name] = action;
   }
 
-  handleDependentAssets(layer: Layer, assetColorName: string) {
-    // If there are layers referenced this layer as color source
-    // also update the assets of those layers
+  #applyAsset(asset: Asset) {
+    this.#appliedAssets[asset.layerName] = asset;
+    this.#notifyAssetObservers(asset);
+  }
+
+  #createAsset(layer: Layer, assetIndex: number, colorName: string) {
+    const assetColorName = this.#resolveAssetColor(colorName, layer);
+    const asset = new AssetModel(layer, assetIndex, assetColorName);
+    this.#applyAsset(asset);
+    this.#updateColorDependentAssets(layer, assetColorName);
+  }
+
+  #resolveAssetColor(colorName: string, layer: Layer): string {
+    if (!layer.colorSource) {
+      return colorName;
+    }
+
+    const sourceLayer = layer.colorSource;
+    const resolvedColor =
+      this.#appliedAssets[sourceLayer.name]?.colorName ??
+      sourceLayer.defaultColorName;
+    return resolvedColor;
+  }
+
+  #updateColorDependentAssets(layer: Layer, assetColorName: string) {
+    // If there are layers referenced this layer as color source,
+    // then update the asset of those layers with new color name.
     layer.referencedBy.forEach((referencingLayer) => {
-      const existingAsset = this.#addedAssets[referencingLayer.name];
-      if (existingAsset) {
-        existingAsset.colorName = assetColorName;
-        this.#notifyAssetObservers(existingAsset);
+      const appliedAsset = this.#appliedAssets[referencingLayer.name];
+      if (appliedAsset) {
+        appliedAsset.colorName = assetColorName;
+        this.#applyAsset(appliedAsset);
       }
     });
   }
 
-  registerAssetObserver(observer: AssetObserver) {
-    this.#assetObservers.push(observer);
+  #handleCommandRules(command: Command, assetIndex: number) {
+    const prevActionOfCommand = this.#appliedActions[command.name];
+    if (prevActionOfCommand) {
+      command.onMatchRule(prevActionOfCommand.assetIndex, (rule: Rule) => {
+        this.#revertRule(rule);
+      });
+    }
+
+    command.onMatchRule(assetIndex, (rule: Rule) => {
+      this.#applyRule(rule);
+    });
+  }
+
+  #applyRule(rule: Rule) {
+    console.log('Rule matched', rule);
+
+    rule.transformers.forEach((transformer: Transformer) => {
+      const layerName = transformer.layerName;
+      const appliedAsset = this.#appliedAssets[layerName];
+      if (appliedAsset) {
+        console.log('freeze', appliedAsset, transformer.assetIndex);
+        this.#applyAsset(appliedAsset.freeze(transformer.assetIndex));
+      }
+    });
+  }
+
+  #revertRule(rule: Rule) {
+    rule.transformers.forEach((transformer: Transformer) => {
+      const layerName = transformer.layerName;
+      const appliedAsset = this.#appliedAssets[layerName];
+      if (appliedAsset) {
+        console.log('unfreeze', appliedAsset.unfreeze());
+        this.#applyAsset(appliedAsset.unfreeze());
+      }
+    });
+  }
+
+  #getCommand(commandName: string): Command {
+    const command = this.#manifest.commands[commandName];
+
+    if (!command) {
+      throw new Error(`Invalid command name '${commandName}'.`);
+    }
+
+    return command;
   }
 
   #notifyAssetObservers(asset: Asset) {
@@ -76,13 +137,17 @@ export default class Composer {
     });
   }
 
-  registerScriptObserver(observer: ScriptObserver) {
-    this.#scriptObserver.push(observer);
-  }
-
-  #notifyScriptObservers(action: Action) {
-    this.#scriptObserver.forEach((observer) => {
+  #notifyActionObservers(action: Action) {
+    this.#actionObserver.forEach((observer) => {
       observer.update(action);
     });
+  }
+
+  registerAssetObserver(observer: AssetObserver) {
+    this.#assetObservers.push(observer);
+  }
+
+  registerActionObserver(observer: ActionObserver) {
+    this.#actionObserver.push(observer);
   }
 }

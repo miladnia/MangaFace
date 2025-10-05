@@ -1,6 +1,6 @@
 import type { Action, Asset } from '../domain/models';
 
-export interface ScriptObserver {
+export interface ActionObserver {
     update(action: Action): void;
 }
 
