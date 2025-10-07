@@ -24,26 +24,21 @@ export default class AssetManager implements AssetObserver {
 
   applyTransformer(transformer: AssetTransformer) {
     console.log('[Transformer Applied]', transformer);
-    const targetAsset = this.#getAsset(transformer.layer);
-    const transformedAsset = transformer.transform(targetAsset);
-    this.#submitNewAsset(transformedAsset);
+    const asset = this.#getAsset(transformer.layer);
+    transformer.transform(asset);
+    this.#notify(asset);
   }
 
   revertTransformer(transformer: AssetTransformer) {
     console.log('[Transformer Reverted]', transformer);
     const transformedAsset = this.#getAsset(transformer.layer);
-    const originalAsset = transformedAsset.reset();
-    this.#submitNewAsset(originalAsset);
+    transformedAsset.reset();
+    this.#notify(transformedAsset);
   }
 
   #getAsset(layer: Layer): Asset {
     this.#assets[layer.name] ??= this.#createNewAsset(layer);
     return this.#assets[layer.name];
-  }
-
-  #submitNewAsset(asset: Asset) {
-    this.#assets[asset.layerName] = asset;
-    this.#notify(asset);
   }
 
   #createNewAsset(layer: Layer): Asset {

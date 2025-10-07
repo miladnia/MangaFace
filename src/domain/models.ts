@@ -201,23 +201,27 @@ export interface Drawable {
 export interface Asset extends Drawable {
   readonly index: AssetIndex;
   readonly colorName?: ColorName;
-  readonly layer: Layer;
   updateState(index: AssetIndex, colorName?: ColorName): void;
   registerObserver(observer: AssetObserver): void;
-  transform(assetIndex: AssetIndex): Asset;
-  reset(): Asset;
+  transform(assetIndex: AssetIndex): void;
+  reset(): void;
 }
 
 export interface AssetObserver {
   onStateUpdate(asset: Asset): void;
 }
 
+interface AssetState {
+  index?: AssetIndex;
+  colorName?: ColorName;
+};
+
 export class AssetModel implements Asset, AssetObserver {
   #layer: Layer;
-  #assetIndex?: AssetIndex;
-  #colorName?: ColorName;
   #colorSource?: Asset;
   #observers: AssetObserver[] = [];
+  #internalState: AssetState = {};
+  #transformedState?: AssetState;
 
   constructor(layer: Layer, colorSource?: Asset, observer?: AssetObserver) {
     this.#layer = layer;
@@ -232,9 +236,13 @@ export class AssetModel implements Asset, AssetObserver {
     }
   }
 
+  get #state(): AssetState {
+    return this.#transformedState ?? this.#internalState;
+  }
+
   updateState(index: AssetIndex, colorName?: ColorName) {
-    this.#assetIndex = index;
-    this.#colorName = colorName;
+    this.#state.index = index;
+    this.#state.colorName = colorName;
     this.notifyObservers();
   }
 
@@ -250,19 +258,15 @@ export class AssetModel implements Asset, AssetObserver {
     this.#observers.forEach((o) => o.onStateUpdate(this));
   }
 
-  get layer(): Layer {
-    return this.#layer;
-  }
-
   get index(): AssetIndex {
-    return this.#assetIndex ?? (0 as AssetIndex);
+    return this.#state.index ?? (0 as AssetIndex);
   }
 
   get colorName(): ColorName | undefined {
     if (this.#colorSource) {
       return this.#colorSource.colorName;
     }
-    return this.#colorName ?? this.#layer.defaultColor;
+    return this.#state.colorName ?? this.#layer.defaultColor;
   }
 
   get url(): string {
@@ -281,69 +285,38 @@ export class AssetModel implements Asset, AssetObserver {
     return this.#layer.position;
   }
 
-  transform(targetIndex: AssetIndex): Asset {
-    return new TransformedAsset(this, targetIndex);
+  transform(targetIndex: AssetIndex) {
+    this.#transformedState = new TransformedAssetState(this.#state, targetIndex);
   }
 
-  reset(): Asset {
-    return this;
+  reset() {
+    this.#transformedState = undefined;
   }
 }
 
-export class TransformedAsset implements Asset {
-  #targetAsset: Asset;
+class TransformedAssetState implements AssetState {
+  #targetState: AssetState;
   #targetIndex: AssetIndex;
 
-  constructor(target: Asset, targetIndex: AssetIndex) {
-    this.#targetAsset = target;
+  constructor(targetState: AssetState, targetIndex: AssetIndex) {
+    this.#targetState = targetState;
     this.#targetIndex = targetIndex;
   }
 
-  get url(): string {
-    return this.layer.getAssetUrl(
-      this.#targetIndex,
-      this.#targetAsset.colorName
-    );
-  }
-
-  updateState(index: AssetIndex, colorName?: ColorName) {
-    this.#targetAsset.updateState(index, colorName);
-  }
-
-  registerObserver(observer: AssetObserver): void {
-    this.#targetAsset.registerObserver(observer);
-  }
-
-  get layer() {
-    return this.#targetAsset.layer;
-  }
-
   get index(): AssetIndex {
-    return this.#targetAsset.index;
+    return this.#targetIndex;
+  }
+
+  set index(index: AssetIndex) {
+    this.#targetState.index = index;
   }
 
   get colorName(): ColorName | undefined {
-    return this.#targetAsset.colorName;
+    return this.#targetState.colorName;
   }
 
-  get layerName(): string {
-    return this.#targetAsset.layerName;
-  }
-
-  get priority(): number {
-    return this.#targetAsset.priority;
-  }
-
-  get position(): Position {
-    return this.#targetAsset.position;
-  }
-
-  transform(): Asset {
-    return this;
-  }
-
-  reset(): Asset {
-    return this.#targetAsset;
+  set colorName(colorName: ColorName) {
+    this.#targetState.colorName = colorName;
   }
 }
 
