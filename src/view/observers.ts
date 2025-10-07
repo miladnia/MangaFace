@@ -1,9 +1,9 @@
-import type { Action, Asset } from '../domain/models';
+import type { Action, Asset as Drawable } from '../domain/models';
 
-export interface ActionObserver {
+export interface UIObserver {
     update(action: Action): void;
 }
 
-export interface AssetObserver {
-    update(layerAsset: Asset): void;
+export interface RenderObserver {
+    update(drawable: Drawable): void;
 }

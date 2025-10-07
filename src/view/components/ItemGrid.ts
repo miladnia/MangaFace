@@ -1,10 +1,10 @@
 import type Composer from '../../domain/Composer';
-import type { Action, Manifest } from '../../domain/models';
+import type { Action, AssetIndex, Manifest } from '../../domain/models';
 import Grid from '../../ui/components/Grid';
 import type { BaseView, Container } from '../../ui/ui';
-import type { ActionObserver } from '../observers';
+import type { UIObserver } from '../observers';
 
-export default class ItemGrid implements BaseView<'ul'>, ActionObserver {
+export default class ItemGrid implements BaseView<'ul'>, UIObserver {
   #grid: Grid;
   #manifest: Manifest;
 
@@ -21,7 +21,10 @@ export default class ItemGrid implements BaseView<'ul'>, ActionObserver {
         const gridPage = this.#grid.newPage(navOption.command.name);
 
         for (let i = 1; i <= cmd.assetsCount; i++) {
-          gridPage.addImagePlaceholder(cmd.getPreviewUrl(i), i.toString());
+          gridPage.addImagePlaceholder(
+            cmd.getPreviewUrl(i as AssetIndex),
+            i.toString()
+          );
         }
 
         this.#grid.addPage(gridPage);

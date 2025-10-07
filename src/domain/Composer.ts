@@ -1,31 +1,31 @@
-import { AssetModel } from './models';
 import type {
   Manifest,
   Script,
   Action,
-  Layer,
-  Asset,
   Rule,
-  Transformer,
+  AssetTransformer,
   Command,
+  AssetIndex,
 } from './models';
-import type { AssetObserver, ActionObserver } from '../view/observers';
+import type { RenderObserver, UIObserver } from '../view/observers';
+import AssetManager from './AssetManager';
 
 /**
  * Generates Assets based on Actions
  */
 export default class Composer {
   #appliedActions: Record<string, Action> = {};
-  #assetObservers: AssetObserver[] = [];
-  #actionObserver: ActionObserver[] = [];
+  #actionObserver: UIObserver[] = [];
   #manifest: Manifest;
-  #appliedAssets: Record<string, Asset> = {};
+  #assetManager: AssetManager;
 
   constructor(manifest: Manifest) {
     this.#manifest = manifest;
+    this.#assetManager = new AssetManager();
   }
 
   async runScript(script: Script) {
+    console.log('[Script Started Running]', script.name, `(${script.description})`);
     script.actions.forEach(async (action) => {
       await this.applyAction(action);
       this.#notifyActionObservers(action);
@@ -33,7 +33,7 @@ export default class Composer {
   }
 
   async applyAction(action: Action) {
-    console.log('Action', action);
+    console.log('[Action Applied]', action);
     const command = this.#getCommand(action.commandName);
 
     if (!action.colorName && command.isColorRequired()) {
@@ -41,50 +41,18 @@ export default class Composer {
     }
 
     command.layers.forEach((layer) => {
-      this.#createAsset(layer, action.assetIndex, action.colorName);
+      this.#assetManager.updateState(
+        layer,
+        action.assetIndex,
+        action.colorName
+      );
     });
 
     this.#handleCommandRules(command, action.assetIndex);
     this.#appliedActions[command.name] = action;
   }
 
-  #applyAsset(asset: Asset) {
-    this.#appliedAssets[asset.layerName] = asset;
-    this.#notifyAssetObservers(asset);
-  }
-
-  #createAsset(layer: Layer, assetIndex: number, colorName: string) {
-    const assetColorName = this.#resolveAssetColor(colorName, layer);
-    const asset = new AssetModel(layer, assetIndex, assetColorName);
-    this.#applyAsset(asset);
-    this.#updateColorDependentAssets(layer, assetColorName);
-  }
-
-  #resolveAssetColor(colorName: string, layer: Layer): string {
-    if (!layer.colorSource) {
-      return colorName;
-    }
-
-    const sourceLayer = layer.colorSource;
-    const resolvedColor =
-      this.#appliedAssets[sourceLayer.name]?.colorName ??
-      sourceLayer.defaultColorName;
-    return resolvedColor;
-  }
-
-  #updateColorDependentAssets(layer: Layer, assetColorName: string) {
-    // If there are layers referenced this layer as color source,
-    // then update the asset of those layers with new color name.
-    layer.referencedBy.forEach((referencingLayer) => {
-      const appliedAsset = this.#appliedAssets[referencingLayer.name];
-      if (appliedAsset) {
-        appliedAsset.colorName = assetColorName;
-        this.#applyAsset(appliedAsset);
-      }
-    });
-  }
-
-  #handleCommandRules(command: Command, assetIndex: number) {
+  #handleCommandRules(command: Command, assetIndex: AssetIndex) {
     const prevActionOfCommand = this.#appliedActions[command.name];
     if (prevActionOfCommand) {
       command.onMatchRule(prevActionOfCommand.assetIndex, (rule: Rule) => {
@@ -98,26 +66,15 @@ export default class Composer {
   }
 
   #applyRule(rule: Rule) {
-    console.log('Rule matched', rule);
-
-    rule.transformers.forEach((transformer: Transformer) => {
-      const layerName = transformer.layerName;
-      const appliedAsset = this.#appliedAssets[layerName];
-      if (appliedAsset) {
-        console.log('freeze', appliedAsset, transformer.assetIndex);
-        this.#applyAsset(appliedAsset.freeze(transformer.assetIndex));
-      }
+    console.log('[Rule Matched]', rule.description, rule);
+    rule.transformers.forEach((transformer: AssetTransformer) => {
+      this.#assetManager.applyTransformer(transformer);
     });
   }
 
   #revertRule(rule: Rule) {
-    rule.transformers.forEach((transformer: Transformer) => {
-      const layerName = transformer.layerName;
-      const appliedAsset = this.#appliedAssets[layerName];
-      if (appliedAsset) {
-        console.log('unfreeze', appliedAsset.unfreeze());
-        this.#applyAsset(appliedAsset.unfreeze());
-      }
+    rule.transformers.forEach((transformer: AssetTransformer) => {
+      this.#assetManager.revertTransformer(transformer);
     });
   }
 
@@ -131,23 +88,17 @@ export default class Composer {
     return command;
   }
 
-  #notifyAssetObservers(asset: Asset) {
-    this.#assetObservers.forEach((observer) => {
-      observer.update(asset);
-    });
-  }
-
   #notifyActionObservers(action: Action) {
     this.#actionObserver.forEach((observer) => {
       observer.update(action);
     });
   }
 
-  registerAssetObserver(observer: AssetObserver) {
-    this.#assetObservers.push(observer);
+  registerActionObserver(observer: UIObserver) {
+    this.#actionObserver.push(observer);
   }
 
-  registerActionObserver(observer: ActionObserver) {
-    this.#actionObserver.push(observer);
+  registerAssetObserver(observer: RenderObserver) {
+    this.#assetManager.registerObserver(observer);
   }
 }

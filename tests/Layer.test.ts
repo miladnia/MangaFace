@@ -1,12 +1,28 @@
-import { Layer, Position } from '../src/domain/models';
+import { AssetIndex, Layer } from '../src/domain/models';
 
 const name = 'lyr1';
-const posZero: Position = {left: 0, top: 0};
-const defPalette = {name: 'palette', colors: []};
+const maxAssetIndex = 1 as AssetIndex;
+
+const palette = {
+  name: 'palette',
+  colors: [
+    {
+      colorName: 'red' as const,
+      colorCode: '#FF0000',
+    },
+  ],
+};
 
 it('should fail with not assets', () => {
-  const noAssets = 0;
+  const noAssets = 0 as AssetIndex;
+  expect(() => new Layer(name, '', noAssets, 0)).toThrow(
+    `Layer '${name}' must have at least one asset.`
+  );
+});
+
+it('should fail with empty color palette', () => {
+  const emptyPalette = { name: 'palette', colors: [] };
   expect(
-    () => new Layer(name, 0, posZero, noAssets, '/', defPalette)
-  ).toThrow(`Layer '${name}' must have at least one asset.`);
+    () => new Layer(name, '', maxAssetIndex, 0, emptyPalette)
+  ).toThrow(`The color palette of layer '${name}' must have colors.`);
 });

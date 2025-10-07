@@ -12,6 +12,9 @@ export default defineConfig(({ mode }) => {
       outDir: '../public',
       assetsDir: 'dist',
     },
+    esbuild: {
+      drop: 'production' === mode ? ['console', 'debugger'] : [],
+    },
     base: env.STATIC_BASE_URL,
     define: {
       __STATIC_BASE_URL__: JSON.stringify(env.STATIC_BASE_URL),

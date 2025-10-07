@@ -33,7 +33,7 @@ export type ScriptDTO = {
 export type CommandDTO = {
   preview_url: string;
   subscribed_layers: string[];
-  rules: RuleDTO[];
+  rules?: RuleDTO[];
 };
 
 export type LayerDTO = {
@@ -41,19 +41,26 @@ export type LayerDTO = {
   color_palette_name?: string;
   color_source?: string;
   asset_url: string;
-  position: {
+  position?: {
     top: number;
     left: number;
   };
 };
 
 export type RuleDTO = {
+  description?: string;
   on_asset_index: {
-    in: number[];
-    not_in: number[];
+    in?: number[];
+    not_in?: number[];
   };
-  transform: Array<{
-    layer_name: string;
-    asset_index: number;
-  }>;
+  transform: TransformDTO[];
+};
+
+export type TransformDTO = {
+  layer_name: string;
+  to_asset_index: number;
+  if_asset_index?: {
+    in?: number[];
+    not_in?: number[];
+  };
 };

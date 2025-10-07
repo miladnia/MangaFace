@@ -23,9 +23,13 @@ export type Script = {
 
 export type Action = {
   readonly commandName: string;
-  readonly assetIndex: number;
-  readonly colorName: string;
+  readonly assetIndex: AssetIndex;
+  readonly colorName?: ColorName;
 };
+
+export type AssetIndex = number & { readonly __brand: unique symbol };
+
+export type ColorName = string & { readonly __brand: unique symbol };
 
 export type Position = {
   readonly top: number;
@@ -33,7 +37,7 @@ export type Position = {
 };
 
 export type Color = {
-  readonly colorName: string;
+  readonly colorName: ColorName;
   readonly colorCode: string;
 };
 
@@ -41,6 +45,8 @@ export type ColorPalette = {
   readonly name: string;
   readonly colors: Color[];
 };
+
+export type RuleOperator = 'in' | 'not_in';
 
 export class Command {
   readonly name: string;
@@ -54,7 +60,7 @@ export class Command {
     name: string,
     previewUrl: string,
     layers: Layer[],
-    rules: Rule[]
+    rules?: Rule[]
   ) {
     if (Command.#areLayersEmpty(layers)) {
       throw new Error(
@@ -84,7 +90,7 @@ export class Command {
     this.layers = layers;
     this.assetsCount = layers[0].maxAssetIndex;
     this.colors = refColorPalette?.colors ?? [];
-    this.rules = rules;
+    this.rules = rules ?? [];
   }
 
   static #areLayersEmpty(layers: Layer[]) {
@@ -109,7 +115,7 @@ export class Command {
     return layers.every((lyr) => lyr.maxAssetIndex === layers[0].maxAssetIndex);
   }
 
-  getPreviewUrl(assetIndex: number) {
+  getPreviewUrl(assetIndex: AssetIndex) {
     return this.previewUrl.replace('{asset_index}', assetIndex.toString());
   }
 
@@ -117,7 +123,7 @@ export class Command {
     return this.colors.length > 0;
   }
 
-  onMatchRule(assetIndex: number, handleRule: (rule: Rule) => void) {
+  onMatchRule(assetIndex: AssetIndex, handleRule: (rule: Rule) => void) {
     this.rules.forEach((rule: Rule) => {
       if (rule.matchAssetIndex(assetIndex)) {
         handleRule(rule);
@@ -128,74 +134,139 @@ export class Command {
 
 export class Layer {
   readonly name: string;
-  readonly priority: number;
-  readonly position: Position;
-  readonly maxAssetIndex: number;
   readonly assetUrl: string;
+  readonly maxAssetIndex: AssetIndex;
+  readonly priority: number;
   readonly colorPalette?: ColorPalette;
   readonly colorSource?: Layer;
+  readonly position: Position;
   referencedBy: Layer[] = [];
 
   constructor(
     name: string,
-    priority: number,
-    position: Position,
-    maxAssetIndex: number,
     assetUrl: string,
+    maxAssetIndex: AssetIndex,
+    priority: number,
     colorPalette?: ColorPalette,
-    colorSource?: Layer
+    colorSource?: Layer,
+    position?: Position
   ) {
     if (maxAssetIndex <= 0) {
       throw new Error(`Layer '${name}' must have at least one asset.`);
     }
 
+    if (colorPalette && !colorPalette.colors.length) {
+      throw new Error(`The color palette of layer '${name}' must have colors.`);
+    }
+
+    if (colorSource && !colorSource.colorPalette) {
+      throw new Error(`The color source of layer '${name}' must have palette.`);
+    }
+
     this.name = name;
-    this.position = position;
-    this.priority = priority;
-    this.maxAssetIndex = maxAssetIndex;
     this.assetUrl = assetUrl;
+    this.maxAssetIndex = maxAssetIndex;
+    this.priority = priority;
     this.colorPalette = colorPalette;
     this.colorSource = colorSource;
+    this.position = position ?? { top: 0, left: 0 };
   }
 
-  getAssetUrl(assetIndex: number, color: string) {
+  get defaultColor(): ColorName | undefined {
+    return this.colorPalette?.colors[0].colorName;
+  }
+
+  getAssetUrl(assetIndex: AssetIndex, colorName?: ColorName): string {
     if (0 === assetIndex) {
       return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABBJREFUeNpi/P//PwNAgAEACQEC/2m8kPAAAAAASUVORK5CYII=';
     }
 
-    return this.assetUrl
-      .replace('{asset_index}', assetIndex.toString())
-      .replace('{color_name}', color);
-  }
+    let url = this.assetUrl.replace('{asset_index}', assetIndex.toString());
 
-  get defaultColorName() {
-    return this.colorPalette?.colors[0].colorName;
+    if (colorName) {
+      url = url.replace('{color_name}', colorName);
+    }
+
+    return url;
   }
 }
 
-export interface Asset {
-  colorName: string;
-  readonly layerName: string;
+export interface Drawable {
   readonly url: string;
+  readonly layerName: string;
   readonly priority: number;
   readonly position: Position;
-  freeze(assetIndex: number): Asset;
-  unfreeze(): Asset;
 }
 
-export class AssetModel implements Asset {
-  #layer: Layer;
-  #assetIndex: number;
-  colorName: string;
+export interface Asset extends Drawable {
+  readonly index: AssetIndex;
+  readonly colorName?: ColorName;
+  readonly layer: Layer;
+  updateState(index: AssetIndex, colorName?: ColorName): void;
+  registerObserver(observer: AssetObserver): void;
+  transform(assetIndex: AssetIndex): Asset;
+  reset(): Asset;
+}
 
-  constructor(layer: Layer, assetIndex: number, colorName: string) {
+export interface AssetObserver {
+  onStateUpdate(asset: Asset): void;
+}
+
+export class AssetModel implements Asset, AssetObserver {
+  #layer: Layer;
+  #assetIndex?: AssetIndex;
+  #colorName?: ColorName;
+  #colorSource?: Asset;
+  #observers: AssetObserver[] = [];
+
+  constructor(layer: Layer, colorSource?: Asset, observer?: AssetObserver) {
     this.#layer = layer;
-    this.#assetIndex = assetIndex;
-    this.colorName = colorName;
+    this.#colorSource = colorSource;
+
+    if (colorSource) {
+      colorSource.registerObserver(this);
+    }
+
+    if (observer) {
+      this.#observers.push(observer);
+    }
+  }
+
+  updateState(index: AssetIndex, colorName?: ColorName) {
+    this.#assetIndex = index;
+    this.#colorName = colorName;
+    this.notifyObservers();
+  }
+
+  onStateUpdate(): void {
+    this.notifyObservers();
+  }
+
+  registerObserver(observer: AssetObserver) {
+    this.#observers.push(observer);
+  }
+
+  notifyObservers() {
+    this.#observers.forEach((o) => o.onStateUpdate(this));
+  }
+
+  get layer(): Layer {
+    return this.#layer;
+  }
+
+  get index(): AssetIndex {
+    return this.#assetIndex ?? (0 as AssetIndex);
+  }
+
+  get colorName(): ColorName | undefined {
+    if (this.#colorSource) {
+      return this.#colorSource.colorName;
+    }
+    return this.#colorName ?? this.#layer.defaultColor;
   }
 
   get url(): string {
-    return this.#layer.getAssetUrl(this.#assetIndex, this.colorName);
+    return this.#layer.getAssetUrl(this.index, this.colorName);
   }
 
   get layerName(): string {
@@ -210,83 +281,125 @@ export class AssetModel implements Asset {
     return this.#layer.position;
   }
 
-  freeze(assetIndex: number): Asset {
-    return new FrozenAsset(this, this.#layer, assetIndex);
+  transform(targetIndex: AssetIndex): Asset {
+    return new TransformedAsset(this, targetIndex);
   }
 
-  unfreeze(): Asset {
+  reset(): Asset {
     return this;
   }
 }
 
-export class FrozenAsset implements Asset {
-  #target: Asset;
-  #layer: Layer;
-  #assetIndex: number;
+export class TransformedAsset implements Asset {
+  #targetAsset: Asset;
+  #targetIndex: AssetIndex;
 
-  constructor(target: Asset, layer: Layer, assetIndex: number) {
-    this.#target = target;
-    this.#layer = layer;
-    this.#assetIndex = assetIndex;
-  }
-
-  get colorName(): string {
-    return this.#target.colorName;
-  }
-
-  set colorName(colorName: string) {
-    this.#target.colorName = colorName;
+  constructor(target: Asset, targetIndex: AssetIndex) {
+    this.#targetAsset = target;
+    this.#targetIndex = targetIndex;
   }
 
   get url(): string {
-    return this.#layer.getAssetUrl(this.#assetIndex, this.#target.colorName);
+    return this.layer.getAssetUrl(
+      this.#targetIndex,
+      this.#targetAsset.colorName
+    );
+  }
+
+  updateState(index: AssetIndex, colorName?: ColorName) {
+    this.#targetAsset.updateState(index, colorName);
+  }
+
+  registerObserver(observer: AssetObserver): void {
+    this.#targetAsset.registerObserver(observer);
+  }
+
+  get layer() {
+    return this.#targetAsset.layer;
+  }
+
+  get index(): AssetIndex {
+    return this.#targetAsset.index;
+  }
+
+  get colorName(): ColorName | undefined {
+    return this.#targetAsset.colorName;
   }
 
   get layerName(): string {
-    return this.#target.layerName;
+    return this.#targetAsset.layerName;
   }
 
   get priority(): number {
-    return this.#target.priority;
+    return this.#targetAsset.priority;
   }
 
   get position(): Position {
-    return this.#target.position;
+    return this.#targetAsset.position;
   }
 
-  freeze(): Asset {
+  transform(): Asset {
     return this;
   }
 
-  unfreeze(): Asset {
-    return this.#target;
+  reset(): Asset {
+    return this.#targetAsset;
   }
 }
 
 export class Rule {
-  #indexesToMatch: number[];
+  #indexesToMatch: AssetIndex[];
   #operator: RuleOperator;
-  readonly transformers: Transformer[];
+  readonly description?: string;
+  readonly transformers: AssetTransformer[];
 
   constructor(
-    indexesToMatch: number[],
+    indexesToMatch: AssetIndex[],
     operator: RuleOperator,
-    transformers: Transformer[]
+    transformers: AssetTransformer[],
+    description?: string
   ) {
     this.#indexesToMatch = indexesToMatch;
     this.#operator = operator;
     this.transformers = transformers;
+    this.description = description;
   }
 
-  matchAssetIndex(index: number) {
+  matchAssetIndex(index: AssetIndex) {
     const includes = this.#indexesToMatch.includes(index);
     return 'in' === this.#operator ? includes : !includes;
   }
 }
 
-export type RuleOperator = 'in' | 'not_in';
+export class AssetTransformer {
+  layer: Layer;
+  #targetIndex: AssetIndex;
+  #sourceIndexesToMatch?: AssetIndex[];
+  #operator?: RuleOperator;
 
-export type Transformer = {
-  layerName: string;
-  assetIndex: number;
-};
+  constructor(
+    layer: Layer,
+    targetIndex: AssetIndex,
+    eligibleSourceIndexes?: AssetIndex[],
+    operator?: RuleOperator
+  ) {
+    this.layer = layer;
+    this.#targetIndex = targetIndex;
+    this.#sourceIndexesToMatch = eligibleSourceIndexes;
+    this.#operator = operator;
+  }
+
+  transform(sourceAsset: Asset) {
+    return this.#isEligibleSource(sourceAsset.index)
+      ? sourceAsset.transform(this.#targetIndex)
+      : sourceAsset;
+  }
+
+  #isEligibleSource(index: AssetIndex): boolean {
+    if (!this.#sourceIndexesToMatch) {
+      return true;
+    }
+    const includes = this.#sourceIndexesToMatch.includes(index);
+    return 'in' === this.#operator ? includes : !includes;
+  }
+}

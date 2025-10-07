@@ -58,3 +58,13 @@
 .pinboard-layout .item {
   position: absolute;
 }
+
+.pinboard-layout img {
+  user-select: none;        /* Prevent text selection */
+  -webkit-user-drag: none;  /* Prevent image dragging in Chrome/Safari */
+  -khtml-user-drag: none;   
+  -moz-user-select: none;   
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}

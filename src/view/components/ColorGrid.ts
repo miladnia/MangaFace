@@ -2,9 +2,9 @@ import type Composer from '../../domain/Composer';
 import type { Action, Manifest } from '../../domain/models';
 import Grid from '../../ui/components/Grid';
 import type { Container } from '../../ui/ui';
-import type { ActionObserver } from '../observers';
+import type { UIObserver } from '../observers';
 
-export default class ColorGrid implements ActionObserver {
+export default class ColorGrid implements UIObserver {
   #grid = new Grid(1, 10);
   #manifest: Manifest;
 

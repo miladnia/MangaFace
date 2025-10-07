@@ -1,6 +1,6 @@
 import ItemGrid from './ItemGrid';
 import ColorGrid from './ColorGrid';
-import type { Manifest, Action } from '../../domain/models';
+import type { Manifest, Action, AssetIndex, ColorName } from '../../domain/models';
 import type Composer from '../../domain/Composer';
 import type { Container } from '../../ui/ui';
 
@@ -23,8 +23,8 @@ export default class CommandPanel {
     this.#itemGrid.onItemSelect((commandName: string, assetIndex: string) => {
       handleNewAction({
         commandName: commandName,
-        assetIndex: parseInt(assetIndex),
-        colorName: this.#colorGrid.getSelectedColor(),
+        assetIndex: parseInt(assetIndex) as AssetIndex,
+        colorName: this.#colorGrid.getSelectedColor() as ColorName,
       });
     });
 
@@ -36,8 +36,8 @@ export default class CommandPanel {
       }
       handleNewAction({
         commandName: commandName,
-        assetIndex: this.#itemGrid.getSelectedAssetIndex(),
-        colorName: colorName,
+        assetIndex: this.#itemGrid.getSelectedAssetIndex() as AssetIndex,
+        colorName: colorName as ColorName,
       });
     });
   }
