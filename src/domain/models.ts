@@ -198,34 +198,22 @@ export interface Drawable {
   readonly position: Position;
 }
 
-export interface Asset extends Drawable {
-  readonly index: AssetIndex;
-  readonly colorName?: ColorName;
-  updateState(index: AssetIndex, colorName?: ColorName): void;
-  registerObserver(observer: AssetObserver): void;
-  transform(assetIndex: AssetIndex): void;
-  reset(): void;
-}
-
 export interface AssetObserver {
   onStateUpdate(asset: Asset): void;
 }
 
-interface AssetState {
-  index?: AssetIndex;
-  colorName?: ColorName;
-};
-
-export class AssetModel implements Asset, AssetObserver {
+export class Asset implements Drawable, AssetObserver {
   #layer: Layer;
+  #index: AssetIndex;
+  #colorName?: ColorName;
   #colorSource?: Asset;
   #observers: AssetObserver[] = [];
-  #internalState: AssetState = {};
-  #transformedState?: AssetState;
+  #transformers?: Set<AssetTransformer>;
 
   constructor(layer: Layer, colorSource?: Asset, observer?: AssetObserver) {
     this.#layer = layer;
     this.#colorSource = colorSource;
+    this.#index = 0 as AssetIndex;
 
     if (colorSource) {
       colorSource.registerObserver(this);
@@ -236,13 +224,9 @@ export class AssetModel implements Asset, AssetObserver {
     }
   }
 
-  get #state(): AssetState {
-    return this.#transformedState ?? this.#internalState;
-  }
-
   updateState(index: AssetIndex, colorName?: ColorName) {
-    this.#state.index = index;
-    this.#state.colorName = colorName;
+    this.#index = index;
+    this.#colorName = colorName;
     this.notifyObservers();
   }
 
@@ -255,18 +239,36 @@ export class AssetModel implements Asset, AssetObserver {
   }
 
   notifyObservers() {
-    this.#observers.forEach((o) => o.onStateUpdate(this));
+    this.#observers.forEach((obs) => obs.onStateUpdate(this));
+  }
+
+  applyTransformer(transformer: AssetTransformer) {
+    this.#transformers ??= new Set();
+    this.#transformers.add(transformer);
+    this.notifyObservers();
+  }
+
+  revertTransformer(transformer: AssetTransformer) {
+    if (!this.#transformers) {
+      return;
+    }
+    this.#transformers.delete(transformer);
+    this.notifyObservers();
   }
 
   get index(): AssetIndex {
-    return this.#state.index ?? (0 as AssetIndex);
+    if (this.#transformers?.size) {
+      const latestTransformer = Array.from(this.#transformers).at(-1)!;
+      return latestTransformer.transform(this.#index);
+    }
+    return this.#index;
   }
 
   get colorName(): ColorName | undefined {
     if (this.#colorSource) {
       return this.#colorSource.colorName;
     }
-    return this.#state.colorName ?? this.#layer.defaultColor;
+    return this.#colorName ?? this.#layer.defaultColor;
   }
 
   get url(): string {
@@ -283,40 +285,6 @@ export class AssetModel implements Asset, AssetObserver {
 
   get position(): Position {
     return this.#layer.position;
-  }
-
-  transform(targetIndex: AssetIndex) {
-    this.#transformedState = new TransformedAssetState(this.#state, targetIndex);
-  }
-
-  reset() {
-    this.#transformedState = undefined;
-  }
-}
-
-class TransformedAssetState implements AssetState {
-  #targetState: AssetState;
-  #targetIndex: AssetIndex;
-
-  constructor(targetState: AssetState, targetIndex: AssetIndex) {
-    this.#targetState = targetState;
-    this.#targetIndex = targetIndex;
-  }
-
-  get index(): AssetIndex {
-    return this.#targetIndex;
-  }
-
-  set index(index: AssetIndex) {
-    this.#targetState.index = index;
-  }
-
-  get colorName(): ColorName | undefined {
-    return this.#targetState.colorName;
-  }
-
-  set colorName(colorName: ColorName) {
-    this.#targetState.colorName = colorName;
   }
 }
 
@@ -362,10 +330,10 @@ export class AssetTransformer {
     this.#operator = operator;
   }
 
-  transform(sourceAsset: Asset) {
-    return this.#isEligibleSource(sourceAsset.index)
-      ? sourceAsset.transform(this.#targetIndex)
-      : sourceAsset;
+  transform(assetIndex: AssetIndex) {
+    return this.#isEligibleSource(assetIndex)
+      ? this.#targetIndex
+      : assetIndex;
   }
 
   #isEligibleSource(index: AssetIndex): boolean {

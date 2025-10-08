@@ -1,7 +1,6 @@
-import { AssetModel } from './models';
+import { Asset } from './models';
 import type {
   Layer,
-  Asset,
   AssetIndex,
   ColorName,
   AssetObserver,
@@ -24,16 +23,12 @@ export default class AssetManager implements AssetObserver {
 
   applyTransformer(transformer: AssetTransformer) {
     console.log('[Transformer Applied]', transformer);
-    const asset = this.#getAsset(transformer.layer);
-    transformer.transform(asset);
-    this.#notify(asset);
+    this.#getAsset(transformer.layer).applyTransformer(transformer);
   }
 
   revertTransformer(transformer: AssetTransformer) {
     console.log('[Transformer Reverted]', transformer);
-    const transformedAsset = this.#getAsset(transformer.layer);
-    transformedAsset.reset();
-    this.#notify(transformedAsset);
+    this.#getAsset(transformer.layer).revertTransformer(transformer);
   }
 
   #getAsset(layer: Layer): Asset {
@@ -43,12 +38,12 @@ export default class AssetManager implements AssetObserver {
 
   #createNewAsset(layer: Layer): Asset {
     let colorSource = layer.colorSource && this.#getAsset(layer.colorSource);
-    return new AssetModel(layer, colorSource, this);
+    return new Asset(layer, colorSource, this);
   }
 
   #notify(asset: Asset) {
     console.log('[Asset Notified]', asset.url, asset);
-    this.#observers.forEach((obs) => obs.update(asset));
+    this.#observers.forEach((obs) => obs.onAssetUpdate(asset));
   }
 
   registerObserver(observer: RenderObserver) {
