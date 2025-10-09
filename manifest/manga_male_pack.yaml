@@ -253,8 +253,8 @@ layers_priority:
   - filled_background_layer
   - pattern_layer
   - theme_layer
-  - body_shape_layer
   - hair_back_layer
+  - body_shape_layer
   - shirt_layer
   - jackets_layer
   - scarf_layer
