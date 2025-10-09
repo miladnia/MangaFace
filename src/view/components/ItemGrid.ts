@@ -1,10 +1,10 @@
-import type Composer from '../../domain/Composer';
-import type { Action, AssetIndex, Manifest } from '../../domain/models';
-import Grid from '../../ui/components/Grid';
-import type { BaseView, Container } from '../../ui/ui';
-import type { UIObserver } from '../observers';
+import type { BaseView, Container } from '@ui/ui';
+import { Grid } from '@ui/components';
+import type { ScriptObserver } from '@domain/interfaces';
+import type { Composer } from '@domain/services';
+import type { Action, AssetIndex, Manifest } from '@domain/models';
 
-export default class ItemGrid implements BaseView<'ul'>, UIObserver {
+export default class ItemGrid implements BaseView<'ul'>, ScriptObserver {
   #grid: Grid;
   #manifest: Manifest;
 
@@ -35,7 +35,7 @@ export default class ItemGrid implements BaseView<'ul'>, UIObserver {
     container.appendView(this);
   }
 
-  update(action: Action) {
+  onActionApply(action: Action) {
     if (this.#grid.hasPage(action.commandName)) {
       this.#grid.setPagePlaceholderSelected(
         action.commandName,

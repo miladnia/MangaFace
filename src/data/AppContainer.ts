@@ -1,7 +1,7 @@
-import { manifestRepository } from "./repositories";
+import { HttpManifestRepository } from "./repositories";
 
 const AppContainer = {
-  manifestRepository: manifestRepository,
+  manifestRepository: HttpManifestRepository,
 };
 
 export default AppContainer;

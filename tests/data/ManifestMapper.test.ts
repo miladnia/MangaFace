@@ -1,7 +1,7 @@
-import type { ManifestDTO } from '../src/data/dtos';
-import { ManifestMapper } from '../src/data/mappers';
-import type { Manifest } from '../src/domain/models';
-import JsonFetch from '../src/utils/JsonFetch';
+import type { ManifestDTO } from '@data/dtos';
+import { ManifestMapper } from '@data/mappers';
+import type { Manifest } from '@domain/models';
+import JsonFetch from '@data/JsonFetch';
 
 let packName: string;
 let manifest: Manifest;

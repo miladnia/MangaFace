@@ -1,3 +1,4 @@
+import { AssetManager } from '@domain/services';
 import type {
   Manifest,
   Script,
@@ -6,16 +7,15 @@ import type {
   AssetTransformer,
   Command,
   AssetIndex,
-} from './models';
-import type { RenderObserver, UIObserver } from '../view/observers';
-import AssetManager from './AssetManager';
+} from '@domain/models';
+import type { RenderObserver, ScriptObserver } from '@domain/interfaces';
 
 /**
  * Generates Assets based on Actions
  */
 export default class Composer {
   #appliedActions: Record<string, Action> = {};
-  #actionObserver: UIObserver[] = [];
+  #actionObserver: ScriptObserver[] = [];
   #manifest: Manifest;
   #assetManager: AssetManager;
 
@@ -25,7 +25,11 @@ export default class Composer {
   }
 
   async runScript(script: Script) {
-    console.log('[Script Started Running]', script.name, `(${script.description})`);
+    console.log(
+      '[Script Started Running]',
+      script.name,
+      `(${script.description})`
+    );
     script.actions.forEach(async (action) => {
       await this.applyAction(action);
       this.#notifyActionObservers(action);
@@ -90,11 +94,11 @@ export default class Composer {
 
   #notifyActionObservers(action: Action) {
     this.#actionObserver.forEach((observer) => {
-      observer.update(action);
+      observer.onActionApply(action);
     });
   }
 
-  registerActionObserver(observer: UIObserver) {
+  registerActionObserver(observer: ScriptObserver) {
     this.#actionObserver.push(observer);
   }
 

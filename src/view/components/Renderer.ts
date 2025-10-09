@@ -1,9 +1,8 @@
-import PinBoard from '../../ui/components/PinBoard';
-import ImageCanvas from '../../ui/components/LayeredImage';
-import type Composer from '../../domain/Composer';
-import type { Drawable } from '../../domain/models';
-import type { Container } from '../../ui/ui';
-import type { RenderObserver } from '../observers';
+import type { Container } from '@ui/ui';
+import { ImageCanvas, PinBoard } from '@ui/components';
+import type { RenderObserver } from '@domain/interfaces';
+import type { Composer } from '@domain/services';
+import type { Drawable } from '@domain/models';
 
 /**
  * Observes Assets, renders them in the UI
@@ -23,22 +22,22 @@ export default class Renderer implements RenderObserver {
     return this.#canvas.toDataURL();
   }
 
-  update(drawable: Drawable) {
-    const pin = this.#board.getItem(drawable.layerName);
+  onAssetUpdate(asset: Drawable) {
+    const pin = this.#board.getItem(asset.layerName);
 
     if (pin) {
       // Update the existing item
-      pin.setImageUrl(drawable.url);
+      pin.setImageUrl(asset.url);
       return;
     }
 
     this.#board.pinItem(
-      drawable.layerName,
+      asset.layerName,
       this.#board
         .newItem()
-        .setImageUrl(drawable.url)
-        .setPosition(drawable.position.top, drawable.position.left)
-        .setPriority(drawable.priority)
+        .setImageUrl(asset.url)
+        .setPosition(asset.position.top, asset.position.left)
+        .setPriority(asset.priority)
     );
   }
 

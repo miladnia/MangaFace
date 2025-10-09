@@ -1,5 +1,4 @@
-import { ViewElement } from '../ui/ui';
-import type { Container } from '../ui/ui';
+import { ViewElement, type Container } from '@ui/ui';
 
 export class DesignerScreenTemplate {
   #template: Container;

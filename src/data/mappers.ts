@@ -1,6 +1,9 @@
 import type { ManifestDTO, RuleDTO, TransformDTO } from './dtos';
-import { Command, Layer, Rule } from '../domain/models';
 import {
+  Command,
+  Layer,
+  Rule,
+  AssetTransformer,
   type Action,
   type Color,
   type ColorPalette,
@@ -12,8 +15,7 @@ import {
   type AssetIndex,
   type ColorName,
   type RuleOperator,
-  AssetTransformer,
-} from '../domain/models';
+} from '@domain/models';
 
 const modelsCache = {} as Record<string, unknown>;
 
@@ -159,12 +161,17 @@ function mapRule(manifestDTO: ManifestDTO, dto: RuleDTO): Rule {
   return new Rule(
     indexesToMatch as AssetIndex[],
     operator,
-    dto.transform.map((transformerDTO) => mapTransformer(manifestDTO, transformerDTO)),
+    dto.transform.map((transformerDTO) =>
+      mapTransformer(manifestDTO, transformerDTO)
+    ),
     dto.description
   );
 }
 
-function mapTransformer(manifestDTO: ManifestDTO, dto: TransformDTO): AssetTransformer {
+function mapTransformer(
+  manifestDTO: ManifestDTO,
+  dto: TransformDTO
+): AssetTransformer {
   let eligibleSourceIndexes: AssetIndex[] | undefined = undefined;
   let operator: RuleOperator | undefined = undefined;
 
@@ -176,7 +183,7 @@ function mapTransformer(manifestDTO: ManifestDTO, dto: TransformDTO): AssetTrans
       eligibleSourceIndexes = dto.if_asset_index.not_in as AssetIndex[];
       operator = 'not_in';
     } else {
-      throw new Error('\'if_asset_index\' must have either "in" or "not_in".');
+      throw new Error("'if_asset_index' must have either 'in' or 'not_in'.");
     }
   }
 

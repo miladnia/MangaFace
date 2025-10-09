@@ -1,5 +1,5 @@
-import AppContainer from "./data/AppContainer";
-import DesignerScreen from "./view/DesignerScreen";
+import AppContainer from "@data/AppContainer";
+import DesignerScreen from "@view/DesignerScreen";
 
 const App = {
   render: async (containerElement: HTMLElement) => {

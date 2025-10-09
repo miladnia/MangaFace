@@ -1,6 +1,6 @@
-import type { Manifest } from '../../domain/models';
-import { Tabs, Tab } from '../../ui/components/Tabs';
-import type { Container } from '../../ui/ui';
+import type { Container } from '@ui/ui';
+import { Tabs, Tab } from '@ui/components';
+import type { Manifest } from '@domain/models';
 
 export default class CommandNavigator {
   #tabs = new Tabs();

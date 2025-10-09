@@ -1,10 +1,10 @@
-import type Composer from '../../domain/Composer';
-import type { Action, Manifest } from '../../domain/models';
-import Grid from '../../ui/components/Grid';
-import type { Container } from '../../ui/ui';
-import type { UIObserver } from '../observers';
+import { Grid } from '@ui/components';
+import type { Container } from '@ui/ui';
+import type { ScriptObserver } from '@domain/interfaces';
+import type { Composer } from '@domain/services';
+import type { Action, Manifest } from '@domain/models';
 
-export default class ColorGrid implements UIObserver {
+export default class ColorGrid implements ScriptObserver {
   #grid = new Grid(1, 10);
   #manifest: Manifest;
 
@@ -36,7 +36,7 @@ export default class ColorGrid implements UIObserver {
     container.appendView(this);
   }
 
-  update(action: Action) {
+  onActionApply(action: Action) {
     if (action.colorName && this.#grid.hasPage(action.commandName)) {
       this.#grid.setPagePlaceholderSelected(
         action.commandName,

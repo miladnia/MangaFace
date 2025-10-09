@@ -1,9 +1,7 @@
-import { DesignerScreenTemplate } from "./DesignerScreenTemplate";
-import CommandNavigator from "./components/CommandNavigator";
-import CommandPanel from "./components/CommandPanel";
-import Renderer from "./components/Renderer";
-import Composer from "../domain/Composer";
-import type { DesignerViewModel } from "./view_models";
+import { DesignerScreenTemplate } from './DesignerScreenTemplate';
+import type { DesignerViewModel } from './view_models';
+import { CommandNavigator, CommandPanel, Renderer } from './components';
+import { Composer } from '@domain/services';
 
 export default class DesignerScreen {
   #tpl: DesignerScreenTemplate;

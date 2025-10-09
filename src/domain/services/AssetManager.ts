@@ -1,12 +1,12 @@
-import { Asset } from './models';
-import type {
-  Layer,
-  AssetIndex,
-  ColorName,
-  AssetObserver,
-  AssetTransformer,
-} from './models';
-import type { RenderObserver } from '../view/observers';
+import {
+  Asset,
+  type AssetIndex,
+  type AssetObserver,
+  type AssetTransformer,
+  type ColorName,
+  type Layer,
+} from "@domain/models";
+import type { RenderObserver } from "@domain/interfaces";
 
 export default class AssetManager implements AssetObserver {
   #observers: RenderObserver[] = [];
@@ -22,12 +22,12 @@ export default class AssetManager implements AssetObserver {
   }
 
   applyTransformer(transformer: AssetTransformer) {
-    console.log('[Transformer Applied]', transformer);
+    console.log("[Transformer Applied]", transformer);
     this.#getAsset(transformer.layer).applyTransformer(transformer);
   }
 
   revertTransformer(transformer: AssetTransformer) {
-    console.log('[Transformer Reverted]', transformer);
+    console.log("[Transformer Reverted]", transformer);
     this.#getAsset(transformer.layer).revertTransformer(transformer);
   }
 
@@ -42,7 +42,7 @@ export default class AssetManager implements AssetObserver {
   }
 
   #notify(asset: Asset) {
-    console.log('[Asset Notified]', asset.url, asset);
+    console.log("[Asset Notified]", asset.url, asset);
     this.#observers.forEach((obs) => obs.onAssetUpdate(asset));
   }
 

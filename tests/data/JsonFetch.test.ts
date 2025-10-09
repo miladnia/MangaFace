@@ -1,5 +1,5 @@
-import JsonFetch from '../src/utils/JsonFetch';
-import type { ManifestDTO } from '../src/data/dtos';
+import JsonFetch from '@data/JsonFetch';
+import type { ManifestDTO } from '@data/dtos';
 
 it('should return a valid manifest dto', async () => {
     const packName = 'manga_male_pack';

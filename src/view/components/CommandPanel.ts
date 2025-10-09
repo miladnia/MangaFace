@@ -1,8 +1,8 @@
 import ItemGrid from './ItemGrid';
 import ColorGrid from './ColorGrid';
-import type { Manifest, Action, AssetIndex, ColorName } from '../../domain/models';
-import type Composer from '../../domain/Composer';
-import type { Container } from '../../ui/ui';
+import type { Container } from '@ui/ui';
+import type { Manifest, Action, AssetIndex, ColorName } from '@domain/models';
+import type { Composer } from '@domain/services';
 
 export default class CommandPanel {
   #itemGrid: ItemGrid;

@@ -1,17 +1,17 @@
-import { AssetIndex, Layer } from '../src/domain/models';
+import { type AssetIndex, Layer } from '@domain/models';
 
 const name = 'lyr1';
 const maxAssetIndex = 1 as AssetIndex;
 
-const palette = {
-  name: 'palette',
-  colors: [
-    {
-      colorName: 'red' as const,
-      colorCode: '#FF0000',
-    },
-  ],
-};
+// const palette = {
+//   name: 'palette',
+//   colors: [
+//     {
+//       colorName: 'red',
+//       colorCode: '#FF0000',
+//     },
+//   ],
+// };
 
 it('should fail with not assets', () => {
   const noAssets = 0 as AssetIndex;
