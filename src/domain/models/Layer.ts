@@ -45,14 +45,19 @@ export class Layer {
   }
 
   getAssetUrl(assetIndex: AssetIndex, colorName?: ColorName): string {
-    if (0 === assetIndex) {
-      return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABBJREFUeNpi/P//PwNAgAEACQEC/2m8kPAAAAAASUVORK5CYII=';
+    if (assetIndex < 0 || assetIndex > this.maxAssetIndex) {
+      return '';
     }
 
-    let url = this.assetUrl.replace('{asset_index}', assetIndex.toString());
+    if (0 === assetIndex) {
+      // Returns a blank image
+      return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>';
+    }
+
+    let url = this.assetUrl.replace("{asset_index}", assetIndex.toString());
 
     if (colorName) {
-      url = url.replace('{color_name}', colorName);
+      url = url.replace("{color_name}", colorName);
     }
 
     return url;

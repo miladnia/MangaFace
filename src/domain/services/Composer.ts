@@ -40,8 +40,8 @@ export default class Composer {
     console.log('[Action Applied]', action);
     const command = this.#getCommand(action.commandName);
 
-    if (!action.colorName && command.isColorRequired()) {
-      throw new Error(`The command '${command.name}' requires color.`);
+    if (!command.isValidAsset(action.assetIndex, action.colorName)) {
+      throw new Error(`Invalid action for command '${command.name}'.`);
     }
 
     command.layers.forEach((layer) => {

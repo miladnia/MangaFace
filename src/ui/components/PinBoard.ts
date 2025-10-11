@@ -37,7 +37,11 @@ class Item {
   }
 
   setImageUrl(imageUrl: string) {
-    this._view.getElement().setAttribute('src', imageUrl);
+    if (!imageUrl) {
+      console.warn("[PinBoard] The image URL could not be empty.");
+      return;
+    }
+    this._view.getElement().setAttribute('src', encodeURI(imageUrl));
     return this;
   }
 

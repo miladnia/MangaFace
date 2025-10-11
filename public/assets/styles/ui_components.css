@@ -27,6 +27,10 @@
 
 /* ------------------------------------- GridCom */
 
+:root {
+  --grid-blank-image: none;
+}
+
 .grid-layout {
   list-style: none;
   margin: 0;

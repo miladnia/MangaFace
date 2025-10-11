@@ -1,16 +1,18 @@
 import type { Layer } from "./Layer";
-import type { AssetIndex, Color, ColorPalette } from "./types";
+import type { AssetIndex, Color, ColorName, ColorPalette } from "./types";
 
 export class Command {
   readonly name: string;
-  readonly previewUrl: string;
   readonly layers: Layer[];
-  readonly assetsCount: number;
   readonly colors: Color[];
   readonly rules: Rule[];
+  #maxAssetIndex: AssetIndex;
+  #isPermanent: boolean = false;
+  #previewUrl: string;
 
   constructor(
     name: string,
+    isPermanent: boolean,
     previewUrl: string,
     layers: Layer[],
     rules?: Rule[]
@@ -39,9 +41,10 @@ export class Command {
     }
 
     this.name = name;
-    this.previewUrl = previewUrl;
+    this.#isPermanent = isPermanent;
+    this.#previewUrl = previewUrl;
     this.layers = layers;
-    this.assetsCount = layers[0].maxAssetIndex;
+    this.#maxAssetIndex = layers[0].maxAssetIndex;
     this.colors = refColorPalette?.colors ?? [];
     this.rules = rules ?? [];
   }
@@ -68,20 +71,59 @@ export class Command {
     return layers.every((lyr) => lyr.maxAssetIndex === layers[0].maxAssetIndex);
   }
 
-  getPreviewUrl(assetIndex: AssetIndex) {
-    return this.previewUrl.replace('{asset_index}', assetIndex.toString());
+  *assetIndexes(): IterableIterator<AssetIndex> {
+    for (let i = this.#minAssetIndex; i <= this.#maxAssetIndex; i++) {
+      yield i as AssetIndex;
+    }
   }
 
-  isColorRequired() {
-    return this.colors.length > 0;
+  getPreviewUrl(index: AssetIndex): string {
+    if (0 === index) {
+      return "";
+    }
+    return this.#previewUrl.replace("{asset_index}", index.toString());
   }
 
-  onMatchRule(assetIndex: AssetIndex, handleRule: (rule: Rule) => void) {
+  onMatchRule(index: AssetIndex, handleRule: (rule: Rule) => void) {
+    // No rules for blank assets
+    if (0 === index) {
+      return;
+    }
     this.rules.forEach((rule: Rule) => {
-      if (rule.matchAssetIndex(assetIndex)) {
+      if (rule.matchAssetIndex(index)) {
         handleRule(rule);
       }
     });
+  }
+
+  isValidAsset(index: AssetIndex, colorName?: ColorName): boolean {
+    return this.#isValidIndex(index) && this.#isValidColor(colorName);
+  }
+
+  #isValidIndex(index: AssetIndex): boolean {
+    return index >= this.#minAssetIndex && index <= this.#maxAssetIndex;
+  }
+
+  #isValidColor(colorName?: ColorName): boolean {
+    if (this.#isColorRequired) {
+      if (!colorName || !this.#hasColor(colorName)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  get #isColorRequired() {
+    return this.colors.length > 0;
+  }
+
+  #hasColor(colorName: ColorName) {
+    return this.colors.some((color) => color.colorName === colorName);
+  }
+
+  get #minAssetIndex(): AssetIndex {
+    return (this.#isPermanent ? 1 : 0) as AssetIndex;
   }
 }
 
@@ -105,7 +147,7 @@ export class Rule {
 
   matchAssetIndex(index: AssetIndex) {
     const includes = this.#indexesToMatch.includes(index);
-    return 'in' === this.#operator ? includes : !includes;
+    return "in" === this.#operator ? includes : !includes;
   }
 }
 
@@ -127,10 +169,8 @@ export class AssetTransformer {
     this.#operator = operator;
   }
 
-  transform(assetIndex: AssetIndex) {
-    return this.#isEligibleSource(assetIndex)
-      ? this.#targetIndex
-      : assetIndex;
+  transform(index: AssetIndex) {
+    return this.#isEligibleSource(index) ? this.#targetIndex : index;
   }
 
   #isEligibleSource(index: AssetIndex): boolean {
@@ -138,8 +178,8 @@ export class AssetTransformer {
       return true;
     }
     const includes = this.#sourceIndexesToMatch.includes(index);
-    return 'in' === this.#operator ? includes : !includes;
+    return "in" === this.#operator ? includes : !includes;
   }
 }
 
-export type RuleOperator = 'in' | 'not_in';
+export type RuleOperator = "in" | "not_in";

@@ -71,6 +71,7 @@ function mapCommand(manifestDTO: ManifestDTO, commandName: string): Command {
     (dto) =>
       new Command(
         commandName,
+        dto.permanent ?? false,
         dto.preview_url,
         dto.subscribed_layers.map((lyr) => mapLayer(manifestDTO, lyr)),
         (dto.rules ?? []).map((ruleDTO) => mapRule(manifestDTO, ruleDTO))

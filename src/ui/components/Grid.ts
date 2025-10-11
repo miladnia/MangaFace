@@ -1,5 +1,5 @@
-import { UIComponent, ViewElement } from '../ui';
-import type { View } from '../ui';
+import { UIComponent, ViewElement } from "../ui";
+import type { View } from "../ui";
 
 type Listener = {
   // Called when a placeholder enters the selected state.
@@ -10,15 +10,15 @@ type Listener = {
   onPlaceholderReselected: (placeholderKey: string, pageKey: string) => void;
 };
 
-export default class Grid extends UIComponent<'ul'> {
+export default class Grid extends UIComponent<"ul"> {
   static #instanceCount = 0;
   _viewId: number = 0;
   _cells: Cell[] = [];
   _pages: Record<string, Page> = {};
   #currentPage: Page | null = null;
   _selectedCell: Cell | null = null;
-  _ATTR_PAGE_ID = 'data-lid';
-  _ATTR_GRID_ID = 'data-gid';
+  _ATTR_PAGE_ID = "data-lid";
+  _ATTR_GRID_ID = "data-gid";
   _columns: number;
   _rows: number;
   _cellCount: number;
@@ -29,7 +29,7 @@ export default class Grid extends UIComponent<'ul'> {
   };
 
   constructor(columns: number, rows: number) {
-    super('ul', 'grid-layout');
+    super("ul", "grid-layout");
     this._viewId = Grid.#instanceCount++;
     this._columns = columns > 0 ? columns : 1;
     this._rows = rows > 0 ? rows : 1;
@@ -191,8 +191,8 @@ export default class Grid extends UIComponent<'ul'> {
     this.getElement().setAttribute(this._ATTR_GRID_ID, this._viewId.toString());
     this._getStyle().addRule(`${this._getStyleSelector()} > *`, {
       width: `${cellSize}%`,
-      height: '0',
-      'padding-top': `${cellSize}%`,
+      height: "0",
+      "padding-top": `${cellSize}%`,
       margin: `${cellMargin}%`,
     });
 
@@ -200,15 +200,21 @@ export default class Grid extends UIComponent<'ul'> {
       const placeholders = this._pages[pageKey].getPlaceholders();
       for (const placeholder of Object.values(placeholders)) {
         const cellPosition = placeholder._cellPosition;
-
-        this._getStyle().addRule(
+        const ruleSelector =
           this._getStyleSelector(pageKey) +
-            ' ' +
-            this._cells[cellPosition]._getStyleSelector(),
-          'color' == placeholder._type
-            ? { 'background-color': placeholder._value }
-            : { 'background-image': 'url("' + placeholder._value + '");' }
-        );
+          " " +
+          this._cells[cellPosition]._getStyleSelector();
+        const ruleProperties = {} as Record<string, string>;
+
+        if ("color" === placeholder._type) {
+          ruleProperties["background-color"] = placeholder._value;
+        } else {
+          ruleProperties["background-image"] = placeholder._value
+            ? `url("${encodeURI(placeholder._value)}")`
+            : `var(--grid-blank-image)`;
+        }
+
+        this._getStyle().addRule(ruleSelector, ruleProperties);
       }
     }
 
@@ -226,14 +232,14 @@ export default class Grid extends UIComponent<'ul'> {
   _getStyleSelector(pageKey?: string) {
     let selector =
       this._view.getStyleSelector() +
-      '[' +
+      "[" +
       this._ATTR_GRID_ID +
       '="' +
       this._viewId +
       '"]';
 
     if (pageKey) {
-      selector += '[' + this._ATTR_PAGE_ID + '="' + pageKey + '"]';
+      selector += "[" + this._ATTR_PAGE_ID + '="' + pageKey + '"]';
     }
 
     return selector;
@@ -241,16 +247,16 @@ export default class Grid extends UIComponent<'ul'> {
 }
 
 class Cell {
-  _view: View<'li'>;
+  _view: View<"li">;
   _parent: Grid;
   _position: number = -1;
-  _ATTR_POSITION: string = 'data-pos';
+  _ATTR_POSITION: string = "data-pos";
 
   constructor(parent: Grid) {
     this._parent = parent;
-    this._view = new ViewElement('li', 'cell');
+    this._view = new ViewElement("li", "cell");
 
-    this._view.getElement().addEventListener('click', () => this.select());
+    this._view.getElement().addEventListener("click", () => this.select());
   }
 
   _setPosition(position: number) {
@@ -275,7 +281,7 @@ class Cell {
   _getStyleSelector() {
     return (
       this._view.getStyleSelector() +
-      '[' +
+      "[" +
       this._ATTR_POSITION +
       '="' +
       this._position +
@@ -308,9 +314,9 @@ class Page {
     if (this.countPlaceholders() >= this._parent.getCellCount()) {
       console.warn(
         "Could not add new placeholder to the page '" + this._key + "'.",
-        'The total number of placeholders should be equal or less than ' +
+        "The total number of placeholders should be equal or less than " +
           this._parent.getCellCount() +
-          '.'
+          "."
       );
 
       return this;
@@ -329,13 +335,13 @@ class Page {
 
   addImagePlaceholder(imageUrl: string, placeholderKey: string) {
     return this._addPlaceholder(
-      new CellPlaceholder('image', imageUrl, placeholderKey)
+      new CellPlaceholder("image", imageUrl, placeholderKey)
     );
   }
 
   addColorPlaceholder(colorCode: string, placeholderKey: string) {
     return this._addPlaceholder(
-      new CellPlaceholder('color', colorCode, placeholderKey)
+      new CellPlaceholder("color", colorCode, placeholderKey)
     );
   }
 
@@ -371,7 +377,7 @@ class Page {
 
   getPlaceholderKeyAt(position: number) {
     const placeholder = this.getPlaceholderAt(position);
-    return placeholder ? placeholder.getKey() : '';
+    return placeholder ? placeholder.getKey() : "";
   }
 
   getSelectedPlaceholderKey() {
@@ -393,11 +399,11 @@ class Page {
 
 class CellPlaceholder {
   _cellPosition: number = -1;
-  _type: string;
+  _type: "image" | "color";
   _value: string;
   _key: string;
 
-  constructor(type: string, value: string, key: string) {
+  constructor(type: "image" | "color", value: string, key: string) {
     this._type = type;
     this._value = value;
     this._key = key;

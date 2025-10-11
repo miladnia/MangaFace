@@ -31,6 +31,7 @@ export type ScriptDTO = {
 };
 
 export type CommandDTO = {
+  permanent?: boolean,
   preview_url: string;
   subscribed_layers: string[];
   rules?: RuleDTO[];

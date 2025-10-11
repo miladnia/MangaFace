@@ -349,18 +349,20 @@ commands:
 
   # Draw body_shape
   draw_body_shape:
-    preview_url: ''
     permanent: true
+    preview_url: ''
     subscribed_layers:
       - body_shape_layer
   # Draw head_shape
   draw_head_shape:
+    permanent: true
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/head_shapes/{asset_index}.gif
     protected: true
     subscribed_layers:
       - head_shape_layer
   # Draw ears
   draw_ears:
+    permanent: true
     default_color_name: plain
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/ears/{asset_index}.gif
     subscribed_layers:
@@ -368,6 +370,7 @@ commands:
       - right_ear_layer
   # Draw eyebrows
   draw_eyebrows:
+    permanent: true
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyebrows/{asset_index}.gif
     movement_limit: 2
     subscribed_layers:
@@ -377,18 +380,21 @@ commands:
       - right_eyeshadow_layer
   # Draw eyes
   draw_eyes:
+    permanent: true
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyes/{asset_index}.gif
     subscribed_layers:
       - left_eye_layer
       - right_eye_layer
   # Draw nose
   draw_nose:
+    permanent: true
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/nose_shapes/{asset_index}.gif
     movement_limit: 2
     subscribed_layers:
       - nose_layer
   # Draw mouth
   draw_mouth:
+    permanent: true
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mouth_shapes/{asset_index}.gif
     movement_limit: 2
     subscribed_layers:
@@ -406,6 +412,7 @@ commands:
       - beard_layer
   # Draw shirt
   draw_shirt:
+    permanent: true
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/shirts/{asset_index}.gif
     subscribed_layers:
       - shirt_layer
@@ -427,6 +434,7 @@ commands:
       - glasses_layer
   # Draw filled_background
   draw_filled_background:
+    permanent: true
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_colors/{asset_index}.gif
     subscribed_layers:
       - filled_background_layer

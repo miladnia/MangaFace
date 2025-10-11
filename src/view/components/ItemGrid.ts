@@ -1,10 +1,10 @@
-import type { BaseView, Container } from '@ui/ui';
-import { Grid } from '@ui/components';
-import type { ScriptObserver } from '@domain/interfaces';
-import type { Composer } from '@domain/services';
-import type { Action, AssetIndex, Manifest } from '@domain/models';
+import type { BaseView, Container } from "@ui/ui";
+import { Grid } from "@ui/components";
+import type { ScriptObserver } from "@domain/interfaces";
+import type { Composer } from "@domain/services";
+import type { Action, Manifest } from "@domain/models";
 
-export default class ItemGrid implements BaseView<'ul'>, ScriptObserver {
+export default class ItemGrid implements BaseView<"ul">, ScriptObserver {
   #grid: Grid;
   #manifest: Manifest;
 
@@ -15,24 +15,27 @@ export default class ItemGrid implements BaseView<'ul'>, ScriptObserver {
   }
 
   async render(container: Container) {
-    for (const navigator of this.#manifest.navigators) {
-      for (const navOption of navigator.options) {
-        const cmd = navOption.command;
-        const gridPage = this.#grid.newPage(navOption.command.name);
+    this.#createGridPages();
+    this.#grid.render();
+    container.appendView(this);
+  }
 
-        for (let i = 1; i <= cmd.assetsCount; i++) {
-          gridPage.addImagePlaceholder(
-            cmd.getPreviewUrl(i as AssetIndex),
-            i.toString()
+  #createGridPages() {
+    for (const nav of this.#manifest.navigators) {
+      for (const option of nav.options) {
+        const cmd = option.command;
+        const page = this.#grid.newPage(option.command.name);
+
+        for (const index of cmd.assetIndexes()) {
+          page.addImagePlaceholder(
+            cmd.getPreviewUrl(index),
+            index.toString()
           );
         }
 
-        this.#grid.addPage(gridPage);
+        this.#grid.addPage(page);
       }
     }
-
-    this.#grid.render();
-    container.appendView(this);
   }
 
   onActionApply(action: Action) {
