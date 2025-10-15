@@ -2,7 +2,7 @@ type HtmlTag = keyof HTMLElementTagNameMap;
 
 export class UIComponent<T extends HtmlTag> {
   _view: View<T>;
-  _style: Style | null = null;
+  #style: Style | null = null;
 
   constructor(tagName: T, className: string) {
     this._view = new ViewElement(tagName, className);
@@ -12,13 +12,17 @@ export class UIComponent<T extends HtmlTag> {
     return this._view;
   }
 
-  getElement(): HTMLElement {
+  getElement(): HTMLElementTagNameMap[T] {
     return this._view.getElement();
   }
 
-  _getStyle() {
-    this._style ??= new Style();
-    return this._style;
+  get element(): HTMLElementTagNameMap[T] {
+    return this._view.getElement();
+  }
+
+  get _style() {
+    this.#style ??= new Style();
+    return this.#style;
   }
 }
 
@@ -35,19 +39,22 @@ export class Style {
     return element;
   }
 
-  addRule(selector: string, properties: Record<string, string>) {
+  addRule(rule: CSSRule) {
     this.#element ??= this.#createStyleElement();
 
-    let propStr = '';
+    const compiledProps = Object.entries(rule.properties)
+      .map(([prop, value], ) => `${prop}: ${value};`)
+      .join('');
 
-    for (const prop in properties) {
-      propStr += `${prop}: ${properties[prop]};`;
-    }
-
-    const rule = `${selector} { ${propStr} }`;
-    this.#element.sheet?.insertRule(rule, this.#element.sheet.cssRules.length);
+    const compiledRule = `${rule.selector}{${compiledProps}}`;
+    this.#element.sheet?.insertRule(compiledRule, this.#element.sheet.cssRules.length);
   }
 }
+
+export type CSSRule = {
+  selector: string;
+  properties: Record<string, string>;
+};
 
 export interface BaseView<T extends HtmlTag> {
   getElement(): HTMLElementTagNameMap[T];

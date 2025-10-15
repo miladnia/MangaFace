@@ -37,7 +37,7 @@ export default class Composer {
   }
 
   async applyAction(action: Action) {
-    console.log('[Action Applied]', action);
+    console.log('[Action Applied]', action.commandName, action);
     const command = this.#getCommand(action.commandName);
 
     if (!command.isValidAsset(action.assetIndex, action.colorName)) {

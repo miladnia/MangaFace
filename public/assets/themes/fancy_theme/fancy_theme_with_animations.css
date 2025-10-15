@@ -17,20 +17,20 @@
   font-size: 1.5em;
 }
 
-.mf-designer-screen-tpl .shapes-frame .cell {
+.mf-designer-screen-tpl .shapes-frame .grid-select-slot {
   background-size: 100% 100%;
   transition: background-size 0.1s, opacity 0.1s;
 }
 
-.mf-designer-screen-tpl .shapes-frame .cell:hover {
+.mf-designer-screen-tpl .shapes-frame .grid-select-slot:hover {
   background-size: 150% 150%;
 }
 
-.mf-designer-screen-tpl .colors-frame .cell {
+.mf-designer-screen-tpl .colors-frame .grid-select-slot {
   transition: width 0.2s, padding-top 0.2s;
 }
 
-.mf-designer-screen-tpl .colors-frame .cell:hover {
+.mf-designer-screen-tpl .colors-frame .grid-select-slot:hover {
   width: 90%;
   padding-top: 90%;
 }

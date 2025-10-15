@@ -1,77 +1,104 @@
-import type { BaseView, Container } from "@ui/ui";
-import { Grid } from "@ui/components";
-import type { ScriptObserver } from "@domain/interfaces";
-import type { Composer } from "@domain/services";
-import type { Action, Manifest } from "@domain/models";
+import { GridSelect } from "@ui/components";
+import type { Container } from "@ui/ui";
+import type { AssetIndex, Command } from "@domain/models";
+import type { CoverType, GridSelectAdapter } from "@ui/components/GridSelect";
 
-export default class ItemGrid implements BaseView<"ul">, ScriptObserver {
-  #grid: Grid;
-  #manifest: Manifest;
+type AssetSelectHandler = (commandName: string, assetIndex: AssetIndex) => void;
 
-  constructor(composer: Composer, manifest: Manifest) {
-    this.#grid = new Grid(6, 6);
-    this.#manifest = manifest;
-    composer.registerActionObserver(this);
+export default class AssetGrid {
+  #grid: GridSelect;
+  #commands: Record<string, Command>;
+
+  onAssetSelect?: AssetSelectHandler;
+
+  constructor(commands: Record<string, Command>) {
+    this.#commands = commands;
+    const adapter = new AssetGridAdapter(commands);
+    this.#grid = new GridSelect(36, adapter);
   }
 
-  async render(container: Container) {
-    this.#createGridPages();
-    this.#grid.render();
-    container.appendView(this);
-  }
-
-  #createGridPages() {
-    for (const nav of this.#manifest.navigators) {
-      for (const option of nav.options) {
-        const cmd = option.command;
-        const page = this.#grid.newPage(option.command.name);
-
-        for (const index of cmd.assetIndexes()) {
-          page.addImagePlaceholder(
-            cmd.getPreviewUrl(index),
-            index.toString()
-          );
-        }
-
-        this.#grid.addPage(page);
+  render(container: Container) {
+    Object.values(this.#commands).forEach((cmd) => {
+      if (cmd.isOptional) {
+        // The first option of an optional command is blank and selected by default
+        this.#grid.markOptionSelected(cmd.name, 0);
       }
-    }
-  }
-
-  onActionApply(action: Action) {
-    if (this.#grid.hasPage(action.commandName)) {
-      this.#grid.setPagePlaceholderSelected(
-        action.commandName,
-        action.assetIndex.toString()
-      );
-    }
-  }
-
-  onItemSelect(
-    handleItemSelect: (commandName: string, assetIndex: string) => void
-  ) {
-    this.#grid.setListener({
-      onPlaceholderSelected: (placeholderKey: string, pageKey: string) => {
-        const assetIndex = placeholderKey;
-        const commandName = pageKey;
-        handleItemSelect(commandName, assetIndex);
-      },
     });
+
+    this.#grid.onOptionSelect = (sessionName, optionIndex) => {
+      const assetIndex = this.#toAssetIndex(sessionName, optionIndex);
+      this.onAssetSelect?.(sessionName, assetIndex);
+    };
+
+    container.append(this.#grid.render());
   }
 
-  hasSelectedItem() {
-    return !!this.#grid.getSelectedPlaceholderKey();
+  showAssets(cmdName: string) {
+    this.#grid.attachSession(cmdName);
   }
 
-  getSelectedAssetIndex(): number {
-    return parseInt(this.#grid.getSelectedPlaceholderKey());
+  setAssetSelected(cmdName: string, assetIndex: AssetIndex) {
+    const optionIndex = this.#toOptionIndex(cmdName, assetIndex);
+    const sessionName = cmdName;
+    this.#grid.markOptionSelected(sessionName, optionIndex);
   }
 
-  showCommandItems(commandName: string) {
-    this.#grid.switchToPage(commandName);
+  hasSelectedAsset() {
+    return this.#grid.selectedOptionIndex >= 0;
   }
 
-  getElement() {
-    return this.#grid.getView().getElement();
+  get selectedAssetIndex(): AssetIndex {
+    return this.#toAssetIndex(
+      this.#grid.sessionName,
+      this.#grid.selectedOptionIndex
+    );
+  }
+
+  #toAssetIndex(sessionName: string, optionIndex: number): AssetIndex {
+    const cmdName = sessionName;
+    const cmd = this.#commands[cmdName];
+    return (optionIndex + cmd.minAssetIndex) as AssetIndex;
+  }
+
+  #toOptionIndex(cmdName: string, assetIndex: AssetIndex): number {
+    const cmd = this.#commands[cmdName];
+    return (assetIndex - cmd.minAssetIndex) as AssetIndex;
+  }
+}
+
+class AssetGridAdapter implements GridSelectAdapter {
+  #commands: Record<string, Command>;
+
+  constructor(commands: Record<string, Command>) {
+    this.#commands = commands;
+  }
+
+  isValidSession(sessionName: string): boolean {
+    return !!this.#commands[sessionName];
+  }
+
+  getOptionsCount(sessionName: string): number {
+    const cmd = this.#commands[sessionName];
+    return cmd.assetsCount;
+  }
+
+  getCover(sessionName: string, optionIndex: number): string {
+    const cmdName = sessionName;
+    const cmd = this.#commands[cmdName];
+    if (cmd.isOptional && 0 === optionIndex) {
+      return "var(--grid-select-blank-slot-bg-image)";
+    }
+    const assetIndex = this.#toAssetIndex(sessionName, optionIndex);
+    return cmd.getPreviewUrl(assetIndex);
+  }
+
+  #toAssetIndex(sessionName: string, optionIndex: number): AssetIndex {
+    const cmdName = sessionName;
+    const cmd = this.#commands[cmdName];
+    return (optionIndex + cmd.minAssetIndex) as AssetIndex;
+  }
+
+  getCoverType(): CoverType {
+    return "image";
   }
 }

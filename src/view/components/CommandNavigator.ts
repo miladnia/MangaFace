@@ -11,7 +11,7 @@ export default class CommandNavigator {
     this.#manifest = manifest;
   }
 
-  async render(tabsContainer: Container, innerTabsContainer: Container) {
+  render(tabsContainer: Container, innerTabsContainer: Container) {
     for (const navigator of this.#manifest.navigators) {
       // Create a new 'Tabs' component for 'inner tabs'.
       const innerTabs = new Tabs()

@@ -16,7 +16,6 @@
   text-align: center;
   line-height: 0;
   overflow: hidden;
-  cursor: default;
   user-select: none;
   z-index: 1;
 }
@@ -25,30 +24,53 @@
   z-index: 2;
 }
 
-/* ------------------------------------- GridCom */
+/* ------------------------------------- grid-select component */
 
 :root {
-  --grid-blank-image: none;
+  --grid-select-slot-bg-color: #ccc;
 }
 
-.grid-layout {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  line-height: 0;
+.grid-select-slots-layout {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 10px;
 }
 
-.grid-layout .cell {
-  display: inline-block;
+.grid-select-slot {
+  aspect-ratio: 1 / 1;
   position: relative;
   background: center no-repeat;
   background-size: cover;
   z-index: 1;
 }
 
-.grid-layout .cell[data-selected] {
+.grid-select-slot[data-selected] {
   box-shadow: 0 0 0 0.1em #000000;
   z-index: 2;
+}
+
+.grid-select-pages-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 5%;
+  gap: 1%;
+}
+
+.grid-select-page-btn {
+  width: 3.5vw;
+  height: 3.5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.grid-select-page-btn svg {
+  width: 50%;
+  height: 50%;
+  fill: currentColor;
 }
 
 /* ------------------------------------- PinboardCom */

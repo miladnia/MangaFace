@@ -1,53 +1,69 @@
-import ItemGrid from "./ItemGrid";
+import AssetGrid from "./ItemGrid";
 import ColorGrid from "./ColorGrid";
+import type { ScriptObserver } from "@domain/interfaces";
 import type { Container } from "@ui/ui";
-import type { Manifest, Action, AssetIndex, ColorName } from "@domain/models";
+import type { Manifest, Action, Command } from "@domain/models";
 import type { Composer } from "@domain/services";
 
-export default class CommandPanel {
-  #itemGrid: ItemGrid;
+type ActionTriggerHandler = (action: Action) => void;
+
+export default class CommandPanel implements ScriptObserver {
+  #itemGrid: AssetGrid;
   #colorGrid: ColorGrid;
 
+  onActionTrigger?: ActionTriggerHandler;
+
   constructor(composer: Composer, manifest: Manifest) {
-    this.#itemGrid = new ItemGrid(composer, manifest);
-    this.#colorGrid = new ColorGrid(composer, manifest);
-  }
-
-  async render(itemGridContainer: Container, colorGridContainer: Container) {
-    await this.#itemGrid.render(itemGridContainer);
-    await this.#colorGrid.render(colorGridContainer);
-  }
-
-  onNewAction(handleNewAction: (action: Action) => void) {
-    // On item select
-    this.#itemGrid.onItemSelect((commandName: string, assetIndex: string) => {
-      handleNewAction({
-        commandName: commandName,
-        assetIndex: parseInt(assetIndex) as AssetIndex,
-        colorName: this.#colorGrid.getSelectedColor() as ColorName,
+    const commands: Record<string, Command> = {};
+    manifest.navigators.forEach((nav) => {
+      nav.options.forEach((opt) => {
+        commands[opt.command.name] = opt.command;
       });
     });
+    this.#itemGrid = new AssetGrid(commands);
+    this.#colorGrid = new ColorGrid(commands);
+    composer.registerActionObserver(this);
+  }
 
-    // On color select
-    this.#colorGrid.onColorSelect((commandName, colorName) => {
-      // Don't run any Action, if no item is selected
-      if (!this.#itemGrid.hasSelectedItem()) {
+  onActionApply(action: Action) {
+    this.#itemGrid.setAssetSelected(action.commandName, action.assetIndex);
+
+    if (action.colorName) {
+      this.#colorGrid.setColorSelected(action.commandName, action.colorName);
+    }
+  }
+
+  switchToCommand(cmdName: string) {
+    this.#itemGrid.showAssets(cmdName);
+    this.#colorGrid.showCommandColors(cmdName);
+  }
+
+  render(itemGridContainer: Container, colorGridContainer: Container) {
+    this.#itemGrid.onAssetSelect = (cmdName, assetIndex) => {
+      // If no color is selected, don't run any Action
+      if (!this.#colorGrid.hasSelectedColor()) {
         return;
       }
-      handleNewAction({
-        commandName: commandName,
-        assetIndex: this.#itemGrid.getSelectedAssetIndex() as AssetIndex,
-        colorName: colorName as ColorName,
+      this.onActionTrigger?.({
+        commandName: cmdName,
+        assetIndex: assetIndex,
+        colorName: this.#colorGrid.selectedColor,
       });
-    });
-  }
+    };
 
-  showCommandControllers(commandName: string) {
-    this.#itemGrid.showCommandItems(commandName);
-    this.#colorGrid.showCommandColors(commandName);
-  }
+    this.#colorGrid.onColorSelect = (cmdName, colorName) => {
+      // If no item is selected, don't run any Action
+      if (!this.#itemGrid.hasSelectedAsset()) {
+        return;
+      }
+      this.onActionTrigger?.({
+        commandName: cmdName,
+        assetIndex: this.#itemGrid.selectedAssetIndex,
+        colorName: colorName,
+      });
+    };
 
-  getElement() {
-    return this.#itemGrid.getElement();
+    this.#itemGrid.render(itemGridContainer);
+    this.#colorGrid.render(colorGridContainer);
   }
 }

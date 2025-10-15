@@ -15,24 +15,24 @@ export default class DesignerScreen {
   async render() {
     const composer = new Composer(this.#model.manifest);
     const renderer = new Renderer(composer);
-    await renderer.render(this.#tpl.previewFrame);
+    renderer.render(this.#tpl.previewFrame);
 
     const commandPanel = new CommandPanel(composer, this.#model.manifest);
-    commandPanel.onNewAction((action) => {
-      composer.applyAction(action);
-    });
-    await commandPanel.render(this.#tpl.shapesFrame, this.#tpl.colorsFrame);
+    commandPanel.onActionTrigger = (action) => composer.applyAction(action);
+    commandPanel.render(this.#tpl.shapesFrame, this.#tpl.colorsFrame);
 
     const commandNavigator = new CommandNavigator(this.#model.manifest);
     commandNavigator.onCommandSelect((commandName) => {
-      commandPanel.showCommandControllers(commandName);
+      commandPanel.switchToCommand(commandName);
     });
-    await commandNavigator.render(
+    commandNavigator.render(
       this.#tpl.sectionsFrame,
       this.#tpl.designersFrame
     );
 
+    setTimeout(() =>{
     composer.runScript(this.#model.manifest.initializerScript);
+    }, 7000);
 
     return this.#tpl.getView();
   }

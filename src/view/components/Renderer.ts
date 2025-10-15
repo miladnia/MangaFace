@@ -41,7 +41,7 @@ export default class Renderer implements RenderObserver {
     );
   }
 
-  async render(container: Container) {
+  render(container: Container) {
     container.appendView(this);
   }
 

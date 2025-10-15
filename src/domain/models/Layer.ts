@@ -8,7 +8,6 @@ export class Layer {
   readonly colorPalette?: ColorPalette;
   readonly colorSource?: Layer;
   readonly position: Position;
-  referencedBy: Layer[] = [];
 
   constructor(
     name: string,

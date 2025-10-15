@@ -1,71 +1,105 @@
-import { Grid } from '@ui/components';
-import type { Container } from '@ui/ui';
-import type { ScriptObserver } from '@domain/interfaces';
-import type { Composer } from '@domain/services';
-import type { Action, Manifest } from '@domain/models';
+import { GridSelect } from "@ui/components";
+import type { Container } from "@ui/ui";
+import type { ColorName, Command } from "@domain/models";
+import type { CoverType, GridSelectAdapter } from "@ui/components/GridSelect";
 
-export default class ColorGrid implements ScriptObserver {
-  #grid = new Grid(1, 10);
-  #manifest: Manifest;
+type OptionSelectHandler = (commandName: string, colorName?: ColorName) => void;
 
-  constructor(composer: Composer, manifest: Manifest) {
-    composer.registerActionObserver(this);
-    this.#manifest = manifest;
+export default class ColorGrid {
+  #grid: GridSelect;
+  #commands: Record<string, Command>;
+
+  onColorSelect?: OptionSelectHandler;
+
+  constructor(commands: Record<string, Command>) {
+    this.#commands = commands;
+    const adapter = new ColorGridAdapter(commands);
+    this.#grid = new GridSelect(10, adapter);
   }
 
-  async render(container: Container) {
-    for (const navigator of this.#manifest.navigators) {
-      for (const navOption of navigator.options) {
-        const cmd = navOption.command;
-        const page = this.#grid.newPage(navOption.command.name);
-
-        cmd.colors.forEach((color) => {
-          page.addColorPlaceholder(color.colorCode, color.colorName);
-        });
-
-        if (cmd.colors.length) {
-          // The first color is selected by default
-          page.setPlaceholderSelected(cmd.colors[0].colorName);
-        }
-
-        this.#grid.addPage(page);
+  render(container: Container) {
+    Object.values(this.#commands).forEach((cmd) => {
+      if (cmd.colors.length) {
+        // The first color is selected by default
+        this.#grid.markOptionSelected(cmd.name, 0);
       }
-    }
-
-    this.#grid.render();
-    container.appendView(this);
-  }
-
-  onActionApply(action: Action) {
-    if (action.colorName && this.#grid.hasPage(action.commandName)) {
-      this.#grid.setPagePlaceholderSelected(
-        action.commandName,
-        action.colorName
-      );
-    }
-  }
-
-  onColorSelect(
-    handleColorSelect: (commandName: string, colorName: string) => void
-  ) {
-    this.#grid.setListener({
-      onPlaceholderSelected: (placeholderKey: string, pageKey: string) => {
-        const colorName = placeholderKey;
-        const commandName = pageKey;
-        handleColorSelect(commandName, colorName);
-      },
     });
+
+    this.#grid.onOptionSelect = (sessionName, optionIndex) => {
+      const colorName = this.#toColorName(sessionName, optionIndex);
+      this.onColorSelect?.(sessionName, colorName);
+    };
+
+    container.append(this.#grid.render());
   }
 
-  getSelectedColor() {
-    return this.#grid.getSelectedPlaceholderKey();
+  showCommandColors(cmdName: string) {
+    this.#grid.attachSession(cmdName);
   }
 
-  showCommandColors(commandName: string) {
-    this.#grid.switchToPage(commandName);
+  setColorSelected(cmdName: string, colorName: ColorName) {
+    const optionIndex = this.#toOptionIndex(cmdName, colorName);
+    const sessionName = cmdName;
+    this.#grid.markOptionSelected(sessionName, optionIndex);
   }
 
-  getElement() {
-    return this.#grid.getView().getElement();
+  hasSelectedColor() {
+    return !this.cmd.isColorRequired || this.#grid.selectedOptionIndex >= 0;
+  }
+
+  get selectedColor(): ColorName | undefined {
+    return this.#toColorName(
+      this.#grid.sessionName,
+      this.#grid.selectedOptionIndex
+    );
+  }
+
+  get cmd(): Command {
+    const cmdName = this.#grid.sessionName;
+    return this.#commands[cmdName];
+  }
+
+  #toColorName(
+    sessionName: string,
+    optionIndex: number
+  ): ColorName | undefined {
+    const cmdName = sessionName;
+    const cmd = this.#commands[cmdName];
+    if (!cmd.colors.length) {
+      return undefined;
+    }
+    return cmd.colors[optionIndex].colorName;
+  }
+
+  #toOptionIndex(cmdName: string, colorName: ColorName) {
+    const cmd = this.#commands[cmdName];
+    return cmd.colors.findIndex((color) => color.colorName === colorName);
+  }
+}
+
+class ColorGridAdapter implements GridSelectAdapter {
+  #commands: Record<string, Command>;
+
+  constructor(commands: Record<string, Command>) {
+    this.#commands = commands;
+  }
+
+  isValidSession(sessionName: string): boolean {
+    return !!this.#commands[sessionName];
+  }
+
+  getOptionsCount(sessionName: string): number {
+    const cmd = this.#commands[sessionName];
+    return cmd.colors.length;
+  }
+
+  getCover(sessionName: string, optionIndex: number): string {
+    const cmdName = sessionName;
+    const cmd = this.#commands[cmdName];
+    return cmd.colors[optionIndex].colorCode;
+  }
+
+  getCoverType(): CoverType {
+    return "color";
   }
 }

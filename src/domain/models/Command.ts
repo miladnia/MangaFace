@@ -71,10 +71,8 @@ export class Command {
     return layers.every((lyr) => lyr.maxAssetIndex === layers[0].maxAssetIndex);
   }
 
-  *assetIndexes(): IterableIterator<AssetIndex> {
-    for (let i = this.#minAssetIndex; i <= this.#maxAssetIndex; i++) {
-      yield i as AssetIndex;
-    }
+  get assetsCount() {
+    return this.#maxAssetIndex - this.minAssetIndex + 1;
   }
 
   getPreviewUrl(index: AssetIndex): string {
@@ -101,11 +99,11 @@ export class Command {
   }
 
   #isValidIndex(index: AssetIndex): boolean {
-    return index >= this.#minAssetIndex && index <= this.#maxAssetIndex;
+    return index >= this.minAssetIndex && index <= this.#maxAssetIndex;
   }
 
   #isValidColor(colorName?: ColorName): boolean {
-    if (this.#isColorRequired) {
+    if (this.isColorRequired) {
       if (!colorName || !this.#hasColor(colorName)) {
         return false;
       }
@@ -114,7 +112,7 @@ export class Command {
     return true;
   }
 
-  get #isColorRequired() {
+  get isColorRequired() {
     return this.colors.length > 0;
   }
 
@@ -122,8 +120,12 @@ export class Command {
     return this.colors.some((color) => color.colorName === colorName);
   }
 
-  get #minAssetIndex(): AssetIndex {
+  get minAssetIndex(): AssetIndex {
     return (this.#isPermanent ? 1 : 0) as AssetIndex;
+  }
+
+  get isOptional() {
+    return !this.#isPermanent;
   }
 }
 

@@ -17,7 +17,6 @@
   height: 100%;
   border-radius: 12px;
   box-shadow: 5px 15px 15px rgba(0, 0, 0, 1);
-  z-index: 1;
 }
 
 .designer-container::after {
@@ -30,6 +29,29 @@
   width: 50%;
   height: 94%;
   border-radius: 12px;
+}
+
+.designer-container > * {
+  position: relative;
+}
+
+.preview-frame {
+  z-index: 0;
+}
+.designer-container::after {
+  z-index: 0;
+}
+.cat-frame {
+  z-index: 1;
+}
+.designer-container::before {
+  z-index: 2;
+}
+.command-panel-frame {
+  z-index: 3;
+}
+.res-frame {
+  z-index: 4;
 }
 
 .mf-designer-screen-tpl .preview-frame::before {

@@ -102,7 +102,7 @@ function mapLayer(
         : undefined;
     }
 
-    const newLayer = new Layer(
+    return new Layer(
       layerName,
       dto.asset_url,
       dto.max_asset_index as AssetIndex,
@@ -111,18 +111,6 @@ function mapLayer(
       colorSource,
       position
     );
-
-    if (!colorSource) {
-      // Find out who referenced this layer as color source
-      newLayer.referencedBy = Object.entries(manifestDTO.layers)
-        .filter(
-          ([lyrName, lyr]) =>
-            lyrName !== layerName && lyr.color_source === layerName
-        )
-        .map(([lyrName]) => mapLayer(manifestDTO, lyrName, newLayer));
-    }
-
-    return newLayer;
   });
 }
 
