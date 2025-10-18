@@ -19,15 +19,15 @@ export default class DesignerScreen {
 
     const commandPanel = new CommandPanel(composer, this.#model.manifest);
     commandPanel.onActionTrigger = (action) => composer.applyAction(action);
-    commandPanel.render(this.#tpl.shapesFrame, this.#tpl.colorsFrame);
+    commandPanel.render(this.#tpl.assetGridContainer, this.#tpl.colorGridContainer);
 
     const commandNavigator = new CommandNavigator(this.#model.manifest);
     commandNavigator.onCommandSelect((commandName) => {
       commandPanel.switchToCommand(commandName);
     });
     commandNavigator.render(
-      this.#tpl.sectionsFrame,
-      this.#tpl.designersFrame
+      this.#tpl.navOptionsContainer,
+      this.#tpl.commandNavigatorContainer
     );
 
     composer.runScript(this.#model.manifest.initializerScript);

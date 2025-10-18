@@ -8,7 +8,7 @@ import type { Composer } from "@domain/services";
 type ActionTriggerHandler = (action: Action) => void;
 
 export default class CommandPanel implements ScriptObserver {
-  #itemGrid: AssetGrid;
+  #assetGrid: AssetGrid;
   #colorGrid: ColorGrid;
 
   onActionTrigger?: ActionTriggerHandler;
@@ -20,13 +20,13 @@ export default class CommandPanel implements ScriptObserver {
         commands[opt.command.name] = opt.command;
       });
     });
-    this.#itemGrid = new AssetGrid(commands);
+    this.#assetGrid = new AssetGrid(commands);
     this.#colorGrid = new ColorGrid(commands);
     composer.registerActionObserver(this);
   }
 
   onActionApply(action: Action) {
-    this.#itemGrid.setAssetSelected(action.commandName, action.assetIndex);
+    this.#assetGrid.setAssetSelected(action.commandName, action.assetIndex);
 
     if (action.colorName) {
       this.#colorGrid.setColorSelected(action.commandName, action.colorName);
@@ -34,12 +34,12 @@ export default class CommandPanel implements ScriptObserver {
   }
 
   switchToCommand(cmdName: string) {
-    this.#itemGrid.showAssets(cmdName);
+    this.#assetGrid.showAssets(cmdName);
     this.#colorGrid.showCommandColors(cmdName);
   }
 
   render(itemGridContainer: Container, colorGridContainer: Container) {
-    this.#itemGrid.onAssetSelect = (cmdName, assetIndex) => {
+    this.#assetGrid.onAssetSelect = (cmdName, assetIndex) => {
       // If no color is selected, don't run any Action
       if (!this.#colorGrid.hasSelectedColor()) {
         return;
@@ -53,17 +53,17 @@ export default class CommandPanel implements ScriptObserver {
 
     this.#colorGrid.onColorSelect = (cmdName, colorName) => {
       // If no item is selected, don't run any Action
-      if (!this.#itemGrid.hasSelectedAsset()) {
+      if (!this.#assetGrid.hasSelectedAsset()) {
         return;
       }
       this.onActionTrigger?.({
         commandName: cmdName,
-        assetIndex: this.#itemGrid.selectedAssetIndex,
+        assetIndex: this.#assetGrid.selectedAssetIndex,
         colorName: colorName,
       });
     };
 
-    this.#itemGrid.render(itemGridContainer);
+    this.#assetGrid.render(itemGridContainer);
     this.#colorGrid.render(colorGridContainer);
   }
 }

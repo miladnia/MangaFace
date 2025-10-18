@@ -41,7 +41,7 @@
 .designer-container::after {
   z-index: 0;
 }
-.cat-frame {
+.navigator-options {
   z-index: 1;
 }
 .designer-container::before {
@@ -50,7 +50,7 @@
 .command-panel-frame {
   z-index: 3;
 }
-.res-frame {
+.command-navigator {
   z-index: 4;
 }
 
