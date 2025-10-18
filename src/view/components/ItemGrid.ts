@@ -38,6 +38,9 @@ export default class AssetGrid {
   }
 
   setAssetSelected(cmdName: string, assetIndex: AssetIndex) {
+    if (!this.#commands[cmdName]) {
+      return;
+    }
     const optionIndex = this.#toOptionIndex(cmdName, assetIndex);
     const sessionName = cmdName;
     this.#grid.markOptionSelected(sessionName, optionIndex);
@@ -62,7 +65,7 @@ export default class AssetGrid {
 
   #toOptionIndex(cmdName: string, assetIndex: AssetIndex): number {
     const cmd = this.#commands[cmdName];
-    return (assetIndex - cmd.minAssetIndex) as AssetIndex;
+    return assetIndex - cmd.minAssetIndex;
   }
 }
 

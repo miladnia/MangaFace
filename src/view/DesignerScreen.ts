@@ -30,9 +30,7 @@ export default class DesignerScreen {
       this.#tpl.designersFrame
     );
 
-    setTimeout(() =>{
     composer.runScript(this.#model.manifest.initializerScript);
-    }, 7000);
 
     return this.#tpl.getView();
   }

@@ -197,7 +197,8 @@ layers:
   beard_layer:
     max_asset_index: 2
     color_palette_name: hair_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/beard/{color_name}/{asset_index}.png
+    variant_source: head_shape_layer
+    asset_url: <BASE_URL>/manga_male_pack/shapes/beard_style/{color_name}/{variant}/{asset_index}.png
     position:
       top: 75
       left: 30
@@ -226,7 +227,7 @@ layers:
       left: 30
   glasses_layer:
     max_asset_index: 34
-    asset_url: <BASE_URL>/manga_male_pack/shapes/glasses/default/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/shapes/glasses/{asset_index}.png
     position:
       top: 57
       left: 27
@@ -234,19 +235,19 @@ layers:
   # Backgrounds
   filled_background_layer:
     max_asset_index: 24
-    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_color/default/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_color/{asset_index}.png
   pattern_layer:
     max_asset_index: 32
     color_palette_name: cloth_color_palette
     asset_url: <BASE_URL>/manga_male_pack/shapes/bg_pattern/{color_name}/{asset_index}.png
   theme_layer:
     max_asset_index: 18
-    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_theme/default/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_theme/{asset_index}.png
 
   # Effects
   weather_effect_layer:
     max_asset_index: 1
-    asset_url: <BASE_URL>/manga_male_pack/shapes/weather_effect/default/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/shapes/weather_effect/{asset_index}.png
 
 
 layers_priority:
@@ -271,8 +272,8 @@ layers_priority:
   - right_eye_layer
   - left_eyebrow_layer
   - right_eyebrow_layer
-  - glasses_layer
   - hair_front_layer
+  - glasses_layer
   - hat_layer
   - weather_effect_layer
 
@@ -363,7 +364,6 @@ commands:
   # Draw ears
   draw_ears:
     permanent: true
-    default_color_name: plain
     preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/ears/{asset_index}.gif
     subscribed_layers:
       - left_ear_layer
@@ -474,7 +474,7 @@ color_palettes:
         color_code: '#a87c4f'
       - color_name: red
         color_code: '#ac3831'
-      - color_name: blonde
+      - color_name: blond
         color_code: '#fabe48'
   # Eye colors
   eye_color_palette:

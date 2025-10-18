@@ -1,5 +1,5 @@
 import type { Layer } from "./Layer";
-import type { AssetIndex, Color, ColorName, ColorPalette } from "./types";
+import type { AssetIndex, Color, ColorName } from "./types";
 
 export class Command {
   readonly name: string;
@@ -17,58 +17,39 @@ export class Command {
     layers: Layer[],
     rules?: Rule[]
   ) {
-    if (Command.#areLayersEmpty(layers)) {
-      throw new Error(
-        `Command '${name}' must have at least one subscribed layer.`
-      );
+    if (!Array.isArray(layers) || !layers.length) {
+      throw new Error(`Command '${name}' must have at least one layer.`);
     }
 
-    const refColorPalette = Command.#getFirstColorPalette(layers);
+    const maxAssetIndex = layers[0].maxAssetIndex;
+    // find the first color palette
+    const colorPalette = layers.find((lyr) => lyr.hasPalette())?.colorPalette;
 
-    if (
-      refColorPalette &&
-      !Command.#doLayersShareSameColorPalette(layers, refColorPalette)
-    ) {
-      throw new Error(
-        `Command '${name}' must have layers that share the same color palette.`
-      );
+    // Do all layers have same amount of assets?
+    const layersHaveSameAssets = layers.every(
+      (lyr) => lyr.maxAssetIndex === maxAssetIndex
+    );
+    if (!layersHaveSameAssets) {
+      throw new Error(`Layers of '${name}' must have same amount of assets.`);
     }
 
-    if (!Command.#doLayersHaveSameAmountOfAssets(layers)) {
-      throw new Error(
-        `Command '${name}' must have layers with the same amount of assets.`
+    if (colorPalette) {
+      // Do all layers share same ColorPalette?
+      const layersShareSamePalette = layers.every(
+        (lyr) => !lyr.hasPalette() || lyr.colorPalette === colorPalette
       );
+      if (!layersShareSamePalette) {
+        throw new Error(`Layers of '${name}' must share same color palette.`);
+      }
     }
 
     this.name = name;
     this.#isPermanent = isPermanent;
     this.#previewUrl = previewUrl;
     this.layers = layers;
-    this.#maxAssetIndex = layers[0].maxAssetIndex;
-    this.colors = refColorPalette?.colors ?? [];
+    this.#maxAssetIndex = maxAssetIndex;
+    this.colors = colorPalette?.colors ?? [];
     this.rules = rules ?? [];
-  }
-
-  static #areLayersEmpty(layers: Layer[]) {
-    return !Array.isArray(layers) || !layers.length;
-  }
-
-  static #getFirstColorPalette(layers: Layer[]) {
-    return layers.find((lyr) => !!lyr.colorPalette)?.colorPalette;
-  }
-
-  static #doLayersShareSameColorPalette(
-    layers: Layer[],
-    refColorPalette: ColorPalette
-  ) {
-    // NOTICE: Some layers may not have a color palette, but color source.
-    return layers.every(
-      (lyr) => !lyr.colorPalette || lyr.colorPalette === refColorPalette
-    );
-  }
-
-  static #doLayersHaveSameAmountOfAssets(layers: Layer[]) {
-    return layers.every((lyr) => lyr.maxAssetIndex === layers[0].maxAssetIndex);
   }
 
   get assetsCount() {

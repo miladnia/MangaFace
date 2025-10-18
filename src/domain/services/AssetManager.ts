@@ -22,12 +22,12 @@ export default class AssetManager implements AssetObserver {
   }
 
   applyTransformer(transformer: AssetTransformer) {
-    console.log("[Transformer Applied]", transformer);
+    console.debug("[Transformer Applied]", transformer);
     this.#getAsset(transformer.layer).applyTransformer(transformer);
   }
 
   revertTransformer(transformer: AssetTransformer) {
-    console.log("[Transformer Reverted]", transformer);
+    console.debug("[Transformer Reverted]", transformer);
     this.#getAsset(transformer.layer).revertTransformer(transformer);
   }
 
@@ -37,12 +37,16 @@ export default class AssetManager implements AssetObserver {
   }
 
   #createNewAsset(layer: Layer): Asset {
-    let colorSource = layer.colorSource && this.#getAsset(layer.colorSource);
-    return new Asset(layer, colorSource, this);
+    const colorSource = layer.colorSource && this.#getAsset(layer.colorSource);
+    const variantSource =
+      layer.variantSource && this.#getAsset(layer.variantSource);
+    const newAsset = new Asset(layer, colorSource, variantSource);
+    newAsset.registerObserver(this);
+    return newAsset;
   }
 
   #notify(asset: Asset) {
-    console.log("[Asset Notified]", asset.url, asset);
+    console.debug("[Asset Notified]", asset.url, asset);
     this.#observers.forEach((obs) => obs.onAssetUpdate(asset));
   }
 

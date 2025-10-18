@@ -41,6 +41,7 @@ export type LayerDTO = {
   max_asset_index: number;
   color_palette_name?: string;
   color_source?: string;
+  variant_source?: string;
   asset_url: string;
   position?: {
     top: number;

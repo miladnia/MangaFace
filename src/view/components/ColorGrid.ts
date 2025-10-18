@@ -38,6 +38,9 @@ export default class ColorGrid {
   }
 
   setColorSelected(cmdName: string, colorName: ColorName) {
+    if (!this.#commands[cmdName]) {
+      return;
+    }
     const optionIndex = this.#toOptionIndex(cmdName, colorName);
     const sessionName = cmdName;
     this.#grid.markOptionSelected(sessionName, optionIndex);
@@ -71,7 +74,7 @@ export default class ColorGrid {
     return cmd.colors[optionIndex].colorName;
   }
 
-  #toOptionIndex(cmdName: string, colorName: ColorName) {
+  #toOptionIndex(cmdName: string, colorName: ColorName): number {
     const cmd = this.#commands[cmdName];
     return cmd.colors.findIndex((color) => color.colorName === colorName);
   }

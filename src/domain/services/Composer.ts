@@ -25,7 +25,7 @@ export default class Composer {
   }
 
   async runScript(script: Script) {
-    console.log(
+    console.debug(
       '[Script Started Running]',
       script.name,
       `(${script.description})`
@@ -37,7 +37,7 @@ export default class Composer {
   }
 
   async applyAction(action: Action) {
-    console.log('[Action Applied]', action.commandName, action);
+    console.debug('[Action Applied]', action.commandName, action);
     const command = this.#getCommand(action.commandName);
 
     if (!command.isValidAsset(action.assetIndex, action.colorName)) {
@@ -59,18 +59,18 @@ export default class Composer {
   #handleCommandRules(command: Command, assetIndex: AssetIndex) {
     const prevActionOfCommand = this.#appliedActions[command.name];
     if (prevActionOfCommand) {
-      command.onMatchRule(prevActionOfCommand.assetIndex, (rule: Rule) => {
+      command.onMatchRule(prevActionOfCommand.assetIndex, (rule) => {
         this.#revertRule(rule);
       });
     }
 
-    command.onMatchRule(assetIndex, (rule: Rule) => {
+    command.onMatchRule(assetIndex, (rule) => {
       this.#applyRule(rule);
     });
   }
 
   #applyRule(rule: Rule) {
-    console.log('[Rule Matched]', rule.description, rule);
+    console.debug('[Rule Matched]', rule.description, rule);
     rule.transformers.forEach((transformer: AssetTransformer) => {
       this.#assetManager.applyTransformer(transformer);
     });

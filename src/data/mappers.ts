@@ -1,4 +1,4 @@
-import type { ManifestDTO, RuleDTO, TransformDTO } from './dtos';
+import type { ManifestDTO, RuleDTO, TransformDTO } from "./dtos";
 import {
   Command,
   Layer,
@@ -15,7 +15,7 @@ import {
   type AssetIndex,
   type ColorName,
   type RuleOperator,
-} from '@domain/models';
+} from "@domain/models";
 
 const modelsCache = {} as Record<string, unknown>;
 
@@ -79,28 +79,28 @@ function mapCommand(manifestDTO: ManifestDTO, commandName: string): Command {
   );
 }
 
-function mapLayer(
-  manifestDTO: ManifestDTO,
-  layerName: string,
-  colorSource?: Layer
-): Layer {
+function mapLayer(manifestDTO: ManifestDTO, layerName: string): Layer {
   return mapDtoToDomain(layerName, manifestDTO.layers, (dto) => {
     const priority = manifestDTO.layers_priority.indexOf(layerName);
-    const position: Position | undefined = dto.position
-      ? {
+
+    const position = dto.position
+      ? ({
           top: dto.position.top,
           left: dto.position.left,
-        }
+        } satisfies Position)
       : undefined;
+
     const colorPalette = dto.color_palette_name
       ? mapColorPalette(manifestDTO, dto.color_palette_name)
       : undefined;
 
-    if (!colorSource) {
-      colorSource = dto.color_source
-        ? mapLayer(manifestDTO, dto.color_source)
-        : undefined;
-    }
+    const colorSource = dto.color_source
+      ? mapLayer(manifestDTO, dto.color_source)
+      : undefined;
+    
+    const variantSource = dto.variant_source
+      ? mapLayer(manifestDTO, dto.variant_source)
+      : undefined;
 
     return new Layer(
       layerName,
@@ -109,6 +109,7 @@ function mapLayer(
       priority,
       colorPalette,
       colorSource,
+      variantSource,
       position
     );
   });
@@ -135,14 +136,14 @@ function mapColorPalette(
 
 function mapRule(manifestDTO: ManifestDTO, dto: RuleDTO): Rule {
   let indexesToMatch = [];
-  let operator: RuleOperator = 'in';
+  let operator: RuleOperator = "in";
 
   if (Array.isArray(dto.on_asset_index.in)) {
     indexesToMatch = dto.on_asset_index.in;
-    operator = 'in';
+    operator = "in";
   } else if (Array.isArray(dto.on_asset_index.not_in)) {
     indexesToMatch = dto.on_asset_index.not_in;
-    operator = 'not_in';
+    operator = "not_in";
   } else {
     throw new Error('\'on_asset_index\' must have either "in" or "not_in".');
   }
@@ -167,10 +168,10 @@ function mapTransformer(
   if (dto.if_asset_index) {
     if (Array.isArray(dto.if_asset_index.in)) {
       eligibleSourceIndexes = dto.if_asset_index.in as AssetIndex[];
-      operator = 'in';
+      operator = "in";
     } else if (Array.isArray(dto.if_asset_index.not_in)) {
       eligibleSourceIndexes = dto.if_asset_index.not_in as AssetIndex[];
-      operator = 'not_in';
+      operator = "not_in";
     } else {
       throw new Error("'if_asset_index' must have either 'in' or 'not_in'.");
     }
