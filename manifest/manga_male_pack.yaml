@@ -4,7 +4,7 @@ initializer_script: initializer_script
 
 navigators:
   # Head
-  - cover_url: <BASE_URL>/manga_male_pack/interface/head_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/head_section.png
     options:
       - title: Shape
         command_name: draw_head_shape
@@ -23,12 +23,12 @@ navigators:
       - title: Beard
         command_name: draw_beard
   # Hair
-  - cover_url: <BASE_URL>/manga_male_pack/interface/hair_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/hair_section.png
     options:
       - title: Hair
         command_name: draw_hair
   # Wearables
-  - cover_url: <BASE_URL>/manga_male_pack/interface/wearables_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/wearables_section.png
     options:
       - title: Shirt
         command_name: draw_shirt
@@ -41,7 +41,7 @@ navigators:
       - title: Glasses
         command_name: draw_glasses
   # Backgrounds
-  - cover_url: <BASE_URL>/manga_male_pack/interface/backgrounds_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/backgrounds_section.png
     options:
       - title: Colors
         command_name: draw_filled_background
@@ -50,7 +50,7 @@ navigators:
       - title: Themes
         command_name: draw_themes
   # Effects
-  - cover_url: <BASE_URL>/manga_male_pack/interface/effects_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/effects_section.png
     options:
       - title: Weather
         command_name: draw_weather_effect
@@ -61,7 +61,7 @@ layers:
   body_shape_layer:
     max_asset_index: 1
     color_source: head_shape_layer
-    asset_url: <BASE_URL>/manga_male_pack/shapes/body_shape/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/body_shape/{color_name}/{asset_index}.png
     position:
       top: 134
       left: 26
@@ -70,7 +70,7 @@ layers:
   head_shape_layer:
     max_asset_index: 30
     color_palette_name: skin_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/head_shape/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/head_shape/{color_name}/{asset_index}.png
     position:
       top: 0
       left: 30
@@ -79,7 +79,7 @@ layers:
   hair_front_layer:
     max_asset_index: 62
     color_palette_name: hair_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/hair_front/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/hair_front/{color_name}/{asset_index}.png
     _assets:
       - &ear_covering_hair [33, 37, 38, 39, 41, 43, 44, 60, 62]
       - &shaved_sides_hairs [1, 2, 3, 9, 28]
@@ -89,7 +89,7 @@ layers:
   hair_back_layer:
     max_asset_index: 62
     color_palette_name: hair_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/hair_back/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/hair_back/{color_name}/{asset_index}.png
     _assets:
       - &standalone_pretty_back_hairs [31, 33, 35, 36]
       # - &front_dependent_back_hairs [32]
@@ -101,7 +101,7 @@ layers:
   hat_layer:
     max_asset_index: 11
     color_palette_name: cloth_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/hat/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/hat/{color_name}/{asset_index}.png
     _assets:
       - &full_coverage_hats [4, 6] # swim caps or head covers
       - &head_sized_hats [1, 8]
@@ -114,14 +114,14 @@ layers:
   left_eye_layer:
     max_asset_index: 28
     color_palette_name: eye_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/left_eye/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/left_eye/{color_name}/{asset_index}.png
     position:
       top: 68
       left: 97
   right_eye_layer:
     max_asset_index: 28
     color_palette_name: eye_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/right_eye/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/right_eye/{color_name}/{asset_index}.png
     position:
       top: 68
       left: 41
@@ -130,28 +130,28 @@ layers:
   left_eyebrow_layer:
     max_asset_index: 27
     color_palette_name: hair_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/left_eyebrow/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/left_eyebrow/{color_name}/{asset_index}.png
     position:
       top: 52
       left: 93
   right_eyebrow_layer:
     max_asset_index: 27
     color_palette_name: hair_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/right_eyebrow/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/right_eyebrow/{color_name}/{asset_index}.png
     position:
       top: 52
       left: 39
   left_eyeshadow_layer:
     max_asset_index: 27
     color_source: head_shape_layer
-    asset_url: <BASE_URL>/manga_male_pack/shapes/left_eyeshadow/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/left_eyeshadow/{color_name}/{asset_index}.png
     position:
       top: 55
       left: 91
   right_eyeshadow_layer:
     max_asset_index: 27
     color_source: head_shape_layer
-    asset_url: <BASE_URL>/manga_male_pack/shapes/right_eyeshadow/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/right_eyeshadow/{color_name}/{asset_index}.png
     position:
       top: 55
       left: 38
@@ -160,14 +160,14 @@ layers:
   right_ear_layer:
     max_asset_index: 6
     color_source: head_shape_layer
-    asset_url: <BASE_URL>/manga_male_pack/shapes/right_ear/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/right_ear/{color_name}/{asset_index}.png
     position:
       top: 64
       left: 12
   left_ear_layer:
     max_asset_index: 6
     color_source: head_shape_layer
-    asset_url: <BASE_URL>/manga_male_pack/shapes/left_ear/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/left_ear/{color_name}/{asset_index}.png
     position:
       top: 64
       left: 137
@@ -176,21 +176,21 @@ layers:
   mouth_layer:
     max_asset_index: 23
     color_source: head_shape_layer
-    asset_url: <BASE_URL>/manga_male_pack/shapes/mouth/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/mouth/{color_name}/{asset_index}.png
     position:
       top: 107
       left: 52
   nose_layer:
     max_asset_index: 34
     color_source: head_shape_layer
-    asset_url: <BASE_URL>/manga_male_pack/shapes/nose/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/nose/{color_name}/{asset_index}.png
     position:
       top: 68
       left: 65
   mustache_layer:
     max_asset_index: 29
     color_palette_name: hair_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/mustache/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/mustache/{color_name}/{asset_index}.png
     position:
       top: 104
       left: 49
@@ -198,7 +198,7 @@ layers:
     max_asset_index: 2
     color_palette_name: hair_color_palette
     variant_source: head_shape_layer
-    asset_url: <BASE_URL>/manga_male_pack/shapes/beard_style/{color_name}/{variant}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/beard_style/{color_name}/{variant}/{asset_index}.png
     position:
       top: 75
       left: 30
@@ -207,27 +207,27 @@ layers:
   shirt_layer:
     max_asset_index: 25
     color_palette_name: cloth_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/shirt/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/shirt/{color_name}/{asset_index}.png
     position:
       top: 124
       left: 26
   jackets_layer:
     max_asset_index: 19
     color_palette_name: cloth_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/jacket/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/jacket/{color_name}/{asset_index}.png
     position:
       top: 122
       left: 24
   scarf_layer:
     max_asset_index: 2
     color_palette_name: cloth_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/scarf/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/scarf/{color_name}/{asset_index}.png
     position:
       top: 126
       left: 30
   glasses_layer:
     max_asset_index: 34
-    asset_url: <BASE_URL>/manga_male_pack/shapes/glasses/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/glasses/{asset_index}.png
     position:
       top: 57
       left: 27
@@ -235,19 +235,19 @@ layers:
   # Backgrounds
   filled_background_layer:
     max_asset_index: 24
-    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_color/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/bg_color/{asset_index}.png
   pattern_layer:
     max_asset_index: 32
     color_palette_name: cloth_color_palette
-    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_pattern/{color_name}/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/bg_pattern/{color_name}/{asset_index}.png
   theme_layer:
     max_asset_index: 18
-    asset_url: <BASE_URL>/manga_male_pack/shapes/bg_theme/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/bg_theme/{asset_index}.png
 
   # Effects
   weather_effect_layer:
     max_asset_index: 1
-    asset_url: <BASE_URL>/manga_male_pack/shapes/weather_effect/{asset_index}.png
+    asset_url: <BASE_URL>/manga_male_pack/assets/weather_effect/{asset_index}.png
 
 
 layers_priority:
@@ -281,7 +281,7 @@ layers_priority:
 commands:
   # Draw hair
   draw_hair:
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/hair_styles/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/hair_styles/{asset_index}.gif
     subscribed_layers:
       - hair_front_layer
       - hair_back_layer
@@ -300,7 +300,7 @@ commands:
   # Draw hat
   draw_hat:
     movement_limit: 3
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/hats/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/hats/{asset_index}.gif
     subscribed_layers:
       - hat_layer
     rules:
@@ -357,21 +357,21 @@ commands:
   # Draw head_shape
   draw_head_shape:
     permanent: true
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/head_shapes/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/head_shapes/{asset_index}.gif
     protected: true
     subscribed_layers:
       - head_shape_layer
   # Draw ears
   draw_ears:
     permanent: true
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/ears/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/ears/{asset_index}.gif
     subscribed_layers:
       - left_ear_layer
       - right_ear_layer
   # Draw eyebrows
   draw_eyebrows:
     permanent: true
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyebrows/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/eyebrows/{asset_index}.gif
     movement_limit: 2
     subscribed_layers:
       - left_eyebrow_layer
@@ -381,76 +381,76 @@ commands:
   # Draw eyes
   draw_eyes:
     permanent: true
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/eyes/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/eyes/{asset_index}.gif
     subscribed_layers:
       - left_eye_layer
       - right_eye_layer
   # Draw nose
   draw_nose:
     permanent: true
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/nose_shapes/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/nose_shapes/{asset_index}.gif
     movement_limit: 2
     subscribed_layers:
       - nose_layer
   # Draw mouth
   draw_mouth:
     permanent: true
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mouth_shapes/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/mouth_shapes/{asset_index}.gif
     movement_limit: 2
     subscribed_layers:
       - mouth_layer
   # Draw mustache
   draw_mustache:
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/mustache_styles/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/mustache_styles/{asset_index}.gif
     movement_limit: 2
     subscribed_layers:
       - mustache_layer
   # Draw beard
   draw_beard:
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/beard_styles/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/beard_styles/{asset_index}.gif
     subscribed_layers:
       - beard_layer
   # Draw shirt
   draw_shirt:
     permanent: true
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/shirts/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/shirts/{asset_index}.gif
     subscribed_layers:
       - shirt_layer
   # Draw jacket
   draw_jacket:
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/jackets/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/jackets/{asset_index}.gif
     subscribed_layers:
       - jackets_layer
   # Draw scarf
   draw_scarf:
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/scarfs/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/scarfs/{asset_index}.gif
     subscribed_layers:
       - scarf_layer
   # Draw glasses
   draw_glasses:
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/glasses/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/glasses/{asset_index}.gif
     movement_limit: 2
     subscribed_layers:
       - glasses_layer
   # Draw filled_background
   draw_filled_background:
     permanent: true
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_colors/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/bg_colors/{asset_index}.gif
     subscribed_layers:
       - filled_background_layer
   # Draw patterns
   draw_patterns:
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_patterns/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/bg_patterns/{asset_index}.gif
     subscribed_layers:
       - pattern_layer
   # Draw themes
   draw_themes:
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/bg_themes/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/bg_themes/{asset_index}.gif
     subscribed_layers:
       - theme_layer
   # Draw weather_effect
   draw_weather_effect:
-    preview_url: <BASE_URL>/manga_male_pack/interface/design_preview/weather_effects/{asset_index}.gif
+    preview_url: <BASE_URL>/manga_male_pack/command_previews/weather_effects/{asset_index}.gif
     subscribed_layers:
       - weather_effect_layer
 
