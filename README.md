@@ -2,7 +2,7 @@
 
 >  **MangaFace** is a _highly customizable_ avatar generator written in TypeScript.
 
-[![MangaFace avatar generator](docs/preview_v0.2.png "Demo | Click here to try it out")](https://miladnia.ir/MangaFace/)
+[![MangaFace avatar generator](docs/preview_v0.2__02.png "Demo | Click here to try it out")](https://miladnia.ir/MangaFace/)
 
 _Inspired by FaceYourManga_
 

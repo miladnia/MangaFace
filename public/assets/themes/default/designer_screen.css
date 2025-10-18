@@ -9,7 +9,8 @@
   --mf-btn-bg-active: #546E7A;
   --mf-btn-glow: 0, 0, 0;
   --mf-btn-glow-alpha: 0.25;
-  --mf-color-btn-glow-alpha: 0.1;
+  --mf-color-grid-btn-glow-alpha: 0.1;
+  --mf-nav-btn-bg-active: var(--mf-btn-bg);
 }
 
 button {
@@ -169,17 +170,12 @@ button {
   width: 50%;
   padding-top: 50%;
   border-radius: 50%;
-  background: var(--mf-btn-bg) no-repeat center;
-  background-size: auto 70%;
+  background: no-repeat center;
+  background-size: auto 50%;
   border: none;
-	opacity: 0.75;
-}
-.mf-designer-screen-tpl .cat-frame .tab:hover,
-.mf-designer-screen-tpl .cat-frame .tab[data-selected] {
-  opacity: 1;
 }
 .mf-designer-screen-tpl .cat-frame .tab[data-selected] {
-  background-color: #90A4AE;
+  background-color: var(--mf-nav-btn-bg-active);
   width: 75%;
   padding-top: 75%;
 }
@@ -246,7 +242,7 @@ button {
   width: 60%;
 }
 .mf-designer-screen-tpl .colors-frame .grid-select-slot[data-selected] {
-  box-shadow: 0 0 0 1.25em rgba(var(--mf-btn-glow), var(--mf-color-btn-glow-alpha));
+  box-shadow: 0 0 0 1.25em rgba(var(--mf-btn-glow), var(--mf-color-grid-btn-glow-alpha));
   width: 90%;
 }
 
@@ -403,6 +399,6 @@ button {
     --mf-btn-color: #212121;
     --mf-btn-glow: 255, 255, 255;
     --mf-btn-glow-alpha: 0.5;
-    --mf-color-btn-glow-alpha: 0.25;
+    --mf-color-grid-btn-glow-alpha: 0.25;
   }
 }

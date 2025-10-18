@@ -4,7 +4,7 @@ initializer_script: initializer_script
 
 navigators:
   # Head
-  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/head_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/head.svg
     options:
       - title: Shape
         command_name: draw_head_shape
@@ -23,12 +23,12 @@ navigators:
       - title: Beard
         command_name: draw_beard
   # Hair
-  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/hair_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/hairstyles.svg
     options:
       - title: Hair
         command_name: draw_hair
   # Wearables
-  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/wearables_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/wearables.svg
     options:
       - title: Shirt
         command_name: draw_shirt
@@ -41,7 +41,7 @@ navigators:
       - title: Glasses
         command_name: draw_glasses
   # Backgrounds
-  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/backgrounds_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/backgrounds.svg
     options:
       - title: Colors
         command_name: draw_filled_background
@@ -50,7 +50,7 @@ navigators:
       - title: Themes
         command_name: draw_themes
   # Effects
-  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/effects_section.png
+  - cover_url: <BASE_URL>/manga_male_pack/navigator_covers/effects.svg
     options:
       - title: Weather
         command_name: draw_weather_effect

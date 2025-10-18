@@ -147,7 +147,6 @@ export class Tab {
     this._view
       .getElement()
       .style.setProperty('background-image', 'url("' + imageUrl + '")');
-    this._view.getElement().style.setProperty('background-size', '50%');
     return this;
   }
 
