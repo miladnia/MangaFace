@@ -26,8 +26,8 @@ export default class DesignerScreen {
       commandPanel.switchToCommand(commandName);
     });
     commandNavigator.render(
-      this.#tpl.navOptionsContainer,
-      this.#tpl.commandNavigatorContainer
+      this.#tpl.commandNavigatorContainer,
+      this.#tpl.navOptionsContainer
     );
 
     composer.runScript(this.#model.manifest.initializerScript);

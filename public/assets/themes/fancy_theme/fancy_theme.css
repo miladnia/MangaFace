@@ -12,8 +12,8 @@
   background-color: var(--bg-color);
   position: absolute;
   top: 0;
-  left: 21%;
-  width: 65%;
+  left: 20.5%;
+  width: 66.5%;
   height: 100%;
   border-radius: 12px;
   box-shadow: 5px 15px 15px rgba(0, 0, 0, 1);
@@ -41,7 +41,7 @@
 .designer-container::after {
   z-index: 0;
 }
-.navigator-options {
+.command-navigator {
   z-index: 1;
 }
 .designer-container::before {
@@ -50,14 +50,14 @@
 .command-panel-frame {
   z-index: 3;
 }
-.command-navigator {
+.navigator-options {
   z-index: 4;
 }
 
 .mf-designer-screen-tpl .preview-frame::before {
   content: '';
   background: var(--bg-color);
-  border-radius: 12px;
+  border-radius: 12px 0 0 12px;
   position: absolute;
   top: 0;
   left: 0;

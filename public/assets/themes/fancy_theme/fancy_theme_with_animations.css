@@ -1,19 +1,19 @@
 @import "./fancy_theme.css";
 
-.mf-designer-screen-tpl .navigator-options .tab {
+.mf-designer-screen-tpl .command-navigator .tab {
   transition: background-color 0.2s, opacity 0.2s, width 0.2s, padding-top 0.2s;
 }
 
-.mf-designer-screen-tpl .navigator-options .tab:hover {
+.mf-designer-screen-tpl .command-navigator .tab:hover {
   width: 75%;
   padding-top: 75%;
 }
 
-.mf-designer-screen-tpl .command-navigator .tab {
+.mf-designer-screen-tpl .navigator-options .tab {
   transition: font-size 0.1s;
 }
 
-.mf-designer-screen-tpl .command-navigator .tab:hover {
+.mf-designer-screen-tpl .navigator-options .tab:hover {
   font-size: 1.5em;
 }
 

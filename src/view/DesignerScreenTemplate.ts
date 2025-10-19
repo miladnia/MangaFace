@@ -3,8 +3,8 @@ import { ViewElement, type Container } from '@ui/ui';
 export class DesignerScreenTemplate {
   #template: Container;
   #container: Container;
-  navOptionsContainer: Container;
   commandNavigatorContainer: Container;
+  navOptionsContainer: Container;
   assetGridContainer: Container;
   controlsFrame: Container;
   previewFrame: Container;
@@ -19,8 +19,8 @@ export class DesignerScreenTemplate {
     const commandPanel = this._createFrame('command-panel-frame');
     this.colorGridContainer = this._createFrame('color-grid', commandPanel);
     this.assetGridContainer = this._createFrame('asset-grid', commandPanel);
-    this.commandNavigatorContainer = this._createFrame('command-navigator');
     this.navOptionsContainer = this._createFrame('navigator-options');
+    this.commandNavigatorContainer = this._createFrame('command-navigator');
   }
 
   _createFrame(classPrefix: string, parent?: Container) {
