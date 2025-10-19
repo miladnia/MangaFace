@@ -58,16 +58,22 @@ export class Asset implements Drawable, AssetObserver {
 
   applyTransformer(transformer: AssetTransformer) {
     this.#transformers ??= new Set();
+    const prevIndex = this._index;
     this.#transformers.add(transformer);
-    this.#notifyObservers();
+    if (prevIndex !== this._index) {
+      this.#notifyObservers();
+    }
   }
 
   revertTransformer(transformer: AssetTransformer) {
-    if (!this.#transformers) {
+    if (!this.#transformers?.size) {
       return;
     }
+    const prevIndex = this._index;
     this.#transformers.delete(transformer);
-    this.#notifyObservers();
+    if (prevIndex !== this._index) {
+      this.#notifyObservers();
+    }
   }
 
   #notifyObservers() {

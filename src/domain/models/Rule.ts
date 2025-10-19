@@ -21,7 +21,11 @@ export class Rule {
     this.description = description;
   }
 
-  matchAssetIndex(index: AssetIndex) {
+  matchAssetIndex(index: AssetIndex): boolean {
+    // Blank assets have no rules
+    if (0 === index) {
+      return false;
+    }
     const includes = this.#indexesToMatch.includes(index);
     return "in" === this.#operator ? includes : !includes;
   }
@@ -70,7 +74,7 @@ export class AssetTransformer {
       if (!eligibleTransformer && transformer._matchSourceIndex(sourceIndex)) {
         eligibleTransformer = transformer;
       }
-      // even a single "Blocker Transformer" neutralizes other transformers
+      // even a single "Blocker Transformer" could neutralize other transformers
       if (
         transformer._isBlocker() &&
         transformer._matchSourceIndex(sourceIndex)
@@ -94,6 +98,10 @@ export class AssetTransformer {
   }
 
   _matchSourceIndex(index: AssetIndex): boolean {
+    // Transformers should not be applied on blank assets
+    if (0 === index) {
+      return false;
+    }
     if (!this.#sourceIndexesToMatch) {
       return true;
     }

@@ -1,4 +1,4 @@
-import { AssetManager } from '@domain/services';
+import { AssetManager } from "@domain/services";
 import type {
   Manifest,
   Script,
@@ -7,8 +7,8 @@ import type {
   AssetTransformer,
   Command,
   AssetIndex,
-} from '@domain/models';
-import type { RenderObserver, ScriptObserver } from '@domain/interfaces';
+} from "@domain/models";
+import type { RenderObserver, ScriptObserver } from "@domain/interfaces";
 
 /**
  * Generates Assets based on Actions
@@ -26,7 +26,7 @@ export default class Composer {
 
   async runScript(script: Script) {
     console.debug(
-      '[Script Started Running]',
+      "[Script Started Running]",
       script.name,
       `(${script.description})`
     );
@@ -37,7 +37,7 @@ export default class Composer {
   }
 
   async applyAction(action: Action) {
-    console.debug('[Action Applied]', action.commandName, action);
+    console.debug("[Action Applied]", action.commandName, action);
     const command = this.#getCommand(action.commandName);
 
     if (!command.isValidAsset(action.assetIndex, action.colorName)) {
@@ -52,12 +52,19 @@ export default class Composer {
       );
     });
 
-    this.#handleCommandRules(command, action.assetIndex);
+    this.#handleCommandRules(
+      command,
+      action.assetIndex,
+      this.#appliedActions[command.name]
+    );
     this.#appliedActions[command.name] = action;
   }
 
-  #handleCommandRules(command: Command, assetIndex: AssetIndex) {
-    const prevActionOfCommand = this.#appliedActions[command.name];
+  #handleCommandRules(
+    command: Command,
+    assetIndex: AssetIndex,
+    prevActionOfCommand?: Action
+  ) {
     if (prevActionOfCommand) {
       command.onMatchRule(prevActionOfCommand.assetIndex, (rule) => {
         this.#revertRule(rule);
@@ -70,7 +77,7 @@ export default class Composer {
   }
 
   #applyRule(rule: Rule) {
-    console.debug('[Rule Matched]', rule.description, rule);
+    console.debug("[Rule Matched]", rule.description, rule);
     rule.transformers.forEach((transformer: AssetTransformer) => {
       this.#assetManager.applyTransformer(transformer);
     });
