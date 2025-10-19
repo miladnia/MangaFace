@@ -1,4 +1,4 @@
-import type { AssetTransformer } from "./Command";
+import { AssetTransformer } from "./Rule";
 import type { Layer } from "./Layer";
 import type { AssetIndex, ColorName, Position } from "./types";
 
@@ -76,8 +76,10 @@ export class Asset implements Drawable, AssetObserver {
 
   get _index(): AssetIndex {
     if (this.#transformers?.size) {
-      const latestTransformer = Array.from(this.#transformers).at(-1)!;
-      return latestTransformer.transform(this.#index);
+      return AssetTransformer.transform(
+        this.#index,
+        Array.from(this.#transformers)
+      );
     }
     return this.#index;
   }

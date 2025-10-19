@@ -1,4 +1,5 @@
 import type { Layer } from "./Layer";
+import type { Rule } from "./Rule";
 import type { AssetIndex, Color, ColorName } from "./types";
 
 export class Command {
@@ -109,60 +110,3 @@ export class Command {
     return !this.#isPermanent;
   }
 }
-
-export class Rule {
-  #indexesToMatch: AssetIndex[];
-  #operator: RuleOperator;
-  readonly description?: string;
-  readonly transformers: AssetTransformer[];
-
-  constructor(
-    indexesToMatch: AssetIndex[],
-    operator: RuleOperator,
-    transformers: AssetTransformer[],
-    description?: string
-  ) {
-    this.#indexesToMatch = indexesToMatch;
-    this.#operator = operator;
-    this.transformers = transformers;
-    this.description = description;
-  }
-
-  matchAssetIndex(index: AssetIndex) {
-    const includes = this.#indexesToMatch.includes(index);
-    return "in" === this.#operator ? includes : !includes;
-  }
-}
-
-export class AssetTransformer {
-  readonly layer: Layer;
-  #targetIndex: AssetIndex;
-  #sourceIndexesToMatch?: AssetIndex[];
-  #operator?: RuleOperator;
-
-  constructor(
-    layer: Layer,
-    targetIndex: AssetIndex,
-    eligibleSourceIndexes?: AssetIndex[],
-    operator?: RuleOperator
-  ) {
-    this.layer = layer;
-    this.#targetIndex = targetIndex;
-    this.#sourceIndexesToMatch = eligibleSourceIndexes;
-    this.#operator = operator;
-  }
-
-  transform(index: AssetIndex) {
-    return this.#isEligibleSource(index) ? this.#targetIndex : index;
-  }
-
-  #isEligibleSource(index: AssetIndex): boolean {
-    if (!this.#sourceIndexesToMatch) {
-      return true;
-    }
-    const includes = this.#sourceIndexesToMatch.includes(index);
-    return "in" === this.#operator ? includes : !includes;
-  }
-}
-
-export type RuleOperator = "in" | "not_in";
