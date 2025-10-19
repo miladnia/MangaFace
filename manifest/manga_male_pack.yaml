@@ -82,17 +82,18 @@ layers:
     asset_url: <BASE_URL>/manga_male_pack/assets/hair_front/{color_name}/{asset_index}.png
     _assets:
       - &ear_covering_hair [33, 37, 38, 39, 41, 43, 44, 60, 62]
-      - &shaved_sides_hairs [1, 2, 3, 9, 28]
-      # - &horseshoe_hair 19
+      - &shaved_sides_hair [1, 2, 3, 9, 28, 55]
+      - &short_hair [
+          1, 2, 3, 9, 28, 55, # *shaved_sides_hair
+          17, 18, 19, 21, 22, 23, 26, 27, 35, 46, 47, 48
+        ]
       - &compact_hair 35
-      - &bald_on_top__hair_on_sides 22
   hair_back_layer:
     max_asset_index: 62
     color_palette_name: hair_color_palette
     asset_url: <BASE_URL>/manga_male_pack/assets/hair_back/{color_name}/{asset_index}.png
     _assets:
-      - &standalone_pretty_back_hairs [31, 33, 35, 36]
-      # - &front_dependent_back_hairs [32]
+      - &standalone_pretty_back_hair [31, 33, 35, 36, 40, 45, 46, 47, 48, 50, 51, 52, 54, 55, 57, 61]
     position:
       top: 23
       left: 0
@@ -104,8 +105,8 @@ layers:
     asset_url: <BASE_URL>/manga_male_pack/assets/hat/{color_name}/{asset_index}.png
     _assets:
       - &full_coverage_hats [4, 6] # swim caps or head covers
-      - &head_sized_hats [1, 8]
-      - &all_non_regular_hats [1, 2, 4, 6, 8]
+      - &head_sized_hats [1, 5, 7, 8, 9]
+      - &larger_hats [3, 10, 11]
     position:
       top: -20
       left: 0
@@ -305,21 +306,31 @@ commands:
       - hat_layer
     rules:
       # Rule 1
+      - description: show ears if they are hidden under hair
+        on_asset_index:
+          not_in: [2, 4, 6]
+        transform:
+          # Use "Blocker Transformer" to show ears if they were hidden under hair
+          - layer_name: left_ear_layer
+            to_asset_index: -1
+          - layer_name: right_ear_layer
+            to_asset_index: -1
+      # Rule 2
       - description: no hair, no ears when the hat fully covers the head
         on_asset_index:
           in: *full_coverage_hats
         transform:
-            # Make the ears invisible
-          - layer_name: left_ear_layer
-            to_asset_index: 0
-          - layer_name: right_ear_layer
-            to_asset_index: 0
-            # Make the hair invisible
+          # Make the hair invisible
           - layer_name: hair_front_layer
             to_asset_index: 0
           - layer_name: hair_back_layer
             to_asset_index: 0
-      # Rule 2
+          # Make the ears invisible
+          - layer_name: left_ear_layer
+            to_asset_index: 0
+          - layer_name: right_ear_layer
+            to_asset_index: 0
+      # Rule 3
       - description: any head-sized hat should correctly cover the hair
         on_asset_index:
           in: *head_sized_hats
@@ -327,26 +338,24 @@ commands:
           - layer_name: hair_front_layer
             to_asset_index: *compact_hair
             if_asset_index:
-              not_in: *shaved_sides_hairs
+              not_in: *shaved_sides_hair
           - layer_name: hair_back_layer
             to_asset_index: 0
             if_asset_index:
-              not_in: *standalone_pretty_back_hairs
-              # in: [4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 20, 24, 25, 29, 31, 44, 56, 57, 60]
-      # Rule 3
-      - description: ensure any remaining hat correctly covers the hair
+              not_in: *standalone_pretty_back_hair
+      # Rule 4
+      - description: any large size hat should correctly cover the hair
         on_asset_index:
-          not_in: *all_non_regular_hats
+          in: *larger_hats
         transform:
-          # Transform hair to horseshoe hair, if it's not shaved sides hair
           - layer_name: hair_front_layer
             to_asset_index: *compact_hair
             if_asset_index:
-              not_in: *shaved_sides_hairs
+              not_in: *short_hair
           - layer_name: hair_back_layer
             to_asset_index: 0
             if_asset_index:
-              not_in: *standalone_pretty_back_hairs
+              not_in: *standalone_pretty_back_hair
 
   # Draw body_shape
   draw_body_shape:
