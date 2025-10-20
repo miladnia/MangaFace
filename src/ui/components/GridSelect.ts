@@ -208,7 +208,7 @@ export default class GridSelect extends UIComponent<"div"> {
     }
 
     const page = Math.floor(optionIndex / this.#slotsCount);
-    let slotPosition = optionIndex % this.#slotsCount;
+    const slotPosition = optionIndex % this.#slotsCount;
 
     rule.selector =
       `.${GridSelect.#GRID_CLASSNAME}` +

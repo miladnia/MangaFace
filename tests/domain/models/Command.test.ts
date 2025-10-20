@@ -27,8 +27,8 @@ const palette2 = {
 };
 
 it("should fail when there is no layers", () => {
-  expect(() => new Command(name, "/", [])).toThrow(
-    `Command '${name}' must have at least one subscribed layer.`
+  expect(() => new Command(name, [], "/")).toThrow(
+    `Command '${name}' must have at least one layer.`
   );
 });
 
@@ -37,8 +37,8 @@ it("should fail when layers do not share same color palette", () => {
     new Layer("layer1", "", maxAssetIndex, 0, palette1),
     new Layer("layer2", "", maxAssetIndex, 0, palette2),
   ];
-  expect(() => new Command(name, "/", layers)).toThrow(
-    `Command '${name}' must have layers that share the same color palette.`
+  expect(() => new Command(name, layers, "/")).toThrow(
+    `Layers of '${name}' must share same color palette.`
   );
 });
 
@@ -49,7 +49,7 @@ it("should have valid colors when there are some layers with no color palette", 
     new Layer("layer3", "", maxAssetIndex, 0),
     new Layer("layer4", "", maxAssetIndex, 0, palette1),
   ];
-  expect(new Command(name, "/", layers).colors).toBe(palette1.colors);
+  expect(new Command(name, layers, "/").colors).toBe(palette1.colors);
 });
 
 it("should fail if layers do not have same amount of assets", () => {
@@ -58,7 +58,7 @@ it("should fail if layers do not have same amount of assets", () => {
     new Layer("layer2", "", 2 as AssetIndex, 0, palette1),
     new Layer("layer3", "", 3 as AssetIndex, 0, palette1),
   ];
-  expect(() => new Command(name, "/", layers)).toThrow(
-    `Command '${name}' must have layers with the same amount of assets.`
+  expect(() => new Command(name, layers, "/")).toThrow(
+    `Layers of '${name}' must have same amount of assets.`
   );
 });

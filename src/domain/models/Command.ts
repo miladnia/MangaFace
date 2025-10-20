@@ -13,9 +13,9 @@ export class Command {
 
   constructor(
     name: string,
-    isPermanent: boolean,
-    previewUrl: string,
     layers: Layer[],
+    previewUrl: string,
+    isPermanent: boolean = false,
     rules?: Rule[]
   ) {
     if (!Array.isArray(layers) || !layers.length) {
@@ -45,9 +45,9 @@ export class Command {
     }
 
     this.name = name;
-    this.#isPermanent = isPermanent;
-    this.#previewUrl = previewUrl;
     this.layers = layers;
+    this.#previewUrl = previewUrl;
+    this.#isPermanent = isPermanent;
     this.#maxAssetIndex = maxAssetIndex;
     this.colors = colorPalette?.colors ?? [];
     this.rules = rules ?? [];
