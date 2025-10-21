@@ -1,16 +1,21 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: dark light;
+  --mf-body-bg: #212121;
   --grid-select-blank-slot-bg-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" fill="%23E0E0E0"/><path stroke="%23757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5"/></svg>');
   --grid-select-slot-bg-color: #ccc;
-  --bg-color: #ffffff;
-  --mf-btn-bg: #E0E0E0;
-  --mf-btn-color: #757575;
+  --bg-color: #424242;
+  --mf-btn-bg: #757575;
+  --mf-btn-color: #212121;
   --mf-btn-color-active: #ECEFF1;
   --mf-btn-bg-active: #546E7A;
-  --mf-btn-glow: 0, 0, 0;
-  --mf-btn-glow-alpha: 0.25;
-  --mf-color-grid-btn-glow-alpha: 0.1;
+  --mf-btn-glow: 255, 255, 255;
+  --mf-btn-glow-alpha: 0.5;
+  --mf-color-grid-btn-glow-alpha: 0.25;
   --mf-nav-btn-bg-active: var(--mf-btn-bg);
+}
+
+body {
+  background-color: var(--mf-body-bg);
 }
 
 button {
@@ -402,13 +407,13 @@ button {
 
 /* Dark Mode */
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --bg-color: #424242;
-    --mf-btn-bg: #757575;
-    --mf-btn-color: #212121;
-    --mf-btn-glow: 255, 255, 255;
-    --mf-btn-glow-alpha: 0.5;
-    --mf-color-grid-btn-glow-alpha: 0.25;
+    --bg-color: #ffffff;
+    --mf-btn-bg: #E0E0E0;
+    --mf-btn-color: #757575;
+    --mf-btn-glow: 0, 0, 0;
+    --mf-btn-glow-alpha: 0.25;
+    --mf-color-grid-btn-glow-alpha: 0.1;
   }
 }
