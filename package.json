@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "pubdev": "vite --host 0.0.0.0",
     "build": "npm run clean && NODE_ENV=production npm run setup && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -13,7 +14,7 @@
     "setup": "npm run man && npm run sym",
     "man": "node scripts/build_static_manifest.js",
     "sym": "node scripts/create_symlinks.js",
-    "local": "http-server public/",
+    "public": "http-server public/",
     "watch": "bash ./scripts/watch.sh -d ./manifest/ -c npm run man"
   },
   "dependencies": {

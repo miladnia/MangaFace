@@ -17,7 +17,7 @@ npm i && npm run build
 ```
 
 ```sh
-npm run local
+npm run public
 ```
 
 > [!TIP]
