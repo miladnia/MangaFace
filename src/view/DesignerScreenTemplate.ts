@@ -1,30 +1,34 @@
-import { ViewElement, type Container } from '@ui/ui';
+import { ViewElement, type Container } from "@ui/ui";
 
 export class DesignerScreenTemplate {
-  #template: Container;
+  #tpl: Container;
   #container: Container;
   commandNavigatorContainer: Container;
   navOptionsContainer: Container;
-  assetGridContainer: Container;
-  controlsFrame: Container;
-  previewFrame: Container;
-  colorGridContainer: Container;
+  assetGridFrame: Container;
+  canvasFrame: Container;
+  colorGridFrame: Container;
 
   constructor() {
-    this.#template = new ViewElement('div', 'mf-designer-screen-tpl');
-    this.#container = new ViewElement('div', 'designer-container');
-    this.#template.appendView(this.#container);
-    this.controlsFrame = this._createFrame('preview-frame');
-    this.previewFrame = this._createFrame('canvas-frame', this.controlsFrame);
-    const commandPanel = this._createFrame('command-panel-frame');
-    this.colorGridContainer = this._createFrame('color-grid', commandPanel);
-    this.assetGridContainer = this._createFrame('asset-grid', commandPanel);
-    this.navOptionsContainer = this._createFrame('navigator-options');
-    this.commandNavigatorContainer = this._createFrame('command-navigator');
+    this.#tpl = new ViewElement("div", "designer-screen");
+    this.#container = this._createElement("designer-screen-container", this.#tpl);
+    this.canvasFrame = this._createElement("canvas-frame");
+    const commandPanel = this._createElement("command-panel");
+    this.colorGridFrame = this._createElement("color-grid-frame", commandPanel);
+    this.assetGridFrame = this._createElement("asset-grid-frame", commandPanel);
+    const navContainer = this._createElement("command-navigator");
+    this.navOptionsContainer = this._createElement(
+      "options-frame",
+      navContainer
+    );
+    this.commandNavigatorContainer = this._createElement(
+      "navigators-frame",
+      navContainer
+    );
   }
 
-  _createFrame(classPrefix: string, parent?: Container) {
-    const frame = new ViewElement('div', classPrefix);
+  _createElement(className: string, parent?: Container) {
+    const frame = new ViewElement("div", className);
 
     if (parent) parent.appendView(frame);
     else this.#container.appendView(frame);
@@ -33,6 +37,6 @@ export class DesignerScreenTemplate {
   }
 
   getView() {
-    return this.#template;
+    return this.#tpl;
   }
 }

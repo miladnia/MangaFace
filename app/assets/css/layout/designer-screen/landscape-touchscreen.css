@@ -1,0 +1,79 @@
+@media only screen and (orientation: landscape) and (pointer: coarse) {
+  :root {
+    /* local variables */
+    --mf-color-grid-cell-size: 17.5vh;
+    /* override variables */
+    /* --mf-command-panel-width: calc(92vw - var(--mf-canvas-width)); */
+    --mf-command-panel-width: auto;
+    --mf-color-grid-width: 50%;
+    --mf-asset-grid-columns: 12;
+  }
+
+  .designer-screen {
+    max-width: 100vw;
+    overflow-x: scroll;
+    touch-action: pan-x;
+    direction: rtl;
+  }
+  .designer-screen-container {
+    justify-content: end;
+    direction: ltr;
+    position: relative;
+  }
+
+  /* ui components */
+
+  .designer-screen .grid-select-pages {
+    justify-content: start;
+  }
+
+  /* sticky canvas-frame */
+
+  .designer-screen .canvas-frame {
+    position: sticky;
+    top: 0;
+    left: calc(var(--mf-containers-gap) / 2);
+    height: auto;
+    align-self: start;
+    z-index: 120;
+  }
+
+  /* command-panel */
+
+  .designer-screen .command-panel {
+    flex-grow: 0;
+    align-items: end;
+    min-width: var(--mf-command-panel-width);
+    z-index: 110;
+  }
+
+  /* color-grid */
+
+  .designer-screen .color-grid-frame {
+    position: sticky;
+    --right-space: calc(var(--mf-navigators-width) + var(--mf-options-width) + (2 * var(--mf-containers-gap)));
+    right: var(--right-space);
+  }
+
+  /* asset-grid */
+
+  .designer-screen .asset-grid-frame .grid-select-slots {
+    gap: 2.5vh;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(3, 1fr);
+  }
+  .designer-screen .asset-grid-frame .grid-select-slot {
+    width: var(--mf-color-grid-cell-size);
+    height: var(--mf-color-grid-cell-size);
+    padding: 0 !important;
+  }
+
+  /* sticky command-navigator */
+
+  .designer-screen .command-navigator {
+    position: sticky;
+    top: 0;
+    right: 0;
+    z-index: 100;
+  }
+}

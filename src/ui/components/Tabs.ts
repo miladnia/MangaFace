@@ -8,14 +8,18 @@ type Listener = {
   onTabDeselected: (tab: Tab) => void;
 };
 
-export class Tabs extends UIComponent<'ul'> {
+export class Tabs extends UIComponent<'nav'> {
   #tabs: Tab[] = [];
+  #layout: HTMLElement;
   #selectedTab: Tab | null = null;
   #enabled = true;
   #listener: Listener;
 
   constructor() {
-    super('ul', 'tab-layout');
+    super('nav', 'tabs-com');
+    this.#layout = document.createElement('div');
+    this.#layout.className = 'tabs-layout';
+    this._view.getElement().appendChild(this.#layout);
     this.#listener = {
       onTabSelected: () => {},
       onTabDeselected: () => {},
@@ -29,7 +33,7 @@ export class Tabs extends UIComponent<'ul'> {
   addTab(tab: Tab) {
     const len = this.#tabs.push(tab);
     tab._position = len - 1;
-    this._view.appendView(tab.getView());
+    this.#layout.appendChild(tab.getView().getElement());
 
     if (0 === tab._position) {
       this._selectTab(tab);
@@ -117,7 +121,7 @@ export class Tabs extends UIComponent<'ul'> {
 }
 
 export class Tab {
-  _view: View<'li'>;
+  _view: View<'button'>;
   _parent: Tabs;
   _text: string;
   _INVALID_POSITION: number;
@@ -126,7 +130,7 @@ export class Tab {
   _tag: unknown;
 
   constructor(parent: Tabs) {
-    this._view = new ViewElement('li', 'tab');
+    this._view = new ViewElement('button', 'tabs-tab');
     this._parent = parent;
     this._text = '';
     this._INVALID_POSITION = -1;

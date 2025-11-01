@@ -1,0 +1,47 @@
+/* animations should work only for devices that
+   support convenient hovering over elements, and
+   have no preferences to reduce motions */
+
+@media only screen and (hover: hover) and (prefers-reduced-motion: no-preference) {
+  /* GridSelect component */ 
+
+  .designer-screen .grid-select-slot {
+    /* transition: opacity 0.1s; */
+  }
+  .designer-screen .grid-select-slot:hover {
+  }
+
+  /* navigators */
+
+  .designer-screen .navigators-frame .tabs-tab {
+    --tab-scale: 0.7;
+    transition: transform 0.1s;
+  }
+  .designer-screen .navigators-frame .tabs-tab:hover,
+  .designer-screen .navigators-frame .tabs-tab[data-selected] {
+    --tab-scale: 1;
+  }
+
+  .designer-screen .options-frame .tabs-tab {
+    --tab-scale: 0.8;
+    transition: transform 0.1s;
+  }
+  .designer-screen .options-frame .tabs-tab:hover,
+  .designer-screen .options-frame .tabs-tab[data-selected] {
+    --tab-scale: 0.9;
+  }
+
+  .designer-screen .renderer-container button {
+    transition:
+      backdrop-filter 0.4s ease-in-out 0.1s,
+      -webkit-backdrop-filter 0.4s ease-in-out 0.1s,
+      opacity 0.1s 0.4s;
+    will-change: backdrop-filter, opacity;
+  }
+  .designer-screen .renderer-container button:hover {
+    transition:
+      backdrop-filter 0.4s ease-in-out 0.1s,
+      -webkit-backdrop-filter 0.4s ease-in-out 0.1s,
+      opacity 0.1s;
+  }
+}

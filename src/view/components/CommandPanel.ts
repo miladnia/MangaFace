@@ -1,4 +1,4 @@
-import AssetGrid from "./ItemGrid";
+import AssetGrid from "./AssetGrid";
 import ColorGrid from "./ColorGrid";
 import type { ScriptObserver } from "@domain/interfaces";
 import type { Container } from "@ui/ui";
@@ -38,7 +38,7 @@ export default class CommandPanel implements ScriptObserver {
     this.#colorGrid.showCommandColors(cmdName);
   }
 
-  render(itemGridContainer: Container, colorGridContainer: Container) {
+  render(assetGridContainer: Container, colorGridContainer: Container) {
     this.#assetGrid.onAssetSelect = (cmdName, assetIndex) => {
       // If no color is selected, don't run any Action
       if (!this.#colorGrid.hasSelectedColor()) {
@@ -63,7 +63,7 @@ export default class CommandPanel implements ScriptObserver {
       });
     };
 
-    this.#assetGrid.render(itemGridContainer);
+    this.#assetGrid.render(assetGridContainer);
     this.#colorGrid.render(colorGridContainer);
   }
 }

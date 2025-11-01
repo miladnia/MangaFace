@@ -89,7 +89,7 @@ class AssetGridAdapter implements GridSelectAdapter {
     const cmdName = sessionName;
     const cmd = this.#commands[cmdName];
     if (cmd.isOptional && 0 === optionIndex) {
-      return "var(--grid-select-blank-slot-bg-image)";
+      return "var(--mf-asset-grid-remove-icon)";
     }
     const assetIndex = this.#toAssetIndex(sessionName, optionIndex);
     return cmd.getPreviewUrl(assetIndex);

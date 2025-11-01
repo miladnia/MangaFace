@@ -25,7 +25,7 @@ type Session = {
 export default class GridSelect extends UIComponent<"div"> {
   static #instanceCount = 0;
 
-  static #GRID_CLASSNAME = "grid-select-layout";
+  static #GRID_CLASSNAME = "grid-select";
   static #GRID_ATTRIBUTE = "data-grid";
   static #SESSION_ATTRIBUTE = "data-session";
   static #PAGE_ATTRIBUTE = "data-page";
@@ -132,6 +132,12 @@ export default class GridSelect extends UIComponent<"div"> {
     } else {
       this.#prevPageBtn?.removeAttribute("disabled");
     }
+
+    if (this.#prevPageBtn?.disabled && this.#nextPageBtn?.disabled) {
+      this.#pagesNav?.setAttribute("data-disabled", "");
+    } else {
+      this.#pagesNav?.removeAttribute("data-disabled");
+    }
   }
 
   get #maxOptionIndex(): number {
@@ -167,9 +173,6 @@ export default class GridSelect extends UIComponent<"div"> {
     const nav = this.#createPagesNav();
     this.element.appendChild(nav);
 
-    // this.#addAllCovers();
-    // this.#updateState();
-
     return this.element;
   }
 
@@ -199,12 +202,12 @@ export default class GridSelect extends UIComponent<"div"> {
     } satisfies CSSRule;
 
     if ("color" === type) {
-      rule.properties["background-color"] = value;
+      rule.properties["--cover-color"] = value;
     } else if ("image" === type) {
-      rule.properties["background-image"] = value.startsWith("var")
+      rule.properties["--cover-image"] = value.startsWith("var")
         ? value // css variable
         : `url(${encodeURI(value)})`;
-      rule.properties["background-color"] = "var(--grid-select-slot-bg-color)";
+      rule.properties["--cover-color"] = "var(--grid-select-slot-cover-color)";
     }
 
     const page = Math.floor(optionIndex / this.#slotsCount);
@@ -244,8 +247,8 @@ export default class GridSelect extends UIComponent<"div"> {
   }
 
   #createSlotsLayout() {
-    const slotsLayout = document.createElement("div");
-    slotsLayout.classList.add("grid-select-slots-layout");
+    const slotsLayout = document.createElement("main");
+    slotsLayout.classList.add("grid-select-slots");
     return slotsLayout;
   }
 
@@ -253,7 +256,7 @@ export default class GridSelect extends UIComponent<"div"> {
     this.#nextPageBtn = this.#createNextPageButton();
     this.#prevPageBtn = this.#createPrevPageButton();
     this.#pagesNav = document.createElement("nav");
-    this.#pagesNav.classList.add("grid-select-pages-nav", "hiddenn");
+    this.#pagesNav.classList.add("grid-select-pages");
     this.#pagesNav.appendChild(this.#prevPageBtn);
     this.#pagesNav.appendChild(this.#nextPageBtn);
     return this.#pagesNav;
@@ -264,7 +267,7 @@ export default class GridSelect extends UIComponent<"div"> {
     nextBtn.type = "button";
     nextBtn.classList.add("grid-select-page-btn");
     nextBtn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 grid-select-page-btn-icon">
         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
       </svg>`;
     nextBtn.addEventListener("click", () => {
@@ -282,7 +285,7 @@ export default class GridSelect extends UIComponent<"div"> {
     prevBtn.type = "button";
     prevBtn.classList.add("grid-select-page-btn");
     prevBtn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 grid-select-page-btn-icon">
         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
       </svg>`;
     prevBtn.addEventListener("click", () => {

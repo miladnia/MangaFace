@@ -1,0 +1,24 @@
+@media only screen and (orientation: landscape) and (pointer: coarse) {
+  :root {
+    --mf-options-btn-padding: 5vh;
+  }
+
+  .designer-screen .asset-grid-frame,
+  .designer-screen .canvas-frame {
+    background: var(--mf-frame-bg);
+    padding: var(--mf-containers-gap);
+    border-radius: 12px;
+  }
+
+  .designer-screen .canvas-frame {
+    background: rgb(var(--mf-frame-bg-rgb));
+  }
+}
+
+/* apply blur for devices with higher resolution */
+@media only screen and (orientation: landscape) and (pointer: coarse) and (min-width: 400px) {
+  .designer-screen .asset-grid-frame,
+  .designer-screen .canvas-frame {
+    backdrop-filter: var(--mf-frame-blur);
+  }
+}

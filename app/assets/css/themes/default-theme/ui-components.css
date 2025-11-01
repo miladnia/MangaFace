@@ -1,0 +1,50 @@
+/* theme for ui components */
+
+/* Tabs component */ 
+
+.tabs-come {
+  --tab-scale: 1;
+}
+.tabs-tab {
+  transform: scale(var(--tab-scale));
+  background-color: #eee;
+  position: relative;
+  padding: 1em;
+  z-index: 1;
+}
+.tabs-tab[data-selected] {
+  z-index: 2;
+}
+
+/* GridSelect component */ 
+
+.grid-select {
+  --active-slot-scale: 1;
+  --active-slot-radius: var(--slot-radius);
+  --slot-glow: 0;
+  --active-slot-glow: 0;
+  --glow-color: #000;
+  --slot-shadow: 0;
+}
+.grid-select-slot {
+  position: relative;
+  z-index: 1;
+  --shadow-color: var(--cover-color); /* fallback when 'color-mix()' is not supported */
+  --shadow-color: color-mix(in srgb, var(--cover-color), #fff 20%);
+  box-shadow: 0 0 var(--slot-shadow) var(--shadow-color);
+}
+.grid-select-slot[data-selected] {
+  transform: scale(var(--active-slot-scale));
+  box-shadow: 0 0 0 var(--active-slot-glow) var(--glow-color);
+  border-radius: var(--active-slot-radius);
+  pointer-events: none;
+  z-index: 2;
+}
+.grid-select-page-btn {
+  background: var(--mf-btn-bg-active);
+  color: var(--mf-btn-color-active);
+  border-radius: 50%;
+}
+.grid-select-page-btn:disabled {
+  display: none;
+}

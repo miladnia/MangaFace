@@ -1,0 +1,22 @@
+@media only screen and (orientation: landscape) and (pointer: fine) and (min-width: 992px) {
+  :root {
+    --mf-options-font: 1em;
+  }
+
+  .designer-screen {
+    display: flex;
+    align-items: center;
+  }
+  .designer-screen-container {
+    height: 45vw;
+    height: 45vw;
+  }
+
+  .designer-screen .command-navigator .tabs-layout {
+    justify-content: space-between;
+    min-height: 100%;
+  }
+  .designer-screen .options-frame .tabs-layout {
+    justify-content: start;
+  }
+}

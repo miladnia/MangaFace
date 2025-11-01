@@ -1,0 +1,11 @@
+/* light mode */
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --mf-screen-bg-rgb: 255, 255, 255;
+    --mf-btn-bg: #E0E0E0;
+    --mf-btn-color: #424242;
+    --mf-btn-glow: 0, 0, 0;
+    --mf-btn-glow-alpha: 0.25;
+  }
+}

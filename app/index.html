@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MangaFace | Create Your Own Custom Avatar</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#1d1d1b" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="./assets/favicon/site.webmanifest" />
+  <link rel="stylesheet" type="text/css" href="./assets/css/themes/default-theme-with-animations.css" />
+<!-- <link rel="stylesheet" type="text/css" href="./assets/css/themes/no-theme.css" /> -->
+  <style>
+    html, body { height: 100%; }
+    body {
+      font-size: 16px; font-family: Arial, Helvetica, sans-serif;
+      width: 100%; margin: 0;
+      background: #292927 url('./assets/background.jpg') no-repeat center;
+      background-size: cover;
+      touch-action: none;
+    }
+    body > main {
+      height: 100%; flex-direction: column; align-items: center;
+      display: flex; overflow: auto;
+      scroll-behavior: smooth;
+    }
+    #root { flex-grow: 1; align-items: center; display: flex; width: 100%; }
+    body > main > footer {
+      padding: 0.5rem; align-items: center; justify-content: space-between;
+      font-size: 0.7em; background: #1d1d1b; color: #ad7135; font-weight: bold;
+      display: flex; box-sizing: border-box; position: relative; width: 100%;
+    }
+    .footer-links a { color: inherit; text-decoration: none; }
+    .footer-links p { margin: 0; font-size: smaller; }
+    .gh-stars { align-items: center; height: 75%; display: flex; }
+    .gh-stars a { display: block; height: 100%; }
+    .gh-stars img { display: block; height: 100%; }
+    @media only screen and (min-width: 992px) {
+      body > main > footer {
+        justify-content: center; text-align: center; gap: 5rem; font-size: 0.9em;
+      }
+    }
+    @media only screen and (orientation: landscape) and (max-height: 768px) {
+      body > main > footer {
+        height: 8vh; padding: 0 1vw; bottom: 0; left: 1vw; justify-content: center;
+        z-index: 1; position: absolute; border-radius: 12px 12px 0 0; width: auto;
+      }
+      .gh-stars { height: 50%; }
+      .footer-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div id="root"></div>
+    <footer>
+      <div class="footer-links">
+        <a href="https://github.com/miladnia/MangaFace">Source Code</a><span> | </span>
+        <a href="https://github.com/miladnia/MangaFace/blob/HEAD/LICENSE">License</a>
+        <p>Background created by freepik.com</p>
+      </div>
+      <div class="gh-stars">
+        <a href="https://github.com/miladnia/MangaFace">
+          <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/miladnia/MangaFace">
+        </a>
+      </div>
+    </footer>
+  </main>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>

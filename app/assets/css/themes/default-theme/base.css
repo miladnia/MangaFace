@@ -1,0 +1,98 @@
+:root {
+  /* designer */
+  --mf-designer-bg-rgb: 33, 33, 33;
+  --mf-designer-bg: rgba(var(--mf-designer-bg-rgb), 0.5);
+  --mf-designer-filter: blur(25px);
+  /* grid-select component */
+  --grid-select-slot-cover-color: #ccc;
+  --mf-asset-grid-remove-icon: var(--mf-cross-mark-icon);
+  /* buttons */
+  --mf-btn-bg: #9E9E9E;
+  --mf-btn-color: #212121;
+  --mf-btn-color-active: #ECEFF1;
+  --mf-btn-bg-active: #546E7A;
+  --mf-btn-glow: 255, 255, 255;
+  --mf-btn-glow-alpha: 0.5;
+  --mf-btn-glow-size: 0.5rem;
+  --mf-nav-btn-bg-active: var(--mf-btn-bg);
+  /* frame */
+  --mf-frame-bg-rgb: 66, 66, 66;
+  --mf-frame-bg: rgba(var(--mf-frame-bg-rgb), 0.5);
+  --mf-frame-radius: 12px;
+  --mf-frame-blur: blur(100px);
+  --mf-frame-shadow: 1rem;
+  --mf-frame-padding: 3%;
+  /* navigators */
+  --mf-navigators-btn-shadow: 0;
+  /* options */
+  --mf-options-btn-padding: 6%;
+  /* asset-grid */
+  --mf-asset-grid-slot-glow-size: 0.8rem;
+}
+
+.designer-screen {
+  background-color: var(--mf-designer-bg);
+  backdrop-filter: var(--mf-designer-filter);
+}
+
+/* navigators-frame */
+
+.designer-screen .navigators-frame .tabs-tab {
+  border-radius: 50%;
+  background-size: 50%;
+}
+.designer-screen .navigators-frame .tabs-tab[data-selected] {
+  background-color: var(--mf-nav-btn-bg-active);
+}
+
+/* options-frame */
+
+.designer-screen .options-frame .tabs-tab {
+  padding: var(--mf-options-btn-padding) 0;
+  line-height: 0;
+  background-color: var(--mf-btn-bg);
+  color: var(--mf-btn-color);
+  border-radius: 2em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.designer-screen .options-frame .tabs-tab[data-selected] {
+  background-color: var(--mf-btn-bg-active);
+  color: var(--mf-btn-color-active);
+}
+
+/* color-grid */
+
+.designer-screen .color-grid-frame .grid-select {
+  /* theme */
+  --slot-count: 4;
+  --active-slot-glow: var(--mf-btn-glow-size);
+  --glow-color: rgba(var(--mf-btn-glow), var(--mf-btn-glow-alpha));
+  --slot-shadow: 2.5rem;
+}
+
+/* asset-grid */
+
+.designer-screen .asset-grid-frame .grid-select {
+  --slot-radius: 15%;
+  /* theme */
+  --active-slot-radius: 50%;
+  --active-slot-scale: 1.5;
+  --active-slot-glow: var(--mf-asset-grid-slot-glow-size);
+  --glow-color: rgba(var(--mf-btn-glow), var(--mf-btn-glow-alpha));
+}
+
+/* renderer-container */
+
+.designer-screen .renderer-container {
+	border-radius: 15%;
+  overflow: hidden;
+}
+.designer-screen .renderer-container button {
+  background: transparent;
+  color: #fff;
+  text-shadow: 1px 1px 2px #444;
+}
+.designer-screen .renderer-container button:hover {
+  backdrop-filter: blur(20px);
+}

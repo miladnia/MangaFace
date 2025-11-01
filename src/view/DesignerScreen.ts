@@ -15,11 +15,11 @@ export default class DesignerScreen {
   async render() {
     const composer = new Composer(this.#model.manifest);
     const renderer = new Renderer(composer);
-    renderer.render(this.#tpl.previewFrame);
+    renderer.render(this.#tpl.canvasFrame);
 
     const commandPanel = new CommandPanel(composer, this.#model.manifest);
     commandPanel.onActionTrigger = (action) => composer.applyAction(action);
-    commandPanel.render(this.#tpl.assetGridContainer, this.#tpl.colorGridContainer);
+    commandPanel.render(this.#tpl.assetGridFrame, this.#tpl.colorGridFrame);
 
     const commandNavigator = new CommandNavigator(this.#model.manifest);
     commandNavigator.onCommandSelect((commandName) => {

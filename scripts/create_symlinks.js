@@ -2,9 +2,9 @@ import fs from "fs";
 import path from "path";
 
 const symlinks = {
-  [path.resolve("web/assets")]: path.resolve("public/assets"),
-  [path.resolve("web/manifest")]: path.resolve("public/manifest"),
-  [path.resolve("web/src")]: path.resolve("src"),
+  [path.resolve("app/app_storage")]: path.resolve("public/app_storage"),
+  [path.resolve("app/manifest")]: path.resolve("public/manifest"),
+  [path.resolve("app/src")]: path.resolve("src"),
 };
 
 for (const [linkPath, targetPath] of Object.entries(symlinks)) {

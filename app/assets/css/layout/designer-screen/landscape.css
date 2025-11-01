@@ -1,0 +1,91 @@
+@media only screen and (orientation: landscape) {
+  :root {
+    /* designer */
+    --designer-width: 100vw;
+    --designer-height: 100vh;
+    /* alignment */
+    --mf-containers-direction: row;
+    --mf-container-align-items: end;
+    --mf-items-direction: column;
+    /* sizes */
+    --mf-command-navigator-width: auto;
+    --mf-command-panel-width: auto;
+    --mf-navigators-width: 7vw;
+    --mf-options-width: 15vw;
+    --mf-asset-grid-width: 100%;
+    --mf-color-grid-width: 75%;
+    --mf-canvas-width: 19vw;
+    /* command-navigator */
+    --mf-navigators-btn-size: 100%;
+    --mf-options-btn-width: 100%;
+    --mf-navigators-justify-content: start;
+    /* asset-grid */
+    --mf-asset-grid-columns: 9;
+    /* color-grid */
+    --mf-color-grid-columns: 10;
+  }
+
+  .designer-screen {
+    width: var(--designer-width);
+    height: var(--designer-height);
+  }
+
+  /* full height */
+
+  .designer-screen-container > *,
+  .designer-screen .command-navigator > *,
+  .designer-screen .command-navigator > *,
+  .designer-screen .tabs-com {
+    height: 100%;
+  }
+
+  /* ui components */
+
+  .designer-screen .grid-select-pages {
+    --page-btn-size: 4vw;
+  }
+
+  /* command-navigator */
+
+  .designer-screen .command-navigator {
+    width: var(--mf-command-navigator-width);
+  }
+
+  /* navigators */
+
+  .designer-screen .navigators-frame {
+    display: flex;
+    width: var(--mf-navigators-width);
+  }
+
+  .designer-screen .options-frame {
+    width: var(--mf-options-width);
+  }
+  .designer-screen .options-frame .tabs-com {
+    justify-content: start;
+  }
+
+  /* command-panel */
+  
+  .designer-screen .command-panel {
+    flex-direction: column;
+    flex-grow: 1;
+    width: var(--mf-command-panel-width);
+  }
+
+  /* asset-grid */
+  
+  .designer-screen .asset-grid-frame {
+    width: var(--mf-asset-grid-width);
+  }
+
+  /* color-grid */
+
+  .designer-screen .color-grid-frame {
+    width: var(--mf-color-grid-width);
+    padding: 0;
+  }
+  .designer-screen .color-grid-frame .grid-select {
+    --gap: 0.5rem;
+  }
+}

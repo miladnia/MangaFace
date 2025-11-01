@@ -1,8 +1,9 @@
 # MangaFace
 public/*
-!public/assets
+!public/app_storage/
 web/*
 !web/index.html
+!web/assets/
 .env.production
 
 # Logs

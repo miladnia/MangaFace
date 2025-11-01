@@ -1,6 +1,6 @@
 manifest_dir: manifest
-assets_dir: assets/mangaface
+assets_dir: app_storage/packs
 
 static_manifest_dir: public/manifest
-static_manifest_assets_path: /assets/mangaface
+static_manifest_assets_path: /app_storage/packs
 pretty_json: true

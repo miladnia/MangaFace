@@ -1,0 +1,26 @@
+/* portrait viewport */
+
+@media only screen and (orientation: portrait) {
+  .designer-screen .asset-grid-frame {
+    background-color: var(--mf-frame-bg);
+    border-radius: 12px;
+    padding: 0.5rem 0;
+  }
+
+  .designer-screen .options-frame,
+  .designer-screen .navigators-frame {
+    background-color: var(--mf-frame-bg);
+    box-shadow: 0 0 var(--mf-frame-shadow) #000;
+    border-radius: var(--mf-frame-radius);
+    padding: var(--mf-frame-padding);
+  }
+}
+
+/* apply blur for devices with higher resolution */
+@media only screen and (orientation: portrait) and (min-width: 400px) {
+  .designer-screen .asset-grid-frame,
+  .designer-screen .options-frame,
+  .designer-screen .navigators-frame {
+    backdrop-filter: var(--mf-frame-blur);
+  }
+}

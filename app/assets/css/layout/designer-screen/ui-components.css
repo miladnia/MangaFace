@@ -1,0 +1,19 @@
+/* customize ui components */
+
+/* grid-select */ 
+
+.designer-screen .grid-select {
+  direction: rtl;
+}
+.designer-screen .grid-select-pages {
+  justify-content: end;
+}
+.designer-screen .grid-select-page-btn-icon {
+  transform: scaleX(-1); /* to support rtl */
+}
+
+/* tabs */
+
+.designer-screen .tabs-com {
+  direction: rtl;
+}

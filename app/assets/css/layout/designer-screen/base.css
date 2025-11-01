@@ -1,0 +1,145 @@
+:root {
+  color-scheme: dark light;
+  --mf-designer-width-unit: min( 1vw, calc(2.2 * 1vh));
+  --mf-min-font-size: 16px;
+  --font-size: var(--mf-designer-width-unit);
+  --mf-max-font-size: 200px;
+  --mf-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  /* designer */
+  --mf-designer-width: 100%;
+  --mf-containers-direction: column;
+  --mf-containers-gap: 1rem;
+  --mf-items-direction: row;
+  --mf-items-gap: 0.5rem;
+  --mf-designer-padding-y: 1.5vh;
+  --mf-designer-padding-x: 3vw;
+  /* canvas-frame */
+  --mf-canvas-width: 50vw;
+  /* color-grid */
+  --mf-color-grid-width: 90%;
+  --mf-color-grid-columns: 2;
+  /* asset-grid */
+  --mf-asset-grid-columns: 6;
+  /* command-navigator */
+  --mf-navigators-btn-size: 20%;
+  --mf-options-btn-width: 25%;
+  --mf-options-font: 0.75em;
+  --mf-navigators-justify-content: space-evenly;
+  /* navigators */
+  --mf-navigators-gap: 0;
+  /* container */
+  --mf-container-align-items: center;
+  --mf-container-justify-content: start;
+  /* frame */
+  --mf-frame-justify-content: start;
+}
+
+/* top-level elements */
+
+.designer-screen {
+  min-width: 300px;
+  height: 100%;
+  touch-action: pan-y;
+  width: var(--mf-designer-width);
+}
+.designer-screen-container {
+  font-size: 16px;
+  font-size: clamp( var(--mf-min-font-size), var(--font-size), var(--mf-max-font-size) );
+  font-family: var(--mf-font-sans-serif);
+  display: flex;
+  flex-direction: var(--mf-containers-direction);
+  align-items: center;
+  justify-content: start;
+  gap: var(--mf-containers-gap);
+  padding: var(--mf-designer-padding-y) var(--mf-designer-padding-x);
+  width: 100%;
+  height: 100%;
+}
+
+/* full width containers and frames*/
+
+.designer-screen-container > *,
+.designer-screen .command-panel > *,
+.designer-screen .command-navigator > * {
+  width: 100%;
+}
+
+/* customize ui components */
+
+.designer-screen .tabs-layout {
+  flex-direction: var(--mf-items-direction);
+  gap: var(--mf-items-gap);
+}
+
+.designer-screen .pinboard-layout {
+  --pinboard-width: var(--mf-canvas-width);
+}
+
+/* command-navigator [CommandNavigator view component] */
+
+.designer-screen .command-navigator {
+  display: flex;
+  flex-direction: var(--mf-containers-direction);
+  align-items: var(--mf-container-align-items);
+  gap: var(--mf-containers-gap);
+}
+
+/* navigators frame [part of CommandNavigator] */
+
+.designer-screen .navigators-frame {
+  display: flex;
+}
+.designer-screen .navigators-frame .tabs-layout {
+  gap: var(--mf-navigators-gap);
+  justify-content: var(--mf-navigators-justify-content);
+}
+.designer-screen .navigators-frame .tabs-tab {
+  padding: 0;
+  width: var(--mf-navigators-btn-size);
+  padding-top: var(--mf-navigators-btn-size);
+  background: no-repeat center;
+  background-size: contain;
+}
+
+/* options frame [part of CommandNavigator] */
+
+.designer-screen .options-frame .tabs-tab {
+  min-width: var(--mf-options-btn-width);
+  font-size: var(--mf-options-font);
+}
+
+/* command-panel [CommandPanel view component] */
+
+.designer-screen .command-panel {
+  display: flex;
+  flex-direction: var(--mf-containers-direction);  
+  align-items: var(--mf-container-align-items);
+  gap: var(--mf-containers-gap);
+}
+
+/* asset-grid frame [AssetGrid view component; part of CommandPanel] */
+
+.designer-screen .asset-grid-frame .grid-select {
+  --columns: var(--mf-asset-grid-columns);
+  --gap: 0.5rem;
+}
+
+/* color-grid frame [ColorGrid view component; part of CommandPanel] */
+
+.designer-screen .color-grid-frame {
+  padding: 0 5%;
+}
+.designer-screen .color-grid-frame .grid-select {
+  --columns: var(--mf-color-grid-columns);
+  --gap: 1.5rem 80%;
+  --slot-radius: 50%;
+}
+.designer-screen .color-grid-frame .grid-select-pages[data-disabled] {
+  display: none;
+}
+
+/* canvas-frame [Renderer view component] */
+
+.designer-screen .canvas-frame {
+  width: auto;
+}

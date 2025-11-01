@@ -81,7 +81,7 @@ function mapCommand(manifestDTO: ManifestDTO, commandName: string): Command {
 
 function mapLayer(manifestDTO: ManifestDTO, layerName: string): Layer {
   return mapDtoToDomain(layerName, manifestDTO.layers, (dto) => {
-    const priority = manifestDTO.layers_priority.indexOf(layerName);
+    const priority = 1 + manifestDTO.layers_priority.indexOf(layerName);
 
     const position = dto.position
       ? ({

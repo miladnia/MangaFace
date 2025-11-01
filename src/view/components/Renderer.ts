@@ -12,7 +12,7 @@ export default class Renderer implements RenderObserver {
   #canvas: ImageCanvas | null = null;
 
   constructor(composer: Composer) {
-    this.#board = new PinBoard();
+    this.#board = new PinBoard(180, 187);
     composer.registerAssetObserver(this);
   }
 

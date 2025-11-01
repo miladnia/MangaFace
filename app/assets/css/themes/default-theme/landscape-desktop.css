@@ -1,0 +1,57 @@
+@media only screen and (orientation: landscape) and (pointer: fine) and (min-width: 992px) {
+  :root {
+    /* designer */
+    --designer-height: 100%;
+    --mf-designer-padding-x: 3vw;
+    --mf-designer-filter: none;
+    --mf-designer-bg: transparent;
+    --mf-height: 100%;
+  }
+
+  .designer-screen .navigators-frame,
+  .designer-screen .options-frame,
+  .designer-screen .command-panel,
+  .designer-screen .canvas-frame {
+    position: relative;
+  }
+
+  .designer-screen .navigators-frame::before,
+  .designer-screen .command-panel::before,
+  .designer-screen .canvas-frame::before {
+    width: 100%;
+    height: 100%;
+    padding: var(--mf-containers-gap);
+    left: calc(-1 * var(--mf-containers-gap));
+    top: calc(-1 * var(--mf-containers-gap));
+    border-radius: 12px;
+    box-shadow: 0 1rem 1rem #000;
+    z-index: -2;
+    background-color: var(--mf-frame-bg);
+    backdrop-filter: var(--mf-frame-blur);
+    content: '';
+    display: block;
+    position: absolute;
+  }
+
+  .designer-screen .navigators-frame {
+    height: 85%;
+    align-self: center;
+  }
+  .designer-screen .navigators-frame::before {
+    border-radius: 0 12px 12px 0;
+  }
+
+  .designer-screen .command-panel::before {
+    width: calc(100% + var(--mf-options-width));
+    z-index: -1;
+  }
+
+  .designer-screen .canvas-frame {
+    height: auto;
+    align-self: start;
+    margin-top: 2vh;
+  }
+  .designer-screen .canvas-frame::before {
+    border-radius: 12px 0 0 12px;
+  }
+}

@@ -1,0 +1,5 @@
+@media only screen and (orientation: landscape) {
+  :root {
+    --mf-options-btn-padding: 3vh;
+  }
+}

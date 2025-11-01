@@ -1,0 +1,107 @@
+/* GridSelect component */
+
+:root {
+  --grid-select-default-cover-color: #ccc;
+}
+
+.grid-select {
+  --columns: 10;
+  --rows: 1;
+  --gap: 0;
+  --slot-radius: 0;
+  --page-btn-size: 10vw;
+  --page-btn-icon-size: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+.grid-select-slots {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+  gap: var(--gap);
+}
+.grid-select-slot {
+  background: center no-repeat;
+  /* '--cover-color' and '--cover-image' will be available at runtime */
+  background-color: var(--cover-color);
+  background-image: var(--cover-image);
+  background-size: cover;
+  border-radius: var(--slot-radius);
+  width: 100%;
+  padding-top: 100% !important;
+  /* aspect-ratio: 1 / 1; */
+}
+.grid-select-pages {
+  display: flex;
+  gap: 0.25rem;
+}
+.grid-select-page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--page-btn-size);
+  height: var(--page-btn-size);
+}
+.designer-screen .grid-select-page-btn-icon {
+  width: var(--page-btn-icon-size);
+  height: var(--page-btn-icon-size);
+}
+
+/* Tabs component */
+
+.tabs-com {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+.tabs-layout {
+  display: flex;
+  align-items: center;
+}
+.tabs-tab {
+  text-wrap: nowrap;
+  overflow: hidden;
+  line-height: 2;
+  flex-shrink: 0;
+}
+
+/* PinBoard component */
+
+@property --pinboard-width {
+  syntax: "<length>";
+  initial-value: 0px;
+  inherits: false;
+}
+
+.pinboard-layout {
+  --pinboard-width: 500px;
+  --original-width: 500px;
+  --original-height: 500px;
+  --ratio: tan(atan2(var(--pinboard-width), var(--original-width)));
+  width: calc(var(--original-width) * var(--ratio));
+  height: calc(var(--original-height) * var(--ratio));
+}
+.pinboard-canvas-mock {
+  position: relative;
+  width: var(--original-width);
+  height: var(--original-height);
+  transform: scale(var(--ratio));
+  transform-origin: top left;
+  z-index: 0;
+}
+.pinboard-canvas-mock .item {
+  position: absolute;
+}
+.pinboard-canvas-mock img {
+  user-select: none;        /* Prevent text selection */
+  -webkit-user-drag: none;  /* Prevent image dragging in Chrome/Safari */
+  -khtml-user-drag: none;   
+  -moz-user-select: none;   
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}

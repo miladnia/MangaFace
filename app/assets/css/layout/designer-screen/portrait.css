@@ -1,0 +1,47 @@
+/* portrait viewport */
+
+@media only screen and (orientation: portrait) {
+  /* designer screen */
+
+  .designer-screen-container {
+    position: relative;
+  }
+
+  /* sticky command-navigator */
+
+  .designer-screen .command-navigator {
+    position: sticky;
+    bottom: 1%;
+    gap: 0.5rem;
+    z-index: 99;
+  }
+
+  /* sticky color-grid-frame and canvas-frame */
+
+  .designer-screen .color-grid-frame {
+    position: sticky;
+    top: calc(2 * var(--mf-containers-gap, 0));
+    z-index: 0;
+  }
+
+  .designer-screen .canvas-frame {
+    position: sticky;
+    top: var(--mf-containers-gap);
+    z-index: 1;
+    height: 0;
+    overflow: visible;
+  }
+
+  .designer-screen .asset-grid-frame {
+    z-index: 2;
+  }
+
+  /* sticky page buttons for grid-select */
+
+  .designer-screen .grid-select-pages {
+    position: sticky;
+    bottom: 49vw;
+    left: 0;
+    z-index: 99;
+  }
+}

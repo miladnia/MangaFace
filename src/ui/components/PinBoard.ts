@@ -2,9 +2,15 @@ import { UIComponent, ViewElement, type View } from '../ui';
 
 export default class PinBoard extends UIComponent<'div'> {
   _items: Record<string, Item> = {};
+  #canvasMock: HTMLElement;
 
-  constructor() {
+  constructor(pxWidth: number, pxHeight: number) {
     super('div', 'pinboard-layout');
+    this.element.style.setProperty('--original-width', `${pxWidth}px`);
+    this.element.style.setProperty('--original-height', `${pxHeight}px`);
+    this.#canvasMock = document.createElement('div');
+    this.#canvasMock.classList.add('pinboard-canvas-mock');
+    this.element.appendChild(this.#canvasMock);
   }
 
   newItem() {
@@ -13,7 +19,7 @@ export default class PinBoard extends UIComponent<'div'> {
 
   pinItem(itemKey: string, item: Item) {
     this._items[itemKey] = item;
-    this._view.appendView(item.getView());
+    this.#canvasMock.appendChild(item.element);
   }
 
   getItem(itemKey: string): Item | null {
@@ -23,7 +29,7 @@ export default class PinBoard extends UIComponent<'div'> {
   get images(): HTMLImageElement[] {
     const imgs = [];
     for (const key in this._items) {
-      imgs.push(this._items[key].getView().getElement());
+      imgs.push(this._items[key].element);
     }
     return imgs;
   }
@@ -57,5 +63,9 @@ class Item {
 
   getView() {
     return this._view;
+  }
+
+  get element() {
+    return this._view.getElement();
   }
 }

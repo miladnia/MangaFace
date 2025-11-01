@@ -1,0 +1,12 @@
+.designer-screen,
+.designer-screen * {
+	box-sizing: border-box;
+}
+
+.designer-screen button {
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: default;
+}
